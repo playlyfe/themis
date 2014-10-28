@@ -1494,6 +1494,14 @@ var SchemaGenerator = function (schema, path, schema_id, cache) {
 
 module.exports = {
 
+  registerFormat: function (format, validation_func) {
+    if (Utils.format[format] === undefined) {
+      Utils.format[format] = validation_func;
+    } else {
+      throw new Error("The format '"+ format +"' has already been registered");
+    }
+  },
+
   validator: function (schemas, options) {
     var body, index, generate, validator, schema, SCHEMA_ID, code;
     options = (options == null) ? {} : options;
@@ -1526,9 +1534,6 @@ module.exports = {
       // Generate readable code
       var ast = UglifyJS.parse("generate = function () {"+body.join("\n")+"}");
       ast.figure_out_scope();
-      //compressed_ast.figure_out_scope();
-      //compressed_ast.compute_char_frequency();
-      //compressed_ast.mangle_names();
       var stream = UglifyJS.OutputStream({ beautify: true });
       ast.print(stream);
       code = stream.toString();

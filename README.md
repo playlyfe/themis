@@ -157,9 +157,123 @@ console.log(require('util').inspect(report, { depth: 10, colors: true }));
 // { valid: true, errors: [] }
 ```
 
-##Performance
+### Validating with custom formats
+
+You can register custom format validators with Themis.
+
+```javascript
+var Themis = require('../src/themis');
+
+Themis.registerFormat('username', function (str) {
+  return /^[a-zA-Z0-9_\.-]+$/.test(str);
+});
+
+Themis.registerFormat('password', function (str) {
+  return /^(?=.{6,}).*$/.test(str);
+});
+
+Themis.registerFormat('identifier', function (str) {
+  return /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(str);
+});
+
+var schema = {
+  "id": "player",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "identifier"
+    },
+    "username": {
+      "type": "string",
+      "format": "username"
+    },
+    "password" :{
+      "type": "string",
+      "format": "password"
+    }
+  }
+};
+
+var valid_player = {
+  "id": "frodo",
+  "username": "Frodo",
+  "password": "TheOneRing"
+};
+
+var invalid_player = {
+  "id": "123",
+  "username": "!@#",
+  "password": "foo"
+};
+
+// Generate the validator
+var validator = Themis.validator(schema);
+
+var report = validator(valid_player, 'player');
+console.log(require('util').inspect(report, { depth: 10, colors: true }));
+// { valid: true, errors: [] }
+
+var report = validator(invalid_player, 'player');
+console.log(require('util').inspect(report, { depth: 10, colors: true }));
+/*
+{ valid: false,
+  errors: [],
+  subReport:
+   [ { valid: false,
+       errors:
+        [ { code: 'INVALID_FORMAT',
+            schema: 'player/properties/id',
+            params: { actual: '123', expected: 'identifier' } } ] },
+     { valid: false,
+       errors:
+        [ { code: 'INVALID_FORMAT',
+            schema: 'player/properties/username',
+            params: { actual: '!@#', expected: 'username' } } ] },
+     { valid: false,
+       errors:
+        [ { code: 'INVALID_FORMAT',
+            schema: 'player/properties/password',
+            params: { actual: 'foo', expected: 'password' } } ] } ] }
+*/
+```
+
+## Methods
+The Themis object contains methods to create validators and register formats.
+
+### validator(schemas)
+Generate a new compiled validator from the provided schemas. The returned validator function has the can be called on a piece of `data` with a `schema_id` refering to the schema to be used for validation. The function can be reused any number of times. Check the examples above to see its usage.
+
+### registerFormat(format, validation_func)
+Register a new format and its associated validation function.
+
+## Performance
 
 Themis achieves its high performance by generating custom optimized validation functions for every json schema document provided to it. For most types of data Themis is atleast 5-10 times faster than Z-Schema 3 and atleast twice as fast as json-model.
+
+```
+Basic Object Validation
+-----------------------
+z-schema#basicObject x 15,421 ops/sec ±7.07% (56 runs sampled)
+jayschema#basicObject x 205 ops/sec ±6.95% (59 runs sampled)
+jjv#basicObject x 3,385 ops/sec ±5.43% (56 runs sampled)
+jsonschema#basicObject x 388 ops/sec ±5.11% (59 runs sampled)
+tv4#basicObject x 9,746 ops/sec ±2.81% (70 runs sampled)
+json-model#basicObject x 29,009 ops/sec ±7.28% (69 runs sampled)
+themis#basicObject x 96,757 ops/sec ±2.80% (55 runs sampled)
+Fastest is themis#basicObject
+
+Advanced Object Validation
+--------------------------
+z-schema#advancedObject x 2,704 ops/sec ±8.09% (60 runs sampled)
+jayschema#advancedObject x 24.79 ops/sec ±5.88% (35 runs sampled)
+jjv#advancedObject x 933 ops/sec ±6.32% (57 runs sampled)
+jsonschema#advancedObject x 90.19 ops/sec ±6.21% (53 runs sampled)
+tv4#advancedObject x 148 ops/sec ±8.47% (64 runs sampled)
+json-model#advancedObject x 3,730 ops/sec ±2.04% (65 runs sampled)
+themis#advancedObject x 10,173 ops/sec ±3.04% (65 runs sampled)
+Fastest is themis#advancedObject
+```
 
 For a more detailed analysis of performance check out the benchmarks against the other popular json schema validators available today.
 

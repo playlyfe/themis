@@ -1,0 +1,10526 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <style type="text/css">
+        table {
+            border: 1px solid black;
+        }
+        td {
+            border: 1px solid black;
+            text-align: left;
+            padding: 3px 10px;
+        }
+        .failed {
+            background-color: #ff6e6e;
+        }
+        .fastest {
+            background-color: #6eff79;
+        }
+        .green {
+            color: green;
+        }
+        .red {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+Generated on Tuesday, October 28, 2014 in 169.8 minutes
+<ul>
+    <li>
+        z-schema
+        <ul>
+            <li class="green">passed: 269</li>
+            <li class="red">failed: 5</li>
+            <li>times fastest: 0</li>
+        </ul>
+    </li>
+    <li>
+        jayschema
+        <ul>
+            <li class="green">passed: 270</li>
+            <li class="red">failed: 4</li>
+            <li>times fastest: 0</li>
+        </ul>
+    </li>
+    <li>
+        jjv
+        <ul>
+            <li class="green">passed: 271</li>
+            <li class="red">failed: 3</li>
+            <li>times fastest: 1</li>
+        </ul>
+    </li>
+    <li>
+        jsonschema
+        <ul>
+            <li class="green">passed: 269</li>
+            <li class="red">failed: 5</li>
+            <li>times fastest: 0</li>
+        </ul>
+    </li>
+    <li>
+        tv4
+        <ul>
+            <li class="green">passed: 253</li>
+            <li class="red">failed: 21</li>
+            <li>times fastest: 0</li>
+        </ul>
+    </li>
+    <li>
+        json-model
+        <ul>
+            <li class="green">passed: 244</li>
+            <li class="red">failed: 30</li>
+            <li>times fastest: 10</li>
+        </ul>
+    </li>
+    <li>
+        themis
+        <ul>
+            <li class="green">passed: 273</li>
+            <li class="red">failed: 1</li>
+            <li>times fastest: 262</li>
+        </ul>
+    </li>
+</ul>
+<table>
+    <tr>
+        <th></th>
+        <th>
+            z-schema
+        </th>
+        <th>
+            jayschema
+        </th>
+        <th>
+            jjv
+        </th>
+        <th>
+            jsonschema
+        </th>
+        <th>
+            tv4
+        </th>
+        <th>
+            json-model
+        </th>
+        <th>
+            themis
+        </th>
+    </tr>
+    <tr>
+        <td>basicObject</td>
+        <td 
+            
+            >
+            15% (15421)
+        </td>
+        <td 
+            
+            >
+            0% (204)
+        </td>
+        <td 
+            
+            >
+            3% (3385)
+        </td>
+        <td 
+            
+            >
+            0% (387)
+        </td>
+        <td 
+            
+            >
+            10% (9746)
+        </td>
+        <td 
+            
+            >
+            29% (29009)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (96757)
+        </td>
+    </tr>
+    <tr>
+        <td>advancedObject</td>
+        <td 
+            
+            >
+            26% (2704)
+        </td>
+        <td 
+            
+            >
+            0% (24)
+        </td>
+        <td 
+            
+            >
+            9% (933)
+        </td>
+        <td 
+            
+            >
+            0% (90)
+        </td>
+        <td 
+            
+            >
+            1% (147)
+        </td>
+        <td 
+            
+            >
+            36% (3729)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (10173)
+        </td>
+    </tr>
+    <tr>
+        <td>additionalItems as schema, additional items match schema</td>
+        <td 
+            
+            >
+            15% (92360)
+        </td>
+        <td 
+            
+            >
+            0% (585)
+        </td>
+        <td 
+            
+            >
+            4% (25874)
+        </td>
+        <td 
+            
+            >
+            0% (1799)
+        </td>
+        <td 
+            
+            >
+            8% (49694)
+        </td>
+        <td 
+            
+            >
+            25% (149444)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (593846)
+        </td>
+    </tr>
+    <tr>
+        <td>additionalItems as schema, additional items do not match schema</td>
+        <td 
+            
+            >
+            13% (69967)
+        </td>
+        <td 
+            
+            >
+            0% (577)
+        </td>
+        <td 
+            
+            >
+            4% (23342)
+        </td>
+        <td 
+            
+            >
+            0% (1852)
+        </td>
+        <td 
+            
+            >
+            0% (1484)
+        </td>
+        <td 
+            
+            >
+            36% (184002)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (510208)
+        </td>
+    </tr>
+    <tr>
+        <td>items is schema, no additionalItems, all items match schema</td>
+        <td 
+            
+            >
+            6% (88263)
+        </td>
+        <td 
+            
+            >
+            0% (697)
+        </td>
+        <td 
+            
+            >
+            1% (22169)
+        </td>
+        <td 
+            
+            >
+            0% (1730)
+        </td>
+        <td 
+            
+            >
+            4% (59507)
+        </td>
+        <td 
+            
+            >
+            8% (120919)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1412048)
+        </td>
+    </tr>
+    <tr>
+        <td>array of items with no additionalItems, no additional items present</td>
+        <td 
+            
+            >
+            24% (110571)
+        </td>
+        <td 
+            
+            >
+            0% (775)
+        </td>
+        <td 
+            
+            >
+            7% (33184)
+        </td>
+        <td 
+            
+            >
+            0% (2552)
+        </td>
+        <td 
+            
+            >
+            10% (47916)
+        </td>
+        <td 
+            
+            >
+            51% (228768)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (446902)
+        </td>
+    </tr>
+    <tr>
+        <td>array of items with no additionalItems, additional items are not permitted</td>
+        <td 
+            
+            >
+            28% (107135)
+        </td>
+        <td 
+            
+            >
+            0% (730)
+        </td>
+        <td 
+            
+            >
+            8% (33006)
+        </td>
+        <td 
+            
+            >
+            0% (2492)
+        </td>
+        <td 
+            
+            >
+            0% (1535)
+        </td>
+        <td 
+            
+            >
+            70% (267175)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (381396)
+        </td>
+    </tr>
+    <tr>
+        <td>additionalItems as false without items, items defaults to empty schema so everything is valid</td>
+        <td 
+            
+            >
+            11% (351870)
+        </td>
+        <td 
+            
+            >
+            0% (818)
+        </td>
+        <td 
+            
+            >
+            14% (428019)
+        </td>
+        <td 
+            
+            >
+            0% (9986)
+        </td>
+        <td 
+            
+            >
+            3% (106296)
+        </td>
+        <td 
+            
+            >
+            20% (627339)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (3048298)
+        </td>
+    </tr>
+    <tr>
+        <td>additionalItems as false without items, ignores non-arrays</td>
+        <td 
+            
+            >
+            7% (201239)
+        </td>
+        <td 
+            
+            >
+            0% (904)
+        </td>
+        <td 
+            
+            >
+            12% (332827)
+        </td>
+        <td 
+            
+            >
+            0% (9991)
+        </td>
+        <td 
+            
+            >
+            2% (66391)
+        </td>
+        <td 
+            
+            >
+            23% (628884)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2657712)
+        </td>
+    </tr>
+    <tr>
+        <td>additionalItems are allowed by default, only the first item is validated</td>
+        <td 
+            
+            >
+            17% (172874)
+        </td>
+        <td 
+            
+            >
+            0% (739)
+        </td>
+        <td 
+            
+            >
+            7% (72146)
+        </td>
+        <td 
+            
+            >
+            0% (4357)
+        </td>
+        <td 
+            
+            >
+            5% (55023)
+        </td>
+        <td 
+            
+            >
+            39% (381746)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (972892)
+        </td>
+    </tr>
+    <tr>
+        <td>additionalProperties being false does not allow other properties, no additional properties is valid</td>
+        <td 
+            
+            >
+            8% (79019)
+        </td>
+        <td 
+            
+            >
+            0% (694)
+        </td>
+        <td 
+            
+            >
+            5% (50865)
+        </td>
+        <td 
+            
+            >
+            0% (3253)
+        </td>
+        <td 
+            
+            >
+            3% (33275)
+        </td>
+        <td 
+            
+            >
+            17% (168204)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (980409)
+        </td>
+    </tr>
+    <tr>
+        <td>additionalProperties being false does not allow other properties, an additional property is invalid</td>
+        <td 
+            
+            >
+            8% (40174)
+        </td>
+        <td 
+            
+            >
+            0% (638)
+        </td>
+        <td 
+            
+            >
+            5% (23463)
+        </td>
+        <td 
+            
+            >
+            0% (3451)
+        </td>
+        <td 
+            
+            >
+            0% (1704)
+        </td>
+        <td 
+            
+            >
+            27% (122328)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (447339)
+        </td>
+    </tr>
+    <tr>
+        <td>additionalProperties being false does not allow other properties, ignores non-objects</td>
+        <td 
+            
+            >
+            19% (328207)
+        </td>
+        <td 
+            
+            >
+            0% (822)
+        </td>
+        <td 
+            
+            >
+            20% (356505)
+        </td>
+        <td 
+            
+            >
+            0% (3496)
+        </td>
+        <td 
+            
+            >
+            3% (51502)
+        </td>
+        <td 
+            
+            >
+            36% (627046)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1706996)
+        </td>
+    </tr>
+    <tr>
+        <td>additionalProperties being false does not allow other properties, patternProperties are not additional properties</td>
+        <td 
+            
+            >
+            7% (49722)
+        </td>
+        <td 
+            
+            >
+            0% (661)
+        </td>
+        <td 
+            
+            >
+            4% (30204)
+        </td>
+        <td 
+            
+            >
+            0% (2779)
+        </td>
+        <td 
+            
+            >
+            3% (23378)
+        </td>
+        <td 
+            
+            >
+            16% (106129)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (638761)
+        </td>
+    </tr>
+    <tr>
+        <td>additionalProperties allows a schema which should validate, no additional properties is valid</td>
+        <td 
+            
+            >
+            9% (131907)
+        </td>
+        <td 
+            
+            >
+            0% (720)
+        </td>
+        <td 
+            
+            >
+            5% (70937)
+        </td>
+        <td 
+            
+            >
+            0% (3418)
+        </td>
+        <td 
+            
+            >
+            3% (49346)
+        </td>
+        <td 
+            
+            >
+            15% (202510)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1348603)
+        </td>
+    </tr>
+    <tr>
+        <td>additionalProperties allows a schema which should validate, an additional valid property is valid</td>
+        <td 
+            
+            >
+            16% (95368)
+        </td>
+        <td 
+            
+            >
+            0% (700)
+        </td>
+        <td 
+            
+            >
+            4% (24920)
+        </td>
+        <td 
+            
+            >
+            0% (2507)
+        </td>
+        <td 
+            
+            >
+            7% (41569)
+        </td>
+        <td 
+            
+            >
+            17% (96405)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (561491)
+        </td>
+    </tr>
+    <tr>
+        <td>additionalProperties allows a schema which should validate, an additional invalid property is invalid</td>
+        <td 
+            
+            >
+            12% (63836)
+        </td>
+        <td 
+            
+            >
+            0% (619)
+        </td>
+        <td 
+            
+            >
+            5% (28457)
+        </td>
+        <td 
+            
+            >
+            0% (2331)
+        </td>
+        <td 
+            
+            >
+            0% (1544)
+        </td>
+        <td 
+            
+            >
+            17% (85895)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (495289)
+        </td>
+    </tr>
+    <tr>
+        <td>additionalProperties are allowed by default, additional properties are allowed</td>
+        <td 
+            
+            >
+            8% (92914)
+        </td>
+        <td 
+            
+            >
+            0% (735)
+        </td>
+        <td 
+            
+            >
+            3% (39096)
+        </td>
+        <td 
+            
+            >
+            0% (3341)
+        </td>
+        <td 
+            
+            >
+            4% (48497)
+        </td>
+        <td 
+            
+            >
+            20% (220440)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1094090)
+        </td>
+    </tr>
+    <tr>
+        <td>allOf, allOf</td>
+        <td 
+            
+            >
+            10% (46840)
+        </td>
+        <td 
+            
+            >
+            0% (463)
+        </td>
+        <td 
+            
+            >
+            4% (19665)
+        </td>
+        <td 
+            
+            >
+            0% (2605)
+        </td>
+        <td 
+            
+            >
+            4% (20364)
+        </td>
+        <td 
+            
+            >
+            38% (178679)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (466897)
+        </td>
+    </tr>
+    <tr>
+        <td>allOf, mismatch second</td>
+        <td 
+            
+            >
+            14% (49893)
+        </td>
+        <td 
+            
+            >
+            0% (471)
+        </td>
+        <td 
+            
+            >
+            28% (101986)
+        </td>
+        <td 
+            
+            >
+            1% (4258)
+        </td>
+        <td 
+            
+            >
+            0% (1535)
+        </td>
+        <td 
+            
+            >
+            64% (228235)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (351931)
+        </td>
+    </tr>
+    <tr>
+        <td>allOf, mismatch first</td>
+        <td 
+            
+            >
+            25% (75722)
+        </td>
+        <td 
+            
+            >
+            0% (479)
+        </td>
+        <td 
+            
+            >
+            10% (32674)
+        </td>
+        <td 
+            
+            >
+            0% (2849)
+        </td>
+        <td 
+            
+            >
+            0% (1410)
+        </td>
+        <td 
+            
+            >
+            68% (205294)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (299809)
+        </td>
+    </tr>
+    <tr>
+        <td>allOf, wrong type</td>
+        <td 
+            
+            >
+            11% (40368)
+        </td>
+        <td 
+            
+            >
+            0% (445)
+        </td>
+        <td 
+            
+            >
+            15% (54064)
+        </td>
+        <td 
+            
+            >
+            1% (3675)
+        </td>
+        <td 
+            
+            >
+            0% (1541)
+        </td>
+        <td 
+            
+            >
+            47% (165900)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (346042)
+        </td>
+    </tr>
+    <tr>
+        <td>allOf with base schema, valid</td>
+        <td 
+            
+            >
+            12% (38321)
+        </td>
+        <td 
+            
+            >
+            0% (407)
+        </td>
+        <td 
+            
+            >
+            4% (15034)
+        </td>
+        <td 
+            
+            >
+            0% (2249)
+        </td>
+        <td 
+            
+            >
+            6% (19107)
+        </td>
+        <td 
+            
+            >
+            48% (148001)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (302600)
+        </td>
+    </tr>
+    <tr>
+        <td>allOf with base schema, mismatch base schema</td>
+        <td 
+            
+            >
+            12% (38494)
+        </td>
+        <td 
+            
+            >
+            0% (403)
+        </td>
+        <td 
+            
+            >
+            6% (18717)
+        </td>
+        <td 
+            
+            >
+            0% (2079)
+        </td>
+        <td 
+            
+            >
+            0% (1440)
+        </td>
+        <td 
+            
+            >
+            56% (172748)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (304425)
+        </td>
+    </tr>
+    <tr>
+        <td>allOf with base schema, mismatch first allOf</td>
+        <td 
+            
+            >
+            16% (40534)
+        </td>
+        <td 
+            
+            >
+            0% (390)
+        </td>
+        <td 
+            
+            >
+            36% (91143)
+        </td>
+        <td 
+            
+            >
+            1% (2655)
+        </td>
+        <td 
+            
+            >
+            0% (1446)
+        </td>
+        <td 
+            
+            >
+            66% (164697)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (249039)
+        </td>
+    </tr>
+    <tr>
+        <td>allOf with base schema, mismatch second allOf</td>
+        <td 
+            
+            >
+            19% (51915)
+        </td>
+        <td 
+            
+            >
+            0% (416)
+        </td>
+        <td 
+            
+            >
+            9% (24570)
+        </td>
+        <td 
+            
+            >
+            0% (2241)
+        </td>
+        <td 
+            
+            >
+            0% (1417)
+        </td>
+        <td 
+            
+            >
+            66% (178759)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (270531)
+        </td>
+    </tr>
+    <tr>
+        <td>allOf with base schema, mismatch both</td>
+        <td 
+            
+            >
+            26% (69873)
+        </td>
+        <td 
+            
+            >
+            0% (402)
+        </td>
+        <td 
+            
+            >
+            37% (98435)
+        </td>
+        <td 
+            
+            >
+            1% (2974)
+        </td>
+        <td 
+            
+            >
+            0% (1443)
+        </td>
+        <td 
+            
+            >
+            82% (214324)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (260481)
+        </td>
+    </tr>
+    <tr>
+        <td>allOf simple types, valid</td>
+        <td 
+            
+            >
+            16% (166840)
+        </td>
+        <td 
+            
+            >
+            0% (698)
+        </td>
+        <td 
+            
+            >
+            4% (48232)
+        </td>
+        <td 
+            
+            >
+            0% (8490)
+        </td>
+        <td 
+            
+            >
+            6% (63920)
+        </td>
+        <td 
+            
+            >
+            34% (358797)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1031235)
+        </td>
+    </tr>
+    <tr>
+        <td>allOf simple types, mismatch one</td>
+        <td 
+            
+            >
+            10% (93231)
+        </td>
+        <td 
+            
+            >
+            0% (643)
+        </td>
+        <td 
+            
+            >
+            10% (93651)
+        </td>
+        <td 
+            
+            >
+            0% (7760)
+        </td>
+        <td 
+            
+            >
+            0% (1488)
+        </td>
+        <td 
+            
+            >
+            44% (388904)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (870064)
+        </td>
+    </tr>
+    <tr>
+        <td>anyOf, first anyOf valid</td>
+        <td 
+            
+            >
+            4% (90220)
+        </td>
+        <td 
+            
+            >
+            0% (781)
+        </td>
+        <td 
+            
+            >
+            4% (75442)
+        </td>
+        <td 
+            
+            >
+            0% (7536)
+        </td>
+        <td 
+            
+            >
+            3% (63326)
+        </td>
+        <td 
+            
+            >
+            6% (115179)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1869422)
+        </td>
+    </tr>
+    <tr>
+        <td>anyOf, second anyOf valid</td>
+        <td 
+            
+            >
+            22% (225486)
+        </td>
+        <td 
+            
+            >
+            0% (630)
+        </td>
+        <td 
+            
+            >
+            5% (56202)
+        </td>
+        <td 
+            
+            >
+            0% (6657)
+        </td>
+        <td 
+            
+            >
+            0% (1496)
+        </td>
+        <td 
+            
+            >
+            9% (96395)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (995991)
+        </td>
+    </tr>
+    <tr>
+        <td>anyOf, both anyOf valid</td>
+        <td 
+            
+            >
+            10% (197715)
+        </td>
+        <td 
+            
+            >
+            0% (750)
+        </td>
+        <td 
+            
+            >
+            3% (73283)
+        </td>
+        <td 
+            
+            >
+            0% (7616)
+        </td>
+        <td 
+            
+            >
+            2% (54896)
+        </td>
+        <td 
+            
+            >
+            4% (81565)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1883922)
+        </td>
+    </tr>
+    <tr>
+        <td>anyOf, neither anyOf valid</td>
+        <td 
+            
+            >
+            7% (61345)
+        </td>
+        <td 
+            
+            >
+            0% (559)
+        </td>
+        <td 
+            
+            >
+            8% (64797)
+        </td>
+        <td 
+            
+            >
+            0% (6061)
+        </td>
+        <td 
+            
+            >
+            0% (539)
+        </td>
+        <td 
+            
+            >
+            19% (152179)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (783220)
+        </td>
+    </tr>
+    <tr>
+        <td>anyOf with base schema, mismatch base schema</td>
+        <td 
+            
+            >
+            14% (212102)
+        </td>
+        <td 
+            
+            >
+            0% (822)
+        </td>
+        <td 
+            
+            >
+            46% (685635)
+        </td>
+        <td 
+            
+            >
+            0% (6643)
+        </td>
+        <td 
+            
+            >
+            0% (1553)
+        </td>
+        <td 
+            
+            >
+            5% (78352)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1481475)
+        </td>
+    </tr>
+    <tr>
+        <td>anyOf with base schema, one anyOf valid</td>
+        <td 
+            
+            >
+            30% (193154)
+        </td>
+        <td 
+            
+            >
+            0% (682)
+        </td>
+        <td 
+            
+            >
+            4% (27235)
+        </td>
+        <td 
+            
+            >
+            1% (8293)
+        </td>
+        <td 
+            
+            >
+            0% (1589)
+        </td>
+        <td 
+            
+            >
+            13% (83544)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (629468)
+        </td>
+    </tr>
+    <tr>
+        <td>anyOf with base schema, both anyOf invalid</td>
+        <td 
+            
+            >
+            12% (63454)
+        </td>
+        <td 
+            
+            >
+            0% (556)
+        </td>
+        <td 
+            
+            >
+            5% (29566)
+        </td>
+        <td 
+            
+            >
+            1% (7244)
+        </td>
+        <td 
+            
+            >
+            0% (518)
+        </td>
+        <td 
+            
+            >
+            23% (119341)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (509553)
+        </td>
+    </tr>
+    <tr>
+        <td>dependencies, neither</td>
+        <td 
+            
+            >
+            11% (199132)
+        </td>
+        <td 
+            
+            >
+            0% (899)
+        </td>
+        <td 
+            
+            >
+            23% (413564)
+        </td>
+        <td 
+            
+            >
+            0% (12169)
+        </td>
+        <td 
+            
+            >
+            3% (58941)
+        </td>
+        <td 
+            
+            >
+            29% (532648)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1776831)
+        </td>
+    </tr>
+    <tr>
+        <td>dependencies, nondependant</td>
+        <td 
+            
+            >
+            10% (167066)
+        </td>
+        <td 
+            
+            >
+            0% (854)
+        </td>
+        <td 
+            
+            >
+            21% (335750)
+        </td>
+        <td 
+            
+            >
+            0% (12006)
+        </td>
+        <td 
+            
+            >
+            3% (52552)
+        </td>
+        <td 
+            
+            >
+            35% (565306)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1576580)
+        </td>
+    </tr>
+    <tr>
+        <td>dependencies, with dependency</td>
+        <td 
+            
+            >
+            11% (130542)
+        </td>
+        <td 
+            
+            >
+            0% (835)
+        </td>
+        <td 
+            
+            >
+            24% (284877)
+        </td>
+        <td 
+            
+            >
+            0% (5661)
+        </td>
+        <td 
+            
+            >
+            4% (48797)
+        </td>
+        <td 
+            
+            >
+            47% (560300)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1174598)
+        </td>
+    </tr>
+    <tr>
+        <td>dependencies, missing dependency</td>
+        <td 
+            
+            >
+            14% (99672)
+        </td>
+        <td 
+            
+            >
+            0% (763)
+        </td>
+        <td 
+            
+            >
+            61% (418020)
+        </td>
+        <td 
+            
+            >
+            0% (5640)
+        </td>
+        <td 
+            
+            >
+            0% (1508)
+        </td>
+        <td 
+            
+            >
+            65% (440937)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (675727)
+        </td>
+    </tr>
+    <tr>
+        <td>dependencies, ignores non-objects</td>
+        <td 
+            
+            >
+            19% (368159)
+        </td>
+        <td 
+            
+            >
+            0% (991)
+        </td>
+        <td 
+            
+            >
+            7% (139948)
+        </td>
+        <td 
+            
+            >
+            0% (11843)
+        </td>
+        <td 
+            
+            >
+            3% (74200)
+        </td>
+        <td 
+            
+            >
+            37% (730766)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1935897)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple dependencies, neither</td>
+        <td 
+            
+            >
+            14% (233688)
+        </td>
+        <td 
+            
+            >
+            0% (867)
+        </td>
+        <td 
+            
+            >
+            21% (359499)
+        </td>
+        <td 
+            
+            >
+            0% (12431)
+        </td>
+        <td 
+            
+            >
+            4% (67818)
+        </td>
+        <td 
+            
+            >
+            30% (500428)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1654518)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple dependencies, nondependants</td>
+        <td 
+            
+            >
+            8% (145189)
+        </td>
+        <td 
+            
+            >
+            0% (862)
+        </td>
+        <td 
+            
+            >
+            18% (311135)
+        </td>
+        <td 
+            
+            >
+            0% (11315)
+        </td>
+        <td 
+            
+            >
+            2% (51026)
+        </td>
+        <td 
+            
+            >
+            31% (541295)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1722669)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple dependencies, with dependencies</td>
+        <td 
+            
+            >
+            12% (122987)
+        </td>
+        <td 
+            
+            >
+            0% (882)
+        </td>
+        <td 
+            
+            >
+            23% (226748)
+        </td>
+        <td 
+            
+            >
+            0% (5173)
+        </td>
+        <td 
+            
+            >
+            4% (44694)
+        </td>
+        <td 
+            
+            >
+            45% (435624)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (966268)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple dependencies, missing dependency</td>
+        <td 
+            
+            >
+            16% (88936)
+        </td>
+        <td 
+            
+            >
+            0% (829)
+        </td>
+        <td 
+            
+            >
+            65% (358012)
+        </td>
+        <td 
+            
+            >
+            1% (5474)
+        </td>
+        <td 
+            
+            >
+            0% (1471)
+        </td>
+        <td 
+            
+            >
+            72% (395690)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (546726)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple dependencies, missing other dependency</td>
+        <td 
+            
+            >
+            11% (85731)
+        </td>
+        <td 
+            
+            >
+            0% (795)
+        </td>
+        <td 
+            
+            >
+            54% (394875)
+        </td>
+        <td 
+            
+            >
+            0% (5230)
+        </td>
+        <td 
+            
+            >
+            0% (1317)
+        </td>
+        <td 
+            
+            >
+            58% (424111)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (725932)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple dependencies, missing both dependencies</td>
+        <td 
+            
+            >
+            10% (78639)
+        </td>
+        <td 
+            
+            >
+            0% (771)
+        </td>
+        <td 
+            
+            >
+            57% (409786)
+        </td>
+        <td 
+            
+            >
+            0% (5009)
+        </td>
+        <td 
+            
+            >
+            0% (1600)
+        </td>
+        <td 
+            
+            >
+            47% (338160)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (715530)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple dependencies subschema, valid</td>
+        <td 
+            
+            >
+            12% (75428)
+        </td>
+        <td 
+            
+            >
+            0% (570)
+        </td>
+        <td 
+            
+            >
+            4% (27581)
+        </td>
+        <td 
+            
+            >
+            0% (2239)
+        </td>
+        <td 
+            
+            >
+            5% (33252)
+        </td>
+        <td 
+            
+            >
+            29% (175937)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (597828)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple dependencies subschema, no dependency</td>
+        <td 
+            
+            >
+            9% (149936)
+        </td>
+        <td 
+            
+            >
+            0% (840)
+        </td>
+        <td 
+            
+            >
+            20% (308030)
+        </td>
+        <td 
+            
+            >
+            0% (10105)
+        </td>
+        <td 
+            
+            >
+            3% (53718)
+        </td>
+        <td 
+            
+            >
+            33% (509852)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1536433)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple dependencies subschema, wrong type</td>
+        <td 
+            
+            >
+            11% (50063)
+        </td>
+        <td 
+            
+            >
+            0% (548)
+        </td>
+        <td 
+            
+            >
+            7% (32851)
+        </td>
+        <td 
+            
+            >
+            0% (2221)
+        </td>
+        <td 
+            
+            >
+            0% (1499)
+        </td>
+        <td 
+            
+            >
+            41% (180755)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (430987)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple dependencies subschema, wrong type other</td>
+        <td 
+            
+            >
+            10% (47733)
+        </td>
+        <td 
+            
+            >
+            0% (557)
+        </td>
+        <td 
+            
+            >
+            6% (29818)
+        </td>
+        <td 
+            
+            >
+            0% (2212)
+        </td>
+        <td 
+            
+            >
+            0% (1502)
+        </td>
+        <td 
+            
+            >
+            37% (177886)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (468726)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple dependencies subschema, wrong type both</td>
+        <td 
+            
+            >
+            9% (47265)
+        </td>
+        <td 
+            
+            >
+            0% (548)
+        </td>
+        <td 
+            
+            >
+            7% (36033)
+        </td>
+        <td 
+            
+            >
+            0% (2121)
+        </td>
+        <td 
+            
+            >
+            0% (1582)
+        </td>
+        <td 
+            
+            >
+            41% (199479)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (479444)
+        </td>
+    </tr>
+    <tr>
+        <td>simple enum validation, one of the enum is valid</td>
+        <td 
+            
+            >
+            11% (345372)
+        </td>
+        <td 
+            
+            >
+            0% (910)
+        </td>
+        <td 
+            
+            >
+            8% (279212)
+        </td>
+        <td 
+            
+            >
+            0% (10399)
+        </td>
+        <td 
+            
+            >
+            3% (114741)
+        </td>
+        <td 
+            
+            >
+            20% (630337)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (3133877)
+        </td>
+    </tr>
+    <tr>
+        <td>simple enum validation, something else is invalid</td>
+        <td 
+            
+            >
+            10% (180927)
+        </td>
+        <td 
+            
+            >
+            0% (768)
+        </td>
+        <td 
+            
+            >
+            12% (213708)
+        </td>
+        <td 
+            
+            >
+            0% (8413)
+        </td>
+        <td 
+            
+            >
+            0% (1471)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1707217)
+        </td>
+    </tr>
+    <tr>
+        <td>heterogeneous enum validation, one of the enum is valid</td>
+        <td 
+            
+            >
+            22% (282810)
+        </td>
+        <td 
+            
+            >
+            0% (770)
+        </td>
+        <td 
+            
+            >
+            24% (299975)
+        </td>
+        <td 
+            
+            >
+            0% (9163)
+        </td>
+        <td 
+            
+            >
+            8% (104900)
+        </td>
+        <td 
+            
+            >
+            52% (652456)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1242459)
+        </td>
+    </tr>
+    <tr>
+        <td>heterogeneous enum validation, something else is invalid</td>
+        <td 
+            
+            >
+            26% (169931)
+        </td>
+        <td 
+            
+            >
+            0% (856)
+        </td>
+        <td 
+            
+            >
+            17% (110805)
+        </td>
+        <td 
+            
+            >
+            1% (8169)
+        </td>
+        <td title="TypeError: Cannot read property &#39;foo&#39; of null"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (647336)
+        </td>
+    </tr>
+    <tr>
+        <td>heterogeneous enum validation, objects are deep compared</td>
+        <td 
+            
+            >
+            24% (77491)
+        </td>
+        <td 
+            
+            >
+            0% (819)
+        </td>
+        <td 
+            
+            >
+            30% (96666)
+        </td>
+        <td 
+            
+            >
+            2% (7365)
+        </td>
+        <td 
+            
+            >
+            0% (1546)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (315764)
+        </td>
+    </tr>
+    <tr>
+        <td>enums in properties, both properties are valid</td>
+        <td 
+            
+            >
+            13% (95305)
+        </td>
+        <td 
+            
+            >
+            0% (568)
+        </td>
+        <td 
+            
+            >
+            3% (23982)
+        </td>
+        <td 
+            
+            >
+            0% (2868)
+        </td>
+        <td 
+            
+            >
+            5% (42214)
+        </td>
+        <td 
+            
+            >
+            29% (205901)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (708838)
+        </td>
+    </tr>
+    <tr>
+        <td>enums in properties, missing optional property is valid</td>
+        <td 
+            
+            >
+            11% (116615)
+        </td>
+        <td 
+            
+            >
+            0% (657)
+        </td>
+        <td 
+            
+            >
+            4% (45649)
+        </td>
+        <td 
+            
+            >
+            0% (3019)
+        </td>
+        <td 
+            
+            >
+            4% (43760)
+        </td>
+        <td 
+            
+            >
+            26% (259714)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (995428)
+        </td>
+    </tr>
+    <tr>
+        <td>enums in properties, missing required property is invalid</td>
+        <td 
+            
+            >
+            17% (95978)
+        </td>
+        <td 
+            
+            >
+            0% (768)
+        </td>
+        <td 
+            
+            >
+            7% (40264)
+        </td>
+        <td 
+            
+            >
+            0% (2985)
+        </td>
+        <td 
+            
+            >
+            0% (1465)
+        </td>
+        <td 
+            
+            >
+            47% (266029)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (562368)
+        </td>
+    </tr>
+    <tr>
+        <td>enums in properties, missing all properties is invalid</td>
+        <td 
+            
+            >
+            16% (129920)
+        </td>
+        <td 
+            
+            >
+            0% (694)
+        </td>
+        <td 
+            
+            >
+            27% (219750)
+        </td>
+        <td 
+            
+            >
+            0% (3229)
+        </td>
+        <td 
+            
+            >
+            0% (1485)
+        </td>
+        <td 
+            
+            >
+            58% (473046)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (807431)
+        </td>
+    </tr>
+    <tr>
+        <td>a schema given for items, valid items</td>
+        <td 
+            
+            >
+            9% (119948)
+        </td>
+        <td 
+            
+            >
+            0% (735)
+        </td>
+        <td 
+            
+            >
+            2% (30460)
+        </td>
+        <td 
+            
+            >
+            0% (2343)
+        </td>
+        <td 
+            
+            >
+            4% (60083)
+        </td>
+        <td 
+            
+            >
+            16% (213815)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1292571)
+        </td>
+    </tr>
+    <tr>
+        <td>a schema given for items, wrong type of items</td>
+        <td 
+            
+            >
+            9% (104413)
+        </td>
+        <td 
+            
+            >
+            0% (717)
+        </td>
+        <td 
+            
+            >
+            4% (46367)
+        </td>
+        <td 
+            
+            >
+            0% (2690)
+        </td>
+        <td 
+            
+            >
+            0% (1410)
+        </td>
+        <td 
+            
+            >
+            23% (251431)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1086609)
+        </td>
+    </tr>
+    <tr>
+        <td>a schema given for items, ignores non-arrays</td>
+        <td 
+            
+            >
+            7% (220182)
+        </td>
+        <td 
+            
+            >
+            0% (974)
+        </td>
+        <td 
+            
+            >
+            11% (346611)
+        </td>
+        <td 
+            
+            >
+            0% (10528)
+        </td>
+        <td 
+            
+            >
+            2% (80651)
+        </td>
+        <td 
+            
+            >
+            22% (679291)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (3000336)
+        </td>
+    </tr>
+    <tr>
+        <td>an array of schemas for items, correct types</td>
+        <td 
+            
+            >
+            26% (132065)
+        </td>
+        <td 
+            
+            >
+            0% (728)
+        </td>
+        <td 
+            
+            >
+            6% (33021)
+        </td>
+        <td 
+            
+            >
+            0% (3346)
+        </td>
+        <td 
+            
+            >
+            11% (56445)
+        </td>
+        <td 
+            
+            >
+            63% (323662)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (506668)
+        </td>
+    </tr>
+    <tr>
+        <td>an array of schemas for items, wrong types</td>
+        <td 
+            
+            >
+            18% (72258)
+        </td>
+        <td 
+            
+            >
+            0% (692)
+        </td>
+        <td 
+            
+            >
+            17% (65984)
+        </td>
+        <td 
+            
+            >
+            0% (2828)
+        </td>
+        <td 
+            
+            >
+            0% (1791)
+        </td>
+        <td 
+            
+            >
+            76% (292008)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (382593)
+        </td>
+    </tr>
+    <tr>
+        <td>maxItems validation, shorter is valid</td>
+        <td 
+            
+            >
+            12% (376723)
+        </td>
+        <td 
+            
+            >
+            0% (890)
+        </td>
+        <td 
+            
+            >
+            13% (389844)
+        </td>
+        <td 
+            
+            >
+            0% (11807)
+        </td>
+        <td 
+            
+            >
+            3% (98441)
+        </td>
+        <td 
+            
+            >
+            21% (634242)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2960395)
+        </td>
+    </tr>
+    <tr>
+        <td>maxItems validation, exact length is valid</td>
+        <td 
+            
+            >
+            14% (408473)
+        </td>
+        <td 
+            
+            >
+            0% (843)
+        </td>
+        <td 
+            
+            >
+            14% (398393)
+        </td>
+        <td 
+            
+            >
+            0% (12387)
+        </td>
+        <td 
+            
+            >
+            3% (100633)
+        </td>
+        <td 
+            
+            >
+            22% (633719)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2803179)
+        </td>
+    </tr>
+    <tr>
+        <td>maxItems validation, too long is invalid</td>
+        <td 
+            
+            >
+            8% (155255)
+        </td>
+        <td 
+            
+            >
+            0% (781)
+        </td>
+        <td 
+            
+            >
+            17% (335269)
+        </td>
+        <td 
+            
+            >
+            0% (11388)
+        </td>
+        <td 
+            
+            >
+            0% (1600)
+        </td>
+        <td 
+            
+            >
+            31% (597052)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1894676)
+        </td>
+    </tr>
+    <tr>
+        <td>maxItems validation, ignores non-arrays</td>
+        <td 
+            
+            >
+            13% (411792)
+        </td>
+        <td 
+            
+            >
+            0% (905)
+        </td>
+        <td 
+            
+            >
+            3% (101459)
+        </td>
+        <td 
+            
+            >
+            0% (11690)
+        </td>
+        <td 
+            
+            >
+            3% (107844)
+        </td>
+        <td 
+            
+            >
+            20% (617313)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (3076975)
+        </td>
+    </tr>
+    <tr>
+        <td>maxLength validation, shorter is valid</td>
+        <td 
+            
+            >
+            29% (361733)
+        </td>
+        <td 
+            
+            >
+            0% (837)
+        </td>
+        <td 
+            
+            >
+            11% (134811)
+        </td>
+        <td 
+            
+            >
+            1% (13788)
+        </td>
+        <td 
+            
+            >
+            8% (106581)
+        </td>
+        <td 
+            
+            >
+            35% (429363)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1205876)
+        </td>
+    </tr>
+    <tr>
+        <td>maxLength validation, exact length is valid</td>
+        <td 
+            
+            >
+            28% (365928)
+        </td>
+        <td 
+            
+            >
+            0% (806)
+        </td>
+        <td 
+            
+            >
+            10% (132263)
+        </td>
+        <td 
+            
+            >
+            0% (11131)
+        </td>
+        <td 
+            
+            >
+            8% (104762)
+        </td>
+        <td 
+            
+            >
+            35% (461584)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1295290)
+        </td>
+    </tr>
+    <tr>
+        <td>maxLength validation, too long is invalid</td>
+        <td 
+            
+            >
+            14% (154722)
+        </td>
+        <td 
+            
+            >
+            0% (791)
+        </td>
+        <td 
+            
+            >
+            11% (119062)
+        </td>
+        <td 
+            
+            >
+            1% (11705)
+        </td>
+        <td 
+            
+            >
+            0% (1772)
+        </td>
+        <td 
+            
+            >
+            39% (415957)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1061801)
+        </td>
+    </tr>
+    <tr>
+        <td>maxLength validation, ignores non-strings</td>
+        <td 
+            
+            >
+            13% (361911)
+        </td>
+        <td 
+            
+            >
+            0% (972)
+        </td>
+        <td 
+            
+            >
+            8% (227638)
+        </td>
+        <td 
+            
+            >
+            0% (15551)
+        </td>
+        <td 
+            
+            >
+            4% (122660)
+        </td>
+        <td 
+            
+            >
+            23% (617491)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2677957)
+        </td>
+    </tr>
+    <tr>
+        <td>maxLength validation, two supplementary Unicode code points is long enough</td>
+        <td title="expected was true but validator returned false"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was true but validator returned false"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was true but validator returned false"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was true but validator returned false"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was true but validator returned false"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            >
+            39% (328317)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (833918)
+        </td>
+    </tr>
+    <tr>
+        <td>maxProperties validation, shorter is valid</td>
+        <td 
+            
+            >
+            11% (175570)
+        </td>
+        <td 
+            
+            >
+            0% (866)
+        </td>
+        <td 
+            
+            >
+            19% (292369)
+        </td>
+        <td 
+            
+            >
+            0% (10545)
+        </td>
+        <td 
+            
+            >
+            4% (69599)
+        </td>
+        <td 
+            
+            >
+            23% (343602)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1487987)
+        </td>
+    </tr>
+    <tr>
+        <td>maxProperties validation, exact length is valid</td>
+        <td 
+            
+            >
+            10% (142529)
+        </td>
+        <td 
+            
+            >
+            0% (881)
+        </td>
+        <td 
+            
+            >
+            18% (254400)
+        </td>
+        <td 
+            
+            >
+            0% (12027)
+        </td>
+        <td 
+            
+            >
+            4% (67758)
+        </td>
+        <td 
+            
+            >
+            24% (342855)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1394719)
+        </td>
+    </tr>
+    <tr>
+        <td>maxProperties validation, too long is invalid</td>
+        <td 
+            
+            >
+            7% (82774)
+        </td>
+        <td 
+            
+            >
+            0% (731)
+        </td>
+        <td 
+            
+            >
+            19% (204601)
+        </td>
+        <td 
+            
+            >
+            1% (11290)
+        </td>
+        <td 
+            
+            >
+            0% (1518)
+        </td>
+        <td 
+            
+            >
+            31% (324335)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1037690)
+        </td>
+    </tr>
+    <tr>
+        <td>maxProperties validation, ignores non-objects</td>
+        <td 
+            
+            >
+            20% (353491)
+        </td>
+        <td 
+            
+            >
+            0% (1056)
+        </td>
+        <td 
+            
+            >
+            5% (95467)
+        </td>
+        <td 
+            
+            >
+            0% (11296)
+        </td>
+        <td 
+            
+            >
+            6% (104692)
+        </td>
+        <td 
+            
+            >
+            32% (557427)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1714181)
+        </td>
+    </tr>
+    <tr>
+        <td>maximum validation, below the maximum is valid</td>
+        <td 
+            
+            >
+            13% (324307)
+        </td>
+        <td 
+            
+            >
+            0% (861)
+        </td>
+        <td 
+            
+            >
+            9% (238977)
+        </td>
+        <td 
+            
+            >
+            0% (11142)
+        </td>
+        <td 
+            
+            >
+            4% (100251)
+        </td>
+        <td 
+            
+            >
+            24% (593483)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2463095)
+        </td>
+    </tr>
+    <tr>
+        <td>maximum validation, above the maximum is invalid</td>
+        <td 
+            
+            >
+            6% (109929)
+        </td>
+        <td 
+            
+            >
+            0% (854)
+        </td>
+        <td 
+            
+            >
+            14% (249993)
+        </td>
+        <td 
+            
+            >
+            0% (11027)
+        </td>
+        <td 
+            
+            >
+            0% (1496)
+        </td>
+        <td 
+            
+            >
+            32% (561050)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1736579)
+        </td>
+    </tr>
+    <tr>
+        <td>maximum validation, ignores non-numbers</td>
+        <td 
+            
+            >
+            12% (419319)
+        </td>
+        <td 
+            
+            >
+            0% (965)
+        </td>
+        <td 
+            
+            >
+            3% (129180)
+        </td>
+        <td 
+            
+            >
+            0% (12774)
+        </td>
+        <td 
+            
+            >
+            2% (100935)
+        </td>
+        <td 
+            
+            >
+            18% (628206)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (3458445)
+        </td>
+    </tr>
+    <tr>
+        <td>exclusiveMaximum validation, below the maximum is still valid</td>
+        <td 
+            
+            >
+            13% (349106)
+        </td>
+        <td 
+            
+            >
+            0% (822)
+        </td>
+        <td 
+            
+            >
+            7% (203021)
+        </td>
+        <td 
+            
+            >
+            0% (10499)
+        </td>
+        <td 
+            
+            >
+            3% (92271)
+        </td>
+        <td 
+            
+            >
+            24% (626905)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2582535)
+        </td>
+    </tr>
+    <tr>
+        <td>exclusiveMaximum validation, boundary point is invalid</td>
+        <td 
+            
+            >
+            7% (140981)
+        </td>
+        <td 
+            
+            >
+            0% (732)
+        </td>
+        <td 
+            
+            >
+            10% (201922)
+        </td>
+        <td 
+            
+            >
+            0% (11032)
+        </td>
+        <td 
+            
+            >
+            0% (1628)
+        </td>
+        <td 
+            
+            >
+            30% (557384)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1856369)
+        </td>
+    </tr>
+    <tr>
+        <td>minItems validation, longer is valid</td>
+        <td 
+            
+            >
+            13% (353116)
+        </td>
+        <td 
+            
+            >
+            0% (1118)
+        </td>
+        <td 
+            
+            >
+            14% (401593)
+        </td>
+        <td 
+            
+            >
+            0% (11361)
+        </td>
+        <td 
+            
+            >
+            3% (100182)
+        </td>
+        <td 
+            
+            >
+            25% (680016)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2698491)
+        </td>
+    </tr>
+    <tr>
+        <td>minItems validation, exact length is valid</td>
+        <td 
+            
+            >
+            13% (359883)
+        </td>
+        <td 
+            
+            >
+            0% (818)
+        </td>
+        <td 
+            
+            >
+            13% (378483)
+        </td>
+        <td 
+            
+            >
+            0% (11505)
+        </td>
+        <td 
+            
+            >
+            4% (131865)
+        </td>
+        <td 
+            
+            >
+            22% (616414)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2766207)
+        </td>
+    </tr>
+    <tr>
+        <td>minItems validation, too short is invalid</td>
+        <td 
+            
+            >
+            7% (145919)
+        </td>
+        <td 
+            
+            >
+            0% (802)
+        </td>
+        <td 
+            
+            >
+            17% (334579)
+        </td>
+        <td 
+            
+            >
+            0% (10731)
+        </td>
+        <td 
+            
+            >
+            0% (1508)
+        </td>
+        <td 
+            
+            >
+            29% (553648)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1877440)
+        </td>
+    </tr>
+    <tr>
+        <td>minItems validation, ignores non-arrays</td>
+        <td 
+            
+            >
+            14% (427879)
+        </td>
+        <td 
+            
+            >
+            0% (907)
+        </td>
+        <td 
+            
+            >
+            5% (172714)
+        </td>
+        <td 
+            
+            >
+            0% (12505)
+        </td>
+        <td 
+            
+            >
+            3% (105539)
+        </td>
+        <td 
+            
+            >
+            21% (628618)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2878744)
+        </td>
+    </tr>
+    <tr>
+        <td>minLength validation, longer is valid</td>
+        <td 
+            
+            >
+            30% (368330)
+        </td>
+        <td 
+            
+            >
+            0% (939)
+        </td>
+        <td 
+            
+            >
+            10% (125765)
+        </td>
+        <td 
+            
+            >
+            0% (12021)
+        </td>
+        <td 
+            
+            >
+            8% (102567)
+        </td>
+        <td 
+            
+            >
+            37% (450235)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1203706)
+        </td>
+    </tr>
+    <tr>
+        <td>minLength validation, exact length is valid</td>
+        <td 
+            
+            >
+            30% (429075)
+        </td>
+        <td 
+            
+            >
+            0% (846)
+        </td>
+        <td 
+            
+            >
+            8% (122022)
+        </td>
+        <td 
+            
+            >
+            0% (11961)
+        </td>
+        <td 
+            
+            >
+            7% (105607)
+        </td>
+        <td 
+            
+            >
+            28% (396461)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1384657)
+        </td>
+    </tr>
+    <tr>
+        <td>minLength validation, too short is invalid</td>
+        <td 
+            
+            >
+            14% (146118)
+        </td>
+        <td 
+            
+            >
+            0% (854)
+        </td>
+        <td 
+            
+            >
+            13% (132219)
+        </td>
+        <td 
+            
+            >
+            1% (11058)
+        </td>
+        <td 
+            
+            >
+            0% (1521)
+        </td>
+        <td 
+            
+            >
+            33% (342711)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1015072)
+        </td>
+    </tr>
+    <tr>
+        <td>minLength validation, ignores non-strings</td>
+        <td 
+            
+            >
+            16% (408343)
+        </td>
+        <td 
+            
+            >
+            0% (872)
+        </td>
+        <td 
+            
+            >
+            7% (183408)
+        </td>
+        <td 
+            
+            >
+            0% (11447)
+        </td>
+        <td 
+            
+            >
+            4% (104900)
+        </td>
+        <td 
+            
+            >
+            23% (573160)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2440535)
+        </td>
+    </tr>
+    <tr>
+        <td>minLength validation, one supplementary Unicode code point is not long enough</td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            >
+            36% (283039)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (765362)
+        </td>
+    </tr>
+    <tr>
+        <td>minProperties validation, longer is valid</td>
+        <td 
+            
+            >
+            9% (151158)
+        </td>
+        <td 
+            
+            >
+            0% (816)
+        </td>
+        <td 
+            
+            >
+            16% (263866)
+        </td>
+        <td 
+            
+            >
+            0% (10507)
+        </td>
+        <td 
+            
+            >
+            4% (65533)
+        </td>
+        <td 
+            
+            >
+            21% (343009)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1560037)
+        </td>
+    </tr>
+    <tr>
+        <td>minProperties validation, exact length is valid</td>
+        <td 
+            
+            >
+            9% (173156)
+        </td>
+        <td 
+            
+            >
+            0% (896)
+        </td>
+        <td 
+            
+            >
+            15% (283078)
+        </td>
+        <td 
+            
+            >
+            0% (10576)
+        </td>
+        <td 
+            
+            >
+            4% (72088)
+        </td>
+        <td 
+            
+            >
+            20% (362182)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1801589)
+        </td>
+    </tr>
+    <tr>
+        <td>minProperties validation, too short is invalid</td>
+        <td 
+            
+            >
+            10% (121923)
+        </td>
+        <td 
+            
+            >
+            0% (804)
+        </td>
+        <td 
+            
+            >
+            24% (285487)
+        </td>
+        <td 
+            
+            >
+            0% (10475)
+        </td>
+        <td 
+            
+            >
+            0% (1677)
+        </td>
+        <td 
+            
+            >
+            29% (338886)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1148405)
+        </td>
+    </tr>
+    <tr>
+        <td>minProperties validation, ignores non-objects</td>
+        <td 
+            
+            >
+            21% (382988)
+        </td>
+        <td 
+            
+            >
+            0% (975)
+        </td>
+        <td 
+            
+            >
+            11% (203089)
+        </td>
+        <td 
+            
+            >
+            0% (10922)
+        </td>
+        <td 
+            
+            >
+            5% (96149)
+        </td>
+        <td 
+            
+            >
+            31% (565486)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1790402)
+        </td>
+    </tr>
+    <tr>
+        <td>minimum validation, above the minimum is valid</td>
+        <td 
+            
+            >
+            13% (357054)
+        </td>
+        <td 
+            
+            >
+            0% (1130)
+        </td>
+        <td 
+            
+            >
+            8% (243038)
+        </td>
+        <td 
+            
+            >
+            0% (11474)
+        </td>
+        <td 
+            
+            >
+            3% (100626)
+        </td>
+        <td 
+            
+            >
+            24% (663951)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2717149)
+        </td>
+    </tr>
+    <tr>
+        <td>minimum validation, below the minimum is invalid</td>
+        <td 
+            
+            >
+            6% (115019)
+        </td>
+        <td 
+            
+            >
+            0% (872)
+        </td>
+        <td 
+            
+            >
+            11% (219487)
+        </td>
+        <td 
+            
+            >
+            0% (10637)
+        </td>
+        <td 
+            
+            >
+            0% (1509)
+        </td>
+        <td 
+            
+            >
+            26% (508112)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1893430)
+        </td>
+    </tr>
+    <tr>
+        <td>minimum validation, ignores non-numbers</td>
+        <td 
+            
+            >
+            12% (408956)
+        </td>
+        <td 
+            
+            >
+            0% (906)
+        </td>
+        <td 
+            
+            >
+            3% (126388)
+        </td>
+        <td 
+            
+            >
+            0% (11741)
+        </td>
+        <td 
+            
+            >
+            4% (132766)
+        </td>
+        <td 
+            
+            >
+            17% (567681)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (3225031)
+        </td>
+    </tr>
+    <tr>
+        <td>exclusiveMinimum validation, above the minimum is still valid</td>
+        <td 
+            
+            >
+            13% (348459)
+        </td>
+        <td 
+            
+            >
+            0% (784)
+        </td>
+        <td 
+            
+            >
+            7% (212316)
+        </td>
+        <td 
+            
+            >
+            0% (11784)
+        </td>
+        <td 
+            
+            >
+            3% (100026)
+        </td>
+        <td 
+            
+            >
+            23% (618467)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2663518)
+        </td>
+    </tr>
+    <tr>
+        <td>exclusiveMinimum validation, boundary point is invalid</td>
+        <td 
+            
+            >
+            9% (168526)
+        </td>
+        <td 
+            
+            >
+            0% (740)
+        </td>
+        <td 
+            
+            >
+            13% (227154)
+        </td>
+        <td 
+            
+            >
+            0% (11540)
+        </td>
+        <td 
+            
+            >
+            0% (1470)
+        </td>
+        <td 
+            
+            >
+            33% (561519)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1690596)
+        </td>
+    </tr>
+    <tr>
+        <td>by int, int by int</td>
+        <td 
+            
+            >
+            19% (380193)
+        </td>
+        <td 
+            
+            >
+            0% (831)
+        </td>
+        <td 
+            
+            >
+            10% (215902)
+        </td>
+        <td 
+            
+            >
+            0% (12760)
+        </td>
+        <td 
+            
+            >
+            6% (137276)
+        </td>
+        <td 
+            
+            >
+            32% (640925)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1971113)
+        </td>
+    </tr>
+    <tr>
+        <td>by int, int by int fail</td>
+        <td 
+            
+            >
+            10% (147450)
+        </td>
+        <td 
+            
+            >
+            0% (802)
+        </td>
+        <td 
+            
+            >
+            14% (214101)
+        </td>
+        <td 
+            
+            >
+            0% (11784)
+        </td>
+        <td 
+            
+            >
+            0% (1527)
+        </td>
+        <td 
+            
+            >
+            43% (623284)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1446207)
+        </td>
+    </tr>
+    <tr>
+        <td>by int, ignores non-numbers</td>
+        <td 
+            
+            >
+            12% (395009)
+        </td>
+        <td 
+            
+            >
+            0% (940)
+        </td>
+        <td 
+            
+            >
+            3% (103083)
+        </td>
+        <td 
+            
+            >
+            0% (10900)
+        </td>
+        <td 
+            
+            >
+            3% (100609)
+        </td>
+        <td 
+            
+            >
+            17% (545982)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (3155572)
+        </td>
+    </tr>
+    <tr>
+        <td>by number, zero is multiple of anything</td>
+        <td 
+            
+            >
+            18% (343787)
+        </td>
+        <td 
+            
+            >
+            0% (828)
+        </td>
+        <td 
+            
+            >
+            11% (214901)
+        </td>
+        <td 
+            
+            >
+            0% (10905)
+        </td>
+        <td 
+            
+            >
+            5% (95028)
+        </td>
+        <td 
+            
+            >
+            30% (552690)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1811737)
+        </td>
+    </tr>
+    <tr>
+        <td>by number, 4.5 is multiple of 1.5</td>
+        <td 
+            
+            >
+            21% (380967)
+        </td>
+        <td 
+            
+            >
+            0% (1091)
+        </td>
+        <td 
+            
+            >
+            12% (230880)
+        </td>
+        <td 
+            
+            >
+            0% (11233)
+        </td>
+        <td 
+            
+            >
+            5% (101340)
+        </td>
+        <td 
+            
+            >
+            30% (545284)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1787146)
+        </td>
+    </tr>
+    <tr>
+        <td>by number, 35 is not multiple of 1.5</td>
+        <td 
+            
+            >
+            8% (122781)
+        </td>
+        <td 
+            
+            >
+            0% (781)
+        </td>
+        <td 
+            
+            >
+            13% (196110)
+        </td>
+        <td 
+            
+            >
+            0% (12602)
+        </td>
+        <td 
+            
+            >
+            0% (1564)
+        </td>
+        <td 
+            
+            >
+            35% (512148)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1433016)
+        </td>
+    </tr>
+    <tr>
+        <td>by small number, 0.0075 is multiple of 0.0001</td>
+        <td 
+            
+            >
+            23% (405632)
+        </td>
+        <td 
+            
+            >
+            0% (863)
+        </td>
+        <td 
+            
+            >
+            12% (215604)
+        </td>
+        <td 
+            
+            >
+            0% (13065)
+        </td>
+        <td title="expected was true but validator returned false"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            >
+            31% (547725)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1712388)
+        </td>
+    </tr>
+    <tr>
+        <td>by small number, 0.00751 is not multiple of 0.0001</td>
+        <td 
+            
+            >
+            9% (148828)
+        </td>
+        <td 
+            
+            >
+            0% (891)
+        </td>
+        <td 
+            
+            >
+            13% (212794)
+        </td>
+        <td 
+            
+            >
+            0% (12104)
+        </td>
+        <td 
+            
+            >
+            0% (1449)
+        </td>
+        <td 
+            
+            >
+            28% (465389)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1608367)
+        </td>
+    </tr>
+    <tr>
+        <td>not, allowed</td>
+        <td 
+            
+            >
+            6% (136644)
+        </td>
+        <td 
+            
+            >
+            0% (773)
+        </td>
+        <td 
+            
+            >
+            3% (65108)
+        </td>
+        <td 
+            
+            >
+            0% (7394)
+        </td>
+        <td 
+            
+            >
+            0% (1500)
+        </td>
+        <td 
+            
+            >
+            27% (574884)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2053474)
+        </td>
+    </tr>
+    <tr>
+        <td>not, disallowed</td>
+        <td 
+            
+            >
+            12% (186911)
+        </td>
+        <td 
+            
+            >
+            0% (866)
+        </td>
+        <td 
+            
+            >
+            5% (83881)
+        </td>
+        <td 
+            
+            >
+            0% (7665)
+        </td>
+        <td 
+            
+            >
+            0% (1500)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1445233)
+        </td>
+    </tr>
+    <tr>
+        <td>not multiple types, valid</td>
+        <td 
+            
+            >
+            4% (89718)
+        </td>
+        <td 
+            
+            >
+            0% (763)
+        </td>
+        <td 
+            
+            >
+            3% (64584)
+        </td>
+        <td 
+            
+            >
+            0% (7734)
+        </td>
+        <td 
+            
+            >
+            0% (1718)
+        </td>
+        <td 
+            
+            >
+            38% (686336)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1799463)
+        </td>
+    </tr>
+    <tr>
+        <td>not multiple types, mismatch</td>
+        <td 
+            
+            >
+            15% (199368)
+        </td>
+        <td 
+            
+            >
+            0% (739)
+        </td>
+        <td 
+            
+            >
+            6% (87357)
+        </td>
+        <td 
+            
+            >
+            0% (8012)
+        </td>
+        <td 
+            
+            >
+            0% (1547)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1273316)
+        </td>
+    </tr>
+    <tr>
+        <td>not multiple types, other mismatch</td>
+        <td 
+            
+            >
+            11% (185083)
+        </td>
+        <td 
+            
+            >
+            0% (711)
+        </td>
+        <td 
+            
+            >
+            4% (80383)
+        </td>
+        <td 
+            
+            >
+            0% (7196)
+        </td>
+        <td 
+            
+            >
+            0% (1533)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1618438)
+        </td>
+    </tr>
+    <tr>
+        <td>not more complex schema, match</td>
+        <td 
+            
+            >
+            12% (113314)
+        </td>
+        <td 
+            
+            >
+            0% (777)
+        </td>
+        <td 
+            
+            >
+            9% (92114)
+        </td>
+        <td 
+            
+            >
+            0% (7672)
+        </td>
+        <td 
+            
+            >
+            0% (1633)
+        </td>
+        <td 
+            
+            >
+            61% (570496)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (927937)
+        </td>
+    </tr>
+    <tr>
+        <td>not more complex schema, other match</td>
+        <td 
+            
+            >
+            8% (58867)
+        </td>
+        <td 
+            
+            >
+            0% (597)
+        </td>
+        <td 
+            
+            >
+            6% (48224)
+        </td>
+        <td 
+            
+            >
+            0% (3870)
+        </td>
+        <td 
+            
+            >
+            0% (1498)
+        </td>
+        <td 
+            
+            >
+            79% (578835)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (726657)
+        </td>
+    </tr>
+    <tr>
+        <td>not more complex schema, mismatch</td>
+        <td 
+            
+            >
+            9% (80681)
+        </td>
+        <td 
+            
+            >
+            0% (586)
+        </td>
+        <td 
+            
+            >
+            4% (35277)
+        </td>
+        <td 
+            
+            >
+            0% (3814)
+        </td>
+        <td 
+            
+            >
+            0% (1462)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (835568)
+        </td>
+    </tr>
+    <tr>
+        <td>forbidden property, property present</td>
+        <td 
+            
+            >
+            13% (97034)
+        </td>
+        <td 
+            
+            >
+            0% (633)
+        </td>
+        <td 
+            
+            >
+            6% (50826)
+        </td>
+        <td 
+            
+            >
+            0% (5301)
+        </td>
+        <td 
+            
+            >
+            0% (1730)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (737691)
+        </td>
+    </tr>
+    <tr>
+        <td>forbidden property, property absent</td>
+        <td 
+            
+            >
+            6% (129331)
+        </td>
+        <td 
+            
+            >
+            0% (822)
+        </td>
+        <td 
+            
+            >
+            15% (304586)
+        </td>
+        <td 
+            
+            >
+            0% (5466)
+        </td>
+        <td 
+            
+            >
+            2% (56346)
+        </td>
+        <td 
+            
+            >
+            25% (506612)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2021883)
+        </td>
+    </tr>
+    <tr>
+        <td>oneOf, first oneOf valid</td>
+        <td 
+            
+            >
+            7% (71597)
+        </td>
+        <td 
+            
+            >
+            0% (643)
+        </td>
+        <td 
+            
+            >
+            4% (47784)
+        </td>
+        <td 
+            
+            >
+            0% (7832)
+        </td>
+        <td 
+            
+            >
+            0% (1886)
+        </td>
+        <td 
+            
+            >
+            11% (107632)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (967708)
+        </td>
+    </tr>
+    <tr>
+        <td>oneOf, second oneOf valid</td>
+        <td 
+            
+            >
+            8% (79002)
+        </td>
+        <td 
+            
+            >
+            0% (621)
+        </td>
+        <td 
+            
+            >
+            5% (55483)
+        </td>
+        <td 
+            
+            >
+            0% (7163)
+        </td>
+        <td 
+            
+            >
+            0% (1667)
+        </td>
+        <td 
+            
+            >
+            11% (106662)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (947919)
+        </td>
+    </tr>
+    <tr>
+        <td>oneOf, both oneOf valid</td>
+        <td 
+            
+            >
+            7% (95175)
+        </td>
+        <td 
+            
+            >
+            0% (615)
+        </td>
+        <td 
+            
+            >
+            3% (48879)
+        </td>
+        <td 
+            
+            >
+            0% (6481)
+        </td>
+        <td 
+            
+            >
+            0% (1448)
+        </td>
+        <td 
+            
+            >
+            7% (93708)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1247463)
+        </td>
+    </tr>
+    <tr>
+        <td>oneOf, neither oneOf valid</td>
+        <td 
+            
+            >
+            7% (52906)
+        </td>
+        <td 
+            
+            >
+            0% (572)
+        </td>
+        <td 
+            
+            >
+            8% (58836)
+        </td>
+        <td 
+            
+            >
+            0% (6360)
+        </td>
+        <td 
+            
+            >
+            0% (519)
+        </td>
+        <td 
+            
+            >
+            20% (137315)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (670201)
+        </td>
+    </tr>
+    <tr>
+        <td>oneOf with base schema, mismatch base schema</td>
+        <td 
+            
+            >
+            20% (213080)
+        </td>
+        <td 
+            
+            >
+            0% (799)
+        </td>
+        <td 
+            
+            >
+            57% (603831)
+        </td>
+        <td 
+            
+            >
+            0% (5921)
+        </td>
+        <td 
+            
+            >
+            0% (1639)
+        </td>
+        <td 
+            
+            >
+            9% (95250)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1056274)
+        </td>
+    </tr>
+    <tr>
+        <td>oneOf with base schema, one oneOf valid</td>
+        <td 
+            
+            >
+            13% (74295)
+        </td>
+        <td 
+            
+            >
+            0% (602)
+        </td>
+        <td 
+            
+            >
+            4% (26055)
+        </td>
+        <td 
+            
+            >
+            1% (7110)
+        </td>
+        <td 
+            
+            >
+            0% (1487)
+        </td>
+        <td 
+            
+            >
+            15% (87304)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (560811)
+        </td>
+    </tr>
+    <tr>
+        <td>oneOf with base schema, both oneOf valid</td>
+        <td 
+            
+            >
+            13% (108858)
+        </td>
+        <td 
+            
+            >
+            0% (601)
+        </td>
+        <td 
+            
+            >
+            3% (29522)
+        </td>
+        <td 
+            
+            >
+            0% (7390)
+        </td>
+        <td 
+            
+            >
+            0% (1522)
+        </td>
+        <td 
+            
+            >
+            9% (77124)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (782602)
+        </td>
+    </tr>
+    <tr>
+        <td>integer, a bignum is an integer</td>
+        <td 
+            
+            >
+            15% (280009)
+        </td>
+        <td 
+            
+            >
+            0% (905)
+        </td>
+        <td 
+            
+            >
+            12% (219250)
+        </td>
+        <td 
+            
+            >
+            0% (8901)
+        </td>
+        <td 
+            
+            >
+            4% (86069)
+        </td>
+        <td 
+            
+            >
+            28% (520195)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1806517)
+        </td>
+    </tr>
+    <tr>
+        <td>number, a bignum is a number</td>
+        <td 
+            
+            >
+            14% (271106)
+        </td>
+        <td 
+            
+            >
+            0% (854)
+        </td>
+        <td 
+            
+            >
+            12% (223716)
+        </td>
+        <td 
+            
+            >
+            0% (8784)
+        </td>
+        <td 
+            
+            >
+            5% (93631)
+        </td>
+        <td 
+            
+            >
+            29% (536522)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1841897)
+        </td>
+    </tr>
+    <tr>
+        <td>integer, a negative bignum is an integer</td>
+        <td 
+            
+            >
+            15% (306167)
+        </td>
+        <td 
+            
+            >
+            0% (917)
+        </td>
+        <td 
+            
+            >
+            10% (204805)
+        </td>
+        <td 
+            
+            >
+            0% (9436)
+        </td>
+        <td 
+            
+            >
+            4% (96262)
+        </td>
+        <td 
+            
+            >
+            29% (575161)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1967488)
+        </td>
+    </tr>
+    <tr>
+        <td>number, a negative bignum is a number</td>
+        <td 
+            
+            >
+            15% (305617)
+        </td>
+        <td 
+            
+            >
+            0% (906)
+        </td>
+        <td 
+            
+            >
+            11% (225350)
+        </td>
+        <td 
+            
+            >
+            0% (9414)
+        </td>
+        <td 
+            
+            >
+            4% (94378)
+        </td>
+        <td 
+            
+            >
+            31% (606381)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1924360)
+        </td>
+    </tr>
+    <tr>
+        <td>string, a bignum is not a string</td>
+        <td 
+            
+            >
+            15% (214677)
+        </td>
+        <td 
+            
+            >
+            0% (849)
+        </td>
+        <td 
+            
+            >
+            43% (602370)
+        </td>
+        <td 
+            
+            >
+            0% (7943)
+        </td>
+        <td 
+            
+            >
+            0% (1504)
+        </td>
+        <td 
+            
+            >
+            37% (514747)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1382144)
+        </td>
+    </tr>
+    <tr>
+        <td>integer comparison, comparison works for high numbers</td>
+        <td 
+            
+            >
+            12% (273150)
+        </td>
+        <td 
+            
+            >
+            0% (839)
+        </td>
+        <td 
+            
+            >
+            11% (254549)
+        </td>
+        <td 
+            
+            >
+            0% (11557)
+        </td>
+        <td 
+            
+            >
+            4% (98325)
+        </td>
+        <td 
+            
+            >
+            26% (577685)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2163016)
+        </td>
+    </tr>
+    <tr>
+        <td>float comparison with high precision, comparison works for high numbers</td>
+        <td 
+            
+            >
+            9% (132171)
+        </td>
+        <td 
+            
+            >
+            0% (756)
+        </td>
+        <td 
+            
+            >
+            12% (176744)
+        </td>
+        <td 
+            
+            >
+            0% (11672)
+        </td>
+        <td 
+            
+            >
+            0% (2267)
+        </td>
+        <td 
+            
+            >
+            35% (513986)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1441839)
+        </td>
+    </tr>
+    <tr>
+        <td>integer comparison, comparison works for very negative numbers</td>
+        <td 
+            
+            >
+            13% (279495)
+        </td>
+        <td 
+            
+            >
+            0% (844)
+        </td>
+        <td 
+            
+            >
+            10% (212771)
+        </td>
+        <td 
+            
+            >
+            0% (10912)
+        </td>
+        <td 
+            
+            >
+            4% (92062)
+        </td>
+        <td 
+            
+            >
+            29% (589540)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2016903)
+        </td>
+    </tr>
+    <tr>
+        <td>float comparison with high precision on negative numbers, comparison works for very negative numbers</td>
+        <td 
+            
+            >
+            8% (122662)
+        </td>
+        <td 
+            
+            >
+            0% (721)
+        </td>
+        <td 
+            
+            >
+            13% (190989)
+        </td>
+        <td 
+            
+            >
+            0% (10386)
+        </td>
+        <td 
+            
+            >
+            0% (1652)
+        </td>
+        <td 
+            
+            >
+            37% (545623)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1464149)
+        </td>
+    </tr>
+    <tr>
+        <td>validation of date-time strings, a valid date-time string</td>
+        <td 
+            
+            >
+            17% (108077)
+        </td>
+        <td 
+            
+            >
+            0% (824)
+        </td>
+        <td 
+            
+            >
+            6% (38065)
+        </td>
+        <td title="expected was true but validator returned false"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            >
+            14% (88146)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (603441)
+        </td>
+        <td 
+            
+            >
+            59% (359516)
+        </td>
+    </tr>
+    <tr>
+        <td>validation of date-time strings, an invalid date-time string</td>
+        <td 
+            
+            >
+            20% (83952)
+        </td>
+        <td 
+            
+            >
+            0% (881)
+        </td>
+        <td 
+            
+            >
+            9% (39758)
+        </td>
+        <td 
+            
+            >
+            2% (10450)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (400465)
+        </td>
+    </tr>
+    <tr>
+        <td>validation of date-time strings, only RFC3339 not all of ISO 8601 are valid</td>
+        <td 
+            
+            >
+            20% (83594)
+        </td>
+        <td 
+            
+            >
+            0% (762)
+        </td>
+        <td 
+            
+            >
+            14% (58531)
+        </td>
+        <td 
+            
+            >
+            2% (10689)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (404965)
+        </td>
+    </tr>
+    <tr>
+        <td>validation of URIs, a valid URI</td>
+        <td 
+            
+            >
+            22% (135678)
+        </td>
+        <td 
+            
+            >
+            0% (858)
+        </td>
+        <td 
+            
+            >
+            8% (49724)
+        </td>
+        <td 
+            
+            >
+            1% (10487)
+        </td>
+        <td 
+            
+            >
+            16% (100271)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (597899)
+        </td>
+        <td 
+            
+            >
+            16% (96909)
+        </td>
+    </tr>
+    <tr>
+        <td>validation of URIs, an invalid URI</td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            >
+            0% (839)
+        </td>
+        <td 
+            
+            >
+            43% (49510)
+        </td>
+        <td 
+            
+            >
+            9% (10660)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (114873)
+        </td>
+    </tr>
+    <tr>
+        <td>validation of URIs, an invalid URI though valid URI reference</td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (96940)
+        </td>
+        <td 
+            
+            >
+            10% (10428)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            >
+            98% (95556)
+        </td>
+    </tr>
+    <tr>
+        <td>validation of e-mail addresses, a valid e-mail address</td>
+        <td 
+            
+            >
+            13% (192363)
+        </td>
+        <td 
+            
+            >
+            0% (792)
+        </td>
+        <td 
+            
+            >
+            3% (48499)
+        </td>
+        <td 
+            
+            >
+            0% (11278)
+        </td>
+        <td 
+            
+            >
+            7% (105506)
+        </td>
+        <td 
+            
+            >
+            40% (585123)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1447566)
+        </td>
+    </tr>
+    <tr>
+        <td>validation of e-mail addresses, an invalid e-mail address</td>
+        <td 
+            
+            >
+            11% (110399)
+        </td>
+        <td 
+            
+            >
+            0% (796)
+        </td>
+        <td 
+            
+            >
+            9% (94125)
+        </td>
+        <td 
+            
+            >
+            1% (10976)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (977406)
+        </td>
+    </tr>
+    <tr>
+        <td>validation of IP addresses, a valid IP address</td>
+        <td 
+            
+            >
+            16% (176272)
+        </td>
+        <td 
+            
+            >
+            0% (1065)
+        </td>
+        <td 
+            
+            >
+            4% (43209)
+        </td>
+        <td 
+            
+            >
+            1% (10787)
+        </td>
+        <td 
+            
+            >
+            9% (94098)
+        </td>
+        <td 
+            
+            >
+            69% (725244)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1043822)
+        </td>
+    </tr>
+    <tr>
+        <td>validation of IP addresses, an IP address with too many components</td>
+        <td 
+            
+            >
+            10% (94751)
+        </td>
+        <td 
+            
+            >
+            0% (888)
+        </td>
+        <td 
+            
+            >
+            7% (62138)
+        </td>
+        <td 
+            
+            >
+            1% (11652)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (879353)
+        </td>
+    </tr>
+    <tr>
+        <td>validation of IP addresses, an IP address with out-of-range values</td>
+        <td 
+            
+            >
+            11% (101071)
+        </td>
+        <td 
+            
+            >
+            0% (846)
+        </td>
+        <td 
+            
+            >
+            4% (40913)
+        </td>
+        <td 
+            
+            >
+            1% (11362)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (843898)
+        </td>
+    </tr>
+    <tr>
+        <td>validation of IP addresses, an IP address without 4 components</td>
+        <td 
+            
+            >
+            11% (103611)
+        </td>
+        <td 
+            
+            >
+            0% (793)
+        </td>
+        <td 
+            
+            >
+            9% (79621)
+        </td>
+        <td 
+            
+            >
+            1% (13096)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (864235)
+        </td>
+    </tr>
+    <tr>
+        <td>validation of IP addresses, an IP address as an integer</td>
+        <td 
+            
+            >
+            12% (134119)
+        </td>
+        <td 
+            
+            >
+            0% (1260)
+        </td>
+        <td 
+            
+            >
+            6% (65183)
+        </td>
+        <td 
+            
+            >
+            1% (10821)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1067395)
+        </td>
+    </tr>
+    <tr>
+        <td>validation of IPv6 addresses, a valid IPv6 address</td>
+        <td 
+            
+            >
+            19% (113072)
+        </td>
+        <td 
+            
+            >
+            0% (893)
+        </td>
+        <td 
+            
+            >
+            16% (91380)
+        </td>
+        <td 
+            
+            >
+            2% (12722)
+        </td>
+        <td 
+            
+            >
+            21% (123802)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (567035)
+        </td>
+        <td 
+            
+            >
+            86% (490840)
+        </td>
+    </tr>
+    <tr>
+        <td>validation of IPv6 addresses, an IPv6 address with out-of-range values</td>
+        <td 
+            
+            >
+            14% (72457)
+        </td>
+        <td 
+            
+            >
+            0% (787)
+        </td>
+        <td 
+            
+            >
+            12% (63731)
+        </td>
+        <td 
+            
+            >
+            2% (10457)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (514755)
+        </td>
+    </tr>
+    <tr>
+        <td>validation of IPv6 addresses, an IPv6 address with too many components</td>
+        <td 
+            
+            >
+            22% (69109)
+        </td>
+        <td 
+            
+            >
+            0% (807)
+        </td>
+        <td 
+            
+            >
+            11% (34327)
+        </td>
+        <td 
+            
+            >
+            3% (9587)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (307548)
+        </td>
+    </tr>
+    <tr>
+        <td>validation of IPv6 addresses, an IPv6 address containing illegal characters</td>
+        <td 
+            
+            >
+            12% (76412)
+        </td>
+        <td 
+            
+            >
+            0% (776)
+        </td>
+        <td 
+            
+            >
+            13% (81596)
+        </td>
+        <td 
+            
+            >
+            1% (12196)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (614979)
+        </td>
+    </tr>
+    <tr>
+        <td>validation of host names, a valid host name</td>
+        <td 
+            
+            >
+            22% (131685)
+        </td>
+        <td 
+            
+            >
+            0% (898)
+        </td>
+        <td 
+            
+            >
+            10% (59097)
+        </td>
+        <td title="expected was true but validator returned false"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            >
+            16% (97947)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (585521)
+        </td>
+        <td 
+            
+            >
+            73% (431127)
+        </td>
+    </tr>
+    <tr>
+        <td>validation of host names, a host name starting with an illegal character</td>
+        <td 
+            
+            >
+            8% (109231)
+        </td>
+        <td 
+            
+            >
+            0% (884)
+        </td>
+        <td 
+            
+            >
+            3% (39157)
+        </td>
+        <td 
+            
+            >
+            0% (10734)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1217512)
+        </td>
+    </tr>
+    <tr>
+        <td>validation of host names, a host name containing illegal characters</td>
+        <td 
+            
+            >
+            11% (104446)
+        </td>
+        <td 
+            
+            >
+            0% (762)
+        </td>
+        <td 
+            
+            >
+            5% (47265)
+        </td>
+        <td 
+            
+            >
+            1% (10519)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (923688)
+        </td>
+    </tr>
+    <tr>
+        <td>validation of host names, a host name with a component too long</td>
+        <td 
+            
+            >
+            14% (96961)
+        </td>
+        <td 
+            
+            >
+            0% (820)
+        </td>
+        <td 
+            
+            >
+            2% (18131)
+        </td>
+        <td 
+            
+            >
+            2% (13373)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (654880)
+        </td>
+    </tr>
+    <tr>
+        <td>some languages do not distinguish between different types of numeric value, a float is not an integer even without fractional part</td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+    </tr>
+    <tr>
+        <td>pattern validation, a matching pattern is valid</td>
+        <td 
+            
+            >
+            8% (207635)
+        </td>
+        <td 
+            
+            >
+            0% (933)
+        </td>
+        <td 
+            
+            >
+            4% (98624)
+        </td>
+        <td 
+            
+            >
+            0% (11234)
+        </td>
+        <td 
+            
+            >
+            3% (91523)
+        </td>
+        <td 
+            
+            >
+            24% (574741)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2364570)
+        </td>
+    </tr>
+    <tr>
+        <td>pattern validation, a non-matching pattern is invalid</td>
+        <td 
+            
+            >
+            6% (104029)
+        </td>
+        <td 
+            
+            >
+            0% (797)
+        </td>
+        <td 
+            
+            >
+            6% (103225)
+        </td>
+        <td 
+            
+            >
+            0% (11965)
+        </td>
+        <td 
+            
+            >
+            0% (1596)
+        </td>
+        <td 
+            
+            >
+            28% (431154)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1515983)
+        </td>
+    </tr>
+    <tr>
+        <td>pattern validation, ignores non-strings</td>
+        <td 
+            
+            >
+            17% (476695)
+        </td>
+        <td 
+            
+            >
+            0% (898)
+        </td>
+        <td 
+            
+            >
+            9% (263544)
+        </td>
+        <td 
+            
+            >
+            0% (12899)
+        </td>
+        <td 
+            
+            >
+            3% (104721)
+        </td>
+        <td 
+            
+            >
+            20% (534425)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2662106)
+        </td>
+    </tr>
+    <tr>
+        <td>patternProperties validates properties matching a regex, a single valid match is valid</td>
+        <td 
+            
+            >
+            9% (86432)
+        </td>
+        <td 
+            
+            >
+            0% (689)
+        </td>
+        <td 
+            
+            >
+            4% (43442)
+        </td>
+        <td 
+            
+            >
+            0% (4463)
+        </td>
+        <td 
+            
+            >
+            3% (35540)
+        </td>
+        <td 
+            
+            >
+            17% (162513)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (954070)
+        </td>
+    </tr>
+    <tr>
+        <td>patternProperties validates properties matching a regex, multiple valid matches is valid</td>
+        <td 
+            
+            >
+            19% (68239)
+        </td>
+        <td 
+            
+            >
+            0% (1099)
+        </td>
+        <td 
+            
+            >
+            6% (23996)
+        </td>
+        <td 
+            
+            >
+            0% (2910)
+        </td>
+        <td 
+            
+            >
+            6% (22895)
+        </td>
+        <td 
+            
+            >
+            27% (94567)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (344992)
+        </td>
+    </tr>
+    <tr>
+        <td>patternProperties validates properties matching a regex, a single invalid match is invalid</td>
+        <td 
+            
+            >
+            16% (55276)
+        </td>
+        <td 
+            
+            >
+            0% (749)
+        </td>
+        <td 
+            
+            >
+            8% (26575)
+        </td>
+        <td 
+            
+            >
+            0% (2825)
+        </td>
+        <td 
+            
+            >
+            0% (1504)
+        </td>
+        <td 
+            
+            >
+            29% (97919)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (329093)
+        </td>
+    </tr>
+    <tr>
+        <td>patternProperties validates properties matching a regex, multiple invalid matches is invalid</td>
+        <td 
+            
+            >
+            14% (44844)
+        </td>
+        <td 
+            
+            >
+            0% (629)
+        </td>
+        <td 
+            
+            >
+            8% (26009)
+        </td>
+        <td 
+            
+            >
+            0% (2678)
+        </td>
+        <td 
+            
+            >
+            0% (1601)
+        </td>
+        <td 
+            
+            >
+            27% (88085)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (318683)
+        </td>
+    </tr>
+    <tr>
+        <td>patternProperties validates properties matching a regex, ignores non-objects</td>
+        <td 
+            
+            >
+            19% (298361)
+        </td>
+        <td 
+            
+            >
+            0% (894)
+        </td>
+        <td 
+            
+            >
+            18% (287484)
+        </td>
+        <td 
+            
+            >
+            0% (11995)
+        </td>
+        <td 
+            
+            >
+            3% (57213)
+        </td>
+        <td 
+            
+            >
+            36% (553973)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1534984)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple simultaneous patternProperties are validated, a single valid match is valid</td>
+        <td 
+            
+            >
+            13% (94408)
+        </td>
+        <td 
+            
+            >
+            0% (714)
+        </td>
+        <td 
+            
+            >
+            6% (41969)
+        </td>
+        <td 
+            
+            >
+            0% (4326)
+        </td>
+        <td 
+            
+            >
+            4% (29591)
+        </td>
+        <td 
+            
+            >
+            24% (170977)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (686194)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple simultaneous patternProperties are validated, a simultaneous match is valid</td>
+        <td 
+            
+            >
+            10% (83767)
+        </td>
+        <td 
+            
+            >
+            0% (649)
+        </td>
+        <td 
+            
+            >
+            3% (29379)
+        </td>
+        <td 
+            
+            >
+            0% (3557)
+        </td>
+        <td 
+            
+            >
+            3% (29361)
+        </td>
+        <td 
+            
+            >
+            15% (118698)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (766139)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple simultaneous patternProperties are validated, multiple matches is valid</td>
+        <td 
+            
+            >
+            20% (63185)
+        </td>
+        <td 
+            
+            >
+            0% (658)
+        </td>
+        <td 
+            
+            >
+            6% (19453)
+        </td>
+        <td 
+            
+            >
+            0% (2246)
+        </td>
+        <td 
+            
+            >
+            7% (24219)
+        </td>
+        <td 
+            
+            >
+            27% (85456)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (308397)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple simultaneous patternProperties are validated, an invalid due to one is invalid</td>
+        <td 
+            
+            >
+            11% (65521)
+        </td>
+        <td 
+            
+            >
+            0% (693)
+        </td>
+        <td 
+            
+            >
+            8% (49048)
+        </td>
+        <td 
+            
+            >
+            0% (4028)
+        </td>
+        <td 
+            
+            >
+            0% (1447)
+        </td>
+        <td 
+            
+            >
+            22% (129881)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (568680)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple simultaneous patternProperties are validated, an invalid due to the other is invalid</td>
+        <td 
+            
+            >
+            11% (54556)
+        </td>
+        <td 
+            
+            >
+            0% (608)
+        </td>
+        <td 
+            
+            >
+            5% (26401)
+        </td>
+        <td 
+            
+            >
+            0% (3099)
+        </td>
+        <td 
+            
+            >
+            0% (1678)
+        </td>
+        <td 
+            
+            >
+            23% (115372)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (486050)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple simultaneous patternProperties are validated, an invalid due to both is invalid</td>
+        <td 
+            
+            >
+            17% (34419)
+        </td>
+        <td 
+            
+            >
+            0% (524)
+        </td>
+        <td 
+            
+            >
+            6% (13306)
+        </td>
+        <td 
+            
+            >
+            0% (1796)
+        </td>
+        <td 
+            
+            >
+            0% (1658)
+        </td>
+        <td 
+            
+            >
+            28% (58631)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (202277)
+        </td>
+    </tr>
+    <tr>
+        <td>regexes are not anchored by default and are case sensitive, non recognized members are ignored</td>
+        <td 
+            
+            >
+            29% (86040)
+        </td>
+        <td 
+            
+            >
+            0% (706)
+        </td>
+        <td 
+            
+            >
+            35% (102917)
+        </td>
+        <td 
+            
+            >
+            1% (5216)
+        </td>
+        <td 
+            
+            >
+            10% (30774)
+        </td>
+        <td 
+            
+            >
+            68% (197349)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (288047)
+        </td>
+    </tr>
+    <tr>
+        <td>regexes are not anchored by default and are case sensitive, recognized members are accounted for</td>
+        <td 
+            
+            >
+            7% (63958)
+        </td>
+        <td 
+            
+            >
+            0% (704)
+        </td>
+        <td 
+            
+            >
+            5% (45907)
+        </td>
+        <td 
+            
+            >
+            0% (4141)
+        </td>
+        <td 
+            
+            >
+            0% (1595)
+        </td>
+        <td 
+            
+            >
+            14% (127034)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (858492)
+        </td>
+    </tr>
+    <tr>
+        <td>regexes are not anchored by default and are case sensitive, regexes are case sensitive</td>
+        <td 
+            
+            >
+            8% (93458)
+        </td>
+        <td 
+            
+            >
+            0% (736)
+        </td>
+        <td 
+            
+            >
+            12% (131542)
+        </td>
+        <td 
+            
+            >
+            0% (5260)
+        </td>
+        <td 
+            
+            >
+            3% (39896)
+        </td>
+        <td 
+            
+            >
+            24% (262214)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1075811)
+        </td>
+    </tr>
+    <tr>
+        <td>regexes are not anchored by default and are case sensitive, regexes are case sensitive, 2</td>
+        <td 
+            
+            >
+            11% (57243)
+        </td>
+        <td 
+            
+            >
+            0% (668)
+        </td>
+        <td 
+            
+            >
+            9% (45830)
+        </td>
+        <td 
+            
+            >
+            0% (4173)
+        </td>
+        <td 
+            
+            >
+            0% (1451)
+        </td>
+        <td 
+            
+            >
+            24% (121787)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (504784)
+        </td>
+    </tr>
+    <tr>
+        <td>object properties validation, both properties present and valid is valid</td>
+        <td 
+            
+            >
+            9% (91180)
+        </td>
+        <td 
+            
+            >
+            0% (735)
+        </td>
+        <td 
+            
+            >
+            3% (28172)
+        </td>
+        <td 
+            
+            >
+            0% (3205)
+        </td>
+        <td 
+            
+            >
+            4% (43290)
+        </td>
+        <td 
+            
+            >
+            25% (237646)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (936616)
+        </td>
+    </tr>
+    <tr>
+        <td>object properties validation, one property invalid is invalid</td>
+        <td 
+            
+            >
+            9% (61871)
+        </td>
+        <td 
+            
+            >
+            0% (638)
+        </td>
+        <td 
+            
+            >
+            5% (38393)
+        </td>
+        <td 
+            
+            >
+            0% (2809)
+        </td>
+        <td 
+            
+            >
+            0% (1533)
+        </td>
+        <td 
+            
+            >
+            32% (221374)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (679962)
+        </td>
+    </tr>
+    <tr>
+        <td>object properties validation, both properties invalid is invalid</td>
+        <td 
+            
+            >
+            11% (64950)
+        </td>
+        <td 
+            
+            >
+            0% (642)
+        </td>
+        <td 
+            
+            >
+            8% (46671)
+        </td>
+        <td 
+            
+            >
+            0% (3148)
+        </td>
+        <td 
+            
+            >
+            0% (1569)
+        </td>
+        <td 
+            
+            >
+            41% (243459)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (582697)
+        </td>
+    </tr>
+    <tr>
+        <td>object properties validation, doesn&#39;t invalidate other properties</td>
+        <td 
+            
+            >
+            11% (156851)
+        </td>
+        <td 
+            
+            >
+            0% (772)
+        </td>
+        <td 
+            
+            >
+            26% (368162)
+        </td>
+        <td 
+            
+            >
+            0% (3540)
+        </td>
+        <td 
+            
+            >
+            3% (55067)
+        </td>
+        <td 
+            
+            >
+            30% (433332)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1401518)
+        </td>
+    </tr>
+    <tr>
+        <td>object properties validation, ignores non-objects</td>
+        <td 
+            
+            >
+            20% (347374)
+        </td>
+        <td 
+            
+            >
+            0% (868)
+        </td>
+        <td 
+            
+            >
+            28% (496027)
+        </td>
+        <td 
+            
+            >
+            0% (3710)
+        </td>
+        <td 
+            
+            >
+            4% (84675)
+        </td>
+        <td 
+            
+            >
+            32% (563785)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1724808)
+        </td>
+    </tr>
+    <tr>
+        <td>properties, patternProperties, additionalProperties interaction, property validates property</td>
+        <td 
+            
+            >
+            7% (62108)
+        </td>
+        <td 
+            
+            >
+            0% (565)
+        </td>
+        <td 
+            
+            >
+            3% (31250)
+        </td>
+        <td 
+            
+            >
+            0% (2304)
+        </td>
+        <td 
+            
+            >
+            3% (29116)
+        </td>
+        <td 
+            
+            >
+            14% (118164)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (788683)
+        </td>
+    </tr>
+    <tr>
+        <td>properties, patternProperties, additionalProperties interaction, property invalidates property</td>
+        <td 
+            
+            >
+            7% (48106)
+        </td>
+        <td 
+            
+            >
+            0% (541)
+        </td>
+        <td 
+            
+            >
+            4% (31471)
+        </td>
+        <td 
+            
+            >
+            0% (2327)
+        </td>
+        <td 
+            
+            >
+            0% (1472)
+        </td>
+        <td 
+            
+            >
+            15% (105234)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (659263)
+        </td>
+    </tr>
+    <tr>
+        <td>properties, patternProperties, additionalProperties interaction, patternProperty invalidates property</td>
+        <td 
+            
+            >
+            9% (51565)
+        </td>
+        <td 
+            
+            >
+            0% (545)
+        </td>
+        <td 
+            
+            >
+            6% (36360)
+        </td>
+        <td 
+            
+            >
+            0% (2371)
+        </td>
+        <td 
+            
+            >
+            0% (1483)
+        </td>
+        <td 
+            
+            >
+            20% (111667)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (538289)
+        </td>
+    </tr>
+    <tr>
+        <td>properties, patternProperties, additionalProperties interaction, patternProperty validates nonproperty</td>
+        <td 
+            
+            >
+            9% (76280)
+        </td>
+        <td 
+            
+            >
+            0% (617)
+        </td>
+        <td 
+            
+            >
+            6% (48514)
+        </td>
+        <td 
+            
+            >
+            0% (2492)
+        </td>
+        <td 
+            
+            >
+            3% (28076)
+        </td>
+        <td 
+            
+            >
+            17% (130390)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (764747)
+        </td>
+    </tr>
+    <tr>
+        <td>properties, patternProperties, additionalProperties interaction, patternProperty invalidates nonproperty</td>
+        <td 
+            
+            >
+            8% (55986)
+        </td>
+        <td 
+            
+            >
+            0% (580)
+        </td>
+        <td 
+            
+            >
+            6% (45119)
+        </td>
+        <td 
+            
+            >
+            0% (2437)
+        </td>
+        <td 
+            
+            >
+            0% (1552)
+        </td>
+        <td 
+            
+            >
+            19% (132174)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (676929)
+        </td>
+    </tr>
+    <tr>
+        <td>properties, patternProperties, additionalProperties interaction, additionalProperty ignores property</td>
+        <td 
+            
+            >
+            5% (71709)
+        </td>
+        <td 
+            
+            >
+            0% (594)
+        </td>
+        <td 
+            
+            >
+            3% (45591)
+        </td>
+        <td 
+            
+            >
+            0% (4057)
+        </td>
+        <td 
+            
+            >
+            2% (30974)
+        </td>
+        <td 
+            
+            >
+            17% (217503)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1225748)
+        </td>
+    </tr>
+    <tr>
+        <td>properties, patternProperties, additionalProperties interaction, additionalProperty validates others</td>
+        <td 
+            
+            >
+            12% (73072)
+        </td>
+        <td 
+            
+            >
+            0% (588)
+        </td>
+        <td 
+            
+            >
+            6% (42429)
+        </td>
+        <td 
+            
+            >
+            0% (2333)
+        </td>
+        <td 
+            
+            >
+            4% (27609)
+        </td>
+        <td 
+            
+            >
+            20% (122090)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (606783)
+        </td>
+    </tr>
+    <tr>
+        <td>properties, patternProperties, additionalProperties interaction, additionalProperty invalidates others</td>
+        <td 
+            
+            >
+            11% (60709)
+        </td>
+        <td 
+            
+            >
+            0% (604)
+        </td>
+        <td 
+            
+            >
+            10% (52151)
+        </td>
+        <td 
+            
+            >
+            0% (2191)
+        </td>
+        <td 
+            
+            >
+            0% (1629)
+        </td>
+        <td 
+            
+            >
+            22% (112371)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (506281)
+        </td>
+    </tr>
+    <tr>
+        <td>root pointer ref, match</td>
+        <td 
+            
+            >
+            9% (76495)
+        </td>
+        <td 
+            
+            >
+            0% (433)
+        </td>
+        <td 
+            
+            >
+            7% (58310)
+        </td>
+        <td 
+            
+            >
+            0% (3082)
+        </td>
+        <td 
+            
+            >
+            2% (16619)
+        </td>
+        <td 
+            
+            >
+            24% (198138)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (820323)
+        </td>
+    </tr>
+    <tr>
+        <td>root pointer ref, recursive match</td>
+        <td 
+            
+            >
+            10% (56783)
+        </td>
+        <td 
+            
+            >
+            0% (300)
+        </td>
+        <td 
+            
+            >
+            7% (40208)
+        </td>
+        <td 
+            
+            >
+            0% (1857)
+        </td>
+        <td 
+            
+            >
+            2% (14138)
+        </td>
+        <td 
+            
+            >
+            27% (148107)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (541310)
+        </td>
+    </tr>
+    <tr>
+        <td>root pointer ref, mismatch</td>
+        <td 
+            
+            >
+            10% (65112)
+        </td>
+        <td 
+            
+            >
+            0% (674)
+        </td>
+        <td 
+            
+            >
+            49% (309789)
+        </td>
+        <td 
+            
+            >
+            0% (3029)
+        </td>
+        <td 
+            
+            >
+            0% (1429)
+        </td>
+        <td 
+            
+            >
+            40% (253010)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (628153)
+        </td>
+    </tr>
+    <tr>
+        <td>root pointer ref, recursive mismatch</td>
+        <td 
+            
+            >
+            10% (40854)
+        </td>
+        <td 
+            
+            >
+            0% (363)
+        </td>
+        <td 
+            
+            >
+            21% (81399)
+        </td>
+        <td 
+            
+            >
+            0% (2102)
+        </td>
+        <td 
+            
+            >
+            0% (1349)
+        </td>
+        <td 
+            
+            >
+            37% (144038)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (381943)
+        </td>
+    </tr>
+    <tr>
+        <td>relative pointer ref to object, match</td>
+        <td 
+            
+            >
+            9% (100355)
+        </td>
+        <td 
+            
+            >
+            0% (380)
+        </td>
+        <td 
+            
+            >
+            3% (40849)
+        </td>
+        <td 
+            
+            >
+            0% (1985)
+        </td>
+        <td 
+            
+            >
+            1% (12640)
+        </td>
+        <td 
+            
+            >
+            27% (296183)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1092560)
+        </td>
+    </tr>
+    <tr>
+        <td>relative pointer ref to object, mismatch</td>
+        <td 
+            
+            >
+            9% (69480)
+        </td>
+        <td 
+            
+            >
+            0% (401)
+        </td>
+        <td 
+            
+            >
+            7% (51901)
+        </td>
+        <td 
+            
+            >
+            0% (2451)
+        </td>
+        <td 
+            
+            >
+            0% (1715)
+        </td>
+        <td 
+            
+            >
+            43% (317475)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (721677)
+        </td>
+    </tr>
+    <tr>
+        <td>relative pointer ref to array, match array</td>
+        <td 
+            
+            >
+            26% (124763)
+        </td>
+        <td 
+            
+            >
+            0% (398)
+        </td>
+        <td 
+            
+            >
+            6% (31902)
+        </td>
+        <td 
+            
+            >
+            0% (1998)
+        </td>
+        <td 
+            
+            >
+            2% (13245)
+        </td>
+        <td 
+            
+            >
+            61% (294966)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (479557)
+        </td>
+    </tr>
+    <tr>
+        <td>relative pointer ref to array, mismatch array</td>
+        <td 
+            
+            >
+            11% (70056)
+        </td>
+        <td 
+            
+            >
+            0% (483)
+        </td>
+        <td 
+            
+            >
+            5% (33320)
+        </td>
+        <td 
+            
+            >
+            0% (1963)
+        </td>
+        <td 
+            
+            >
+            0% (1320)
+        </td>
+        <td 
+            
+            >
+            48% (286970)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (594476)
+        </td>
+    </tr>
+    <tr>
+        <td>escaped pointer ref, slash</td>
+        <td 
+            
+            >
+            15% (48917)
+        </td>
+        <td 
+            
+            >
+            0% (380)
+        </td>
+        <td 
+            
+            >
+            19% (64488)
+        </td>
+        <td 
+            
+            >
+            0% (1048)
+        </td>
+        <td 
+            
+            >
+            0% (1286)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (325009)
+        </td>
+        <td 
+            
+            >
+            35% (116140)
+        </td>
+    </tr>
+    <tr>
+        <td>escaped pointer ref, tilda</td>
+        <td 
+            
+            >
+            24% (60381)
+        </td>
+        <td 
+            
+            >
+            0% (382)
+        </td>
+        <td 
+            
+            >
+            24% (62711)
+        </td>
+        <td 
+            
+            >
+            0% (1078)
+        </td>
+        <td 
+            
+            >
+            0% (1326)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (251418)
+        </td>
+        <td 
+            
+            >
+            42% (106457)
+        </td>
+    </tr>
+    <tr>
+        <td>escaped pointer ref, percent</td>
+        <td 
+            
+            >
+            17% (51448)
+        </td>
+        <td 
+            
+            >
+            0% (459)
+        </td>
+        <td 
+            
+            >
+            21% (62365)
+        </td>
+        <td 
+            
+            >
+            0% (1103)
+        </td>
+        <td 
+            
+            >
+            0% (1337)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (292985)
+        </td>
+        <td 
+            
+            >
+            36% (106535)
+        </td>
+    </tr>
+    <tr>
+        <td>nested refs, nested ref valid</td>
+        <td 
+            
+            >
+            8% (153025)
+        </td>
+        <td 
+            
+            >
+            0% (255)
+        </td>
+        <td 
+            
+            >
+            3% (63325)
+        </td>
+        <td 
+            
+            >
+            0% (1852)
+        </td>
+        <td 
+            
+            >
+            0% (8884)
+        </td>
+        <td 
+            
+            >
+            27% (523091)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1907767)
+        </td>
+    </tr>
+    <tr>
+        <td>nested refs, nested ref invalid</td>
+        <td 
+            
+            >
+            7% (124084)
+        </td>
+        <td 
+            
+            >
+            0% (223)
+        </td>
+        <td 
+            
+            >
+            4% (81230)
+        </td>
+        <td 
+            
+            >
+            0% (1464)
+        </td>
+        <td 
+            
+            >
+            0% (1328)
+        </td>
+        <td 
+            
+            >
+            26% (458338)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1737233)
+        </td>
+    </tr>
+    <tr>
+        <td>required validation, present required property is valid</td>
+        <td 
+            
+            >
+            13% (119958)
+        </td>
+        <td 
+            
+            >
+            0% (746)
+        </td>
+        <td 
+            
+            >
+            7% (63392)
+        </td>
+        <td 
+            
+            >
+            0% (3758)
+        </td>
+        <td 
+            
+            >
+            5% (47627)
+        </td>
+        <td 
+            
+            >
+            28% (249003)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (884859)
+        </td>
+    </tr>
+    <tr>
+        <td>required validation, non-present required property is invalid</td>
+        <td 
+            
+            >
+            16% (77256)
+        </td>
+        <td 
+            
+            >
+            0% (700)
+        </td>
+        <td 
+            
+            >
+            12% (59487)
+        </td>
+        <td 
+            
+            >
+            0% (3924)
+        </td>
+        <td 
+            
+            >
+            0% (1454)
+        </td>
+        <td 
+            
+            >
+            49% (237290)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (479336)
+        </td>
+    </tr>
+    <tr>
+        <td>required default validation, not required by default</td>
+        <td 
+            
+            >
+            11% (206207)
+        </td>
+        <td 
+            
+            >
+            0% (865)
+        </td>
+        <td 
+            
+            >
+            22% (409976)
+        </td>
+        <td 
+            
+            >
+            0% (5405)
+        </td>
+        <td 
+            
+            >
+            3% (68127)
+        </td>
+        <td 
+            
+            >
+            32% (575736)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1795940)
+        </td>
+    </tr>
+    <tr>
+        <td>integer type matches integers, an integer is an integer</td>
+        <td 
+            
+            >
+            8% (282646)
+        </td>
+        <td 
+            
+            >
+            0% (908)
+        </td>
+        <td 
+            
+            >
+            6% (212744)
+        </td>
+        <td 
+            
+            >
+            0% (8802)
+        </td>
+        <td 
+            
+            >
+            2% (87870)
+        </td>
+        <td 
+            
+            >
+            17% (580858)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (3288154)
+        </td>
+    </tr>
+    <tr>
+        <td>integer type matches integers, a float is not an integer</td>
+        <td 
+            
+            >
+            23% (312297)
+        </td>
+        <td 
+            
+            >
+            0% (871)
+        </td>
+        <td 
+            
+            >
+            43% (574661)
+        </td>
+        <td 
+            
+            >
+            0% (7705)
+        </td>
+        <td 
+            
+            >
+            0% (1629)
+        </td>
+        <td 
+            
+            >
+            32% (432175)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1313206)
+        </td>
+    </tr>
+    <tr>
+        <td>integer type matches integers, a string is not an integer</td>
+        <td 
+            
+            >
+            9% (208403)
+        </td>
+        <td 
+            
+            >
+            0% (896)
+        </td>
+        <td 
+            
+            >
+            32% (693148)
+        </td>
+        <td 
+            
+            >
+            0% (8035)
+        </td>
+        <td 
+            
+            >
+            0% (1749)
+        </td>
+        <td 
+            
+            >
+            24% (527749)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2116026)
+        </td>
+    </tr>
+    <tr>
+        <td>integer type matches integers, an object is not an integer</td>
+        <td 
+            
+            >
+            10% (214771)
+        </td>
+        <td 
+            
+            >
+            0% (857)
+        </td>
+        <td 
+            
+            >
+            31% (667857)
+        </td>
+        <td 
+            
+            >
+            0% (7931)
+        </td>
+        <td 
+            
+            >
+            0% (1464)
+        </td>
+        <td 
+            
+            >
+            23% (513111)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2140278)
+        </td>
+    </tr>
+    <tr>
+        <td>integer type matches integers, an array is not an integer</td>
+        <td 
+            
+            >
+            11% (210259)
+        </td>
+        <td 
+            
+            >
+            0% (878)
+        </td>
+        <td 
+            
+            >
+            33% (622341)
+        </td>
+        <td 
+            
+            >
+            0% (8628)
+        </td>
+        <td 
+            
+            >
+            0% (1569)
+        </td>
+        <td 
+            
+            >
+            28% (522065)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1852405)
+        </td>
+    </tr>
+    <tr>
+        <td>integer type matches integers, a boolean is not an integer</td>
+        <td 
+            
+            >
+            10% (201070)
+        </td>
+        <td 
+            
+            >
+            0% (842)
+        </td>
+        <td 
+            
+            >
+            30% (583492)
+        </td>
+        <td 
+            
+            >
+            0% (7912)
+        </td>
+        <td 
+            
+            >
+            0% (1499)
+        </td>
+        <td 
+            
+            >
+            27% (524342)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1923631)
+        </td>
+    </tr>
+    <tr>
+        <td>integer type matches integers, null is not an integer</td>
+        <td 
+            
+            >
+            9% (194023)
+        </td>
+        <td 
+            
+            >
+            0% (1031)
+        </td>
+        <td 
+            
+            >
+            29% (588679)
+        </td>
+        <td 
+            
+            >
+            0% (7970)
+        </td>
+        <td 
+            
+            >
+            0% (1550)
+        </td>
+        <td 
+            
+            >
+            25% (518661)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2021406)
+        </td>
+    </tr>
+    <tr>
+        <td>number type matches numbers, an integer is a number</td>
+        <td 
+            
+            >
+            10% (277751)
+        </td>
+        <td 
+            
+            >
+            0% (958)
+        </td>
+        <td 
+            
+            >
+            9% (249112)
+        </td>
+        <td 
+            
+            >
+            0% (9201)
+        </td>
+        <td 
+            
+            >
+            3% (93128)
+        </td>
+        <td 
+            
+            >
+            18% (491453)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2619968)
+        </td>
+    </tr>
+    <tr>
+        <td>number type matches numbers, a float is a number</td>
+        <td 
+            
+            >
+            9% (276859)
+        </td>
+        <td 
+            
+            >
+            0% (911)
+        </td>
+        <td 
+            
+            >
+            8% (252529)
+        </td>
+        <td 
+            
+            >
+            0% (10494)
+        </td>
+        <td 
+            
+            >
+            3% (100813)
+        </td>
+        <td 
+            
+            >
+            19% (545276)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2833632)
+        </td>
+    </tr>
+    <tr>
+        <td>number type matches numbers, a string is not a number</td>
+        <td 
+            
+            >
+            9% (214288)
+        </td>
+        <td 
+            
+            >
+            0% (811)
+        </td>
+        <td 
+            
+            >
+            33% (743695)
+        </td>
+        <td 
+            
+            >
+            0% (8173)
+        </td>
+        <td 
+            
+            >
+            0% (1816)
+        </td>
+        <td 
+            
+            >
+            28% (643979)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2224205)
+        </td>
+    </tr>
+    <tr>
+        <td>number type matches numbers, an object is not a number</td>
+        <td 
+            
+            >
+            14% (209605)
+        </td>
+        <td 
+            
+            >
+            0% (888)
+        </td>
+        <td 
+            
+            >
+            47% (670021)
+        </td>
+        <td 
+            
+            >
+            0% (7926)
+        </td>
+        <td 
+            
+            >
+            0% (1544)
+        </td>
+        <td 
+            
+            >
+            29% (420311)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1424005)
+        </td>
+    </tr>
+    <tr>
+        <td>number type matches numbers, an array is not a number</td>
+        <td 
+            
+            >
+            11% (199207)
+        </td>
+        <td 
+            
+            >
+            0% (878)
+        </td>
+        <td 
+            
+            >
+            32% (592703)
+        </td>
+        <td 
+            
+            >
+            0% (8605)
+        </td>
+        <td 
+            
+            >
+            0% (1552)
+        </td>
+        <td 
+            
+            >
+            30% (550795)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1802583)
+        </td>
+    </tr>
+    <tr>
+        <td>number type matches numbers, a boolean is not a number</td>
+        <td 
+            
+            >
+            10% (194587)
+        </td>
+        <td 
+            
+            >
+            0% (873)
+        </td>
+        <td 
+            
+            >
+            36% (656529)
+        </td>
+        <td 
+            
+            >
+            0% (8497)
+        </td>
+        <td 
+            
+            >
+            0% (1525)
+        </td>
+        <td 
+            
+            >
+            24% (448650)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1817940)
+        </td>
+    </tr>
+    <tr>
+        <td>number type matches numbers, null is not a number</td>
+        <td 
+            
+            >
+            11% (209799)
+        </td>
+        <td 
+            
+            >
+            0% (861)
+        </td>
+        <td 
+            
+            >
+            35% (625353)
+        </td>
+        <td 
+            
+            >
+            0% (8751)
+        </td>
+        <td 
+            
+            >
+            0% (1542)
+        </td>
+        <td 
+            
+            >
+            30% (544755)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1786449)
+        </td>
+    </tr>
+    <tr>
+        <td>string type matches strings, 1 is not a string</td>
+        <td 
+            
+            >
+            10% (202515)
+        </td>
+        <td 
+            
+            >
+            0% (989)
+        </td>
+        <td 
+            
+            >
+            38% (730296)
+        </td>
+        <td 
+            
+            >
+            0% (8868)
+        </td>
+        <td 
+            
+            >
+            0% (1803)
+        </td>
+        <td 
+            
+            >
+            28% (543608)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1915298)
+        </td>
+    </tr>
+    <tr>
+        <td>string type matches strings, a float is not a string</td>
+        <td 
+            
+            >
+            14% (251077)
+        </td>
+        <td 
+            
+            >
+            0% (858)
+        </td>
+        <td 
+            
+            >
+            38% (656706)
+        </td>
+        <td 
+            
+            >
+            0% (8603)
+        </td>
+        <td 
+            
+            >
+            0% (1459)
+        </td>
+        <td 
+            
+            >
+            28% (474704)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1687348)
+        </td>
+    </tr>
+    <tr>
+        <td>string type matches strings, a string is a string</td>
+        <td 
+            
+            >
+            9% (286485)
+        </td>
+        <td 
+            
+            >
+            0% (933)
+        </td>
+        <td 
+            
+            >
+            4% (119188)
+        </td>
+        <td 
+            
+            >
+            0% (9975)
+        </td>
+        <td 
+            
+            >
+            3% (95100)
+        </td>
+        <td 
+            
+            >
+            16% (489178)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2904276)
+        </td>
+    </tr>
+    <tr>
+        <td>string type matches strings, an object is not a string</td>
+        <td 
+            
+            >
+            18% (343811)
+        </td>
+        <td 
+            
+            >
+            0% (977)
+        </td>
+        <td 
+            
+            >
+            41% (756684)
+        </td>
+        <td 
+            
+            >
+            0% (8720)
+        </td>
+        <td 
+            
+            >
+            0% (1638)
+        </td>
+        <td 
+            
+            >
+            28% (513091)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1818052)
+        </td>
+    </tr>
+    <tr>
+        <td>string type matches strings, an array is not a string</td>
+        <td 
+            
+            >
+            11% (222938)
+        </td>
+        <td 
+            
+            >
+            0% (833)
+        </td>
+        <td 
+            
+            >
+            35% (677967)
+        </td>
+        <td 
+            
+            >
+            0% (8988)
+        </td>
+        <td 
+            
+            >
+            0% (1566)
+        </td>
+        <td 
+            
+            >
+            25% (495247)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1931731)
+        </td>
+    </tr>
+    <tr>
+        <td>string type matches strings, a boolean is not a string</td>
+        <td 
+            
+            >
+            10% (184805)
+        </td>
+        <td 
+            
+            >
+            0% (882)
+        </td>
+        <td 
+            
+            >
+            37% (665371)
+        </td>
+        <td 
+            
+            >
+            0% (7611)
+        </td>
+        <td 
+            
+            >
+            0% (1505)
+        </td>
+        <td 
+            
+            >
+            26% (472849)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1782266)
+        </td>
+    </tr>
+    <tr>
+        <td>string type matches strings, null is not a string</td>
+        <td 
+            
+            >
+            12% (224183)
+        </td>
+        <td 
+            
+            >
+            0% (866)
+        </td>
+        <td 
+            
+            >
+            36% (658243)
+        </td>
+        <td 
+            
+            >
+            0% (8111)
+        </td>
+        <td 
+            
+            >
+            0% (1577)
+        </td>
+        <td 
+            
+            >
+            26% (479211)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1789068)
+        </td>
+    </tr>
+    <tr>
+        <td>object type matches objects, an integer is not an object</td>
+        <td 
+            
+            >
+            11% (198956)
+        </td>
+        <td 
+            
+            >
+            0% (851)
+        </td>
+        <td 
+            
+            >
+            38% (656786)
+        </td>
+        <td 
+            
+            >
+            0% (7998)
+        </td>
+        <td 
+            
+            >
+            0% (1817)
+        </td>
+        <td 
+            
+            >
+            26% (457346)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1701404)
+        </td>
+    </tr>
+    <tr>
+        <td>object type matches objects, a float is not an object</td>
+        <td 
+            
+            >
+            15% (222710)
+        </td>
+        <td 
+            
+            >
+            0% (939)
+        </td>
+        <td 
+            
+            >
+            44% (636328)
+        </td>
+        <td 
+            
+            >
+            0% (7740)
+        </td>
+        <td 
+            
+            >
+            0% (1506)
+        </td>
+        <td 
+            
+            >
+            30% (431094)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1430774)
+        </td>
+    </tr>
+    <tr>
+        <td>object type matches objects, a string is not an object</td>
+        <td 
+            
+            >
+            10% (200945)
+        </td>
+        <td 
+            
+            >
+            0% (826)
+        </td>
+        <td 
+            
+            >
+            34% (673291)
+        </td>
+        <td 
+            
+            >
+            0% (8681)
+        </td>
+        <td 
+            
+            >
+            0% (1622)
+        </td>
+        <td 
+            
+            >
+            23% (472198)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1970005)
+        </td>
+    </tr>
+    <tr>
+        <td>object type matches objects, an object is an object</td>
+        <td 
+            
+            >
+            6% (232860)
+        </td>
+        <td 
+            
+            >
+            0% (1005)
+        </td>
+        <td 
+            
+            >
+            9% (326642)
+        </td>
+        <td 
+            
+            >
+            0% (8760)
+        </td>
+        <td 
+            
+            >
+            2% (77641)
+        </td>
+        <td 
+            
+            >
+            18% (623479)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (3374885)
+        </td>
+    </tr>
+    <tr>
+        <td>object type matches objects, an array is not an object</td>
+        <td 
+            
+            >
+            8% (209854)
+        </td>
+        <td 
+            
+            >
+            0% (835)
+        </td>
+        <td 
+            
+            >
+            25% (604866)
+        </td>
+        <td 
+            
+            >
+            0% (8067)
+        </td>
+        <td 
+            
+            >
+            0% (1554)
+        </td>
+        <td 
+            
+            >
+            19% (456909)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2392510)
+        </td>
+    </tr>
+    <tr>
+        <td>object type matches objects, a boolean is not an object</td>
+        <td 
+            
+            >
+            11% (218578)
+        </td>
+        <td 
+            
+            >
+            0% (858)
+        </td>
+        <td 
+            
+            >
+            35% (662246)
+        </td>
+        <td 
+            
+            >
+            0% (7974)
+        </td>
+        <td 
+            
+            >
+            0% (1763)
+        </td>
+        <td 
+            
+            >
+            25% (468927)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1850664)
+        </td>
+    </tr>
+    <tr>
+        <td>object type matches objects, null is not an object</td>
+        <td 
+            
+            >
+            12% (215410)
+        </td>
+        <td 
+            
+            >
+            0% (794)
+        </td>
+        <td 
+            
+            >
+            33% (587739)
+        </td>
+        <td 
+            
+            >
+            0% (7743)
+        </td>
+        <td 
+            
+            >
+            0% (1573)
+        </td>
+        <td 
+            
+            >
+            25% (445303)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1737874)
+        </td>
+    </tr>
+    <tr>
+        <td>array type matches arrays, an integer is not an array</td>
+        <td 
+            
+            >
+            12% (194861)
+        </td>
+        <td 
+            
+            >
+            0% (929)
+        </td>
+        <td 
+            
+            >
+            38% (618596)
+        </td>
+        <td 
+            
+            >
+            0% (7496)
+        </td>
+        <td 
+            
+            >
+            0% (1606)
+        </td>
+        <td 
+            
+            >
+            31% (496179)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1599970)
+        </td>
+    </tr>
+    <tr>
+        <td>array type matches arrays, a float is not an array</td>
+        <td 
+            
+            >
+            16% (226506)
+        </td>
+        <td 
+            
+            >
+            0% (902)
+        </td>
+        <td 
+            
+            >
+            37% (536166)
+        </td>
+        <td 
+            
+            >
+            0% (7858)
+        </td>
+        <td 
+            
+            >
+            0% (1476)
+        </td>
+        <td 
+            
+            >
+            38% (550314)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1414587)
+        </td>
+    </tr>
+    <tr>
+        <td>array type matches arrays, a string is not an array</td>
+        <td 
+            
+            >
+            11% (207818)
+        </td>
+        <td 
+            
+            >
+            0% (893)
+        </td>
+        <td 
+            
+            >
+            32% (599599)
+        </td>
+        <td 
+            
+            >
+            0% (7986)
+        </td>
+        <td 
+            
+            >
+            0% (1491)
+        </td>
+        <td 
+            
+            >
+            23% (435229)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1834687)
+        </td>
+    </tr>
+    <tr>
+        <td>array type matches arrays, an object is not an array</td>
+        <td 
+            
+            >
+            11% (215081)
+        </td>
+        <td 
+            
+            >
+            0% (840)
+        </td>
+        <td 
+            
+            >
+            33% (609123)
+        </td>
+        <td 
+            
+            >
+            0% (7431)
+        </td>
+        <td 
+            
+            >
+            0% (1453)
+        </td>
+        <td 
+            
+            >
+            26% (484290)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1808036)
+        </td>
+    </tr>
+    <tr>
+        <td>array type matches arrays, an array is not an array</td>
+        <td 
+            
+            >
+            12% (311634)
+        </td>
+        <td 
+            
+            >
+            0% (902)
+        </td>
+        <td 
+            
+            >
+            17% (443576)
+        </td>
+        <td 
+            
+            >
+            0% (9644)
+        </td>
+        <td 
+            
+            >
+            3% (86806)
+        </td>
+        <td 
+            
+            >
+            20% (525450)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2537633)
+        </td>
+    </tr>
+    <tr>
+        <td>array type matches arrays, a boolean is not an array</td>
+        <td 
+            
+            >
+            9% (207616)
+        </td>
+        <td 
+            
+            >
+            0% (855)
+        </td>
+        <td 
+            
+            >
+            34% (717608)
+        </td>
+        <td 
+            
+            >
+            0% (7934)
+        </td>
+        <td 
+            
+            >
+            0% (1571)
+        </td>
+        <td 
+            
+            >
+            20% (439095)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2091268)
+        </td>
+    </tr>
+    <tr>
+        <td>array type matches arrays, null is not an array</td>
+        <td 
+            
+            >
+            12% (210530)
+        </td>
+        <td 
+            
+            >
+            0% (893)
+        </td>
+        <td 
+            
+            >
+            39% (685601)
+        </td>
+        <td 
+            
+            >
+            0% (8074)
+        </td>
+        <td 
+            
+            >
+            0% (1510)
+        </td>
+        <td 
+            
+            >
+            25% (437280)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1714177)
+        </td>
+    </tr>
+    <tr>
+        <td>boolean type matches booleans, an integer is not a boolean</td>
+        <td 
+            
+            >
+            13% (211291)
+        </td>
+        <td 
+            
+            >
+            0% (946)
+        </td>
+        <td 
+            
+            >
+            42% (687454)
+        </td>
+        <td 
+            
+            >
+            0% (8545)
+        </td>
+        <td 
+            
+            >
+            0% (1531)
+        </td>
+        <td 
+            
+            >
+            28% (458131)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1618606)
+        </td>
+    </tr>
+    <tr>
+        <td>boolean type matches booleans, a float is not a boolean</td>
+        <td 
+            
+            >
+            11% (210238)
+        </td>
+        <td 
+            
+            >
+            0% (863)
+        </td>
+        <td 
+            
+            >
+            39% (717336)
+        </td>
+        <td 
+            
+            >
+            0% (8089)
+        </td>
+        <td 
+            
+            >
+            0% (1500)
+        </td>
+        <td 
+            
+            >
+            26% (479672)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1795675)
+        </td>
+    </tr>
+    <tr>
+        <td>boolean type matches booleans, a string is not a boolean</td>
+        <td 
+            
+            >
+            10% (220854)
+        </td>
+        <td 
+            
+            >
+            0% (851)
+        </td>
+        <td 
+            
+            >
+            29% (622776)
+        </td>
+        <td 
+            
+            >
+            0% (7850)
+        </td>
+        <td 
+            
+            >
+            0% (1644)
+        </td>
+        <td 
+            
+            >
+            22% (466184)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2107096)
+        </td>
+    </tr>
+    <tr>
+        <td>boolean type matches booleans, an object is not a boolean</td>
+        <td 
+            
+            >
+            9% (197905)
+        </td>
+        <td 
+            
+            >
+            0% (777)
+        </td>
+        <td 
+            
+            >
+            29% (603854)
+        </td>
+        <td 
+            
+            >
+            0% (7451)
+        </td>
+        <td 
+            
+            >
+            0% (1426)
+        </td>
+        <td 
+            
+            >
+            23% (478750)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2018535)
+        </td>
+    </tr>
+    <tr>
+        <td>boolean type matches booleans, an array is not a boolean</td>
+        <td 
+            
+            >
+            8% (189408)
+        </td>
+        <td 
+            
+            >
+            0% (826)
+        </td>
+        <td 
+            
+            >
+            28% (605475)
+        </td>
+        <td 
+            
+            >
+            0% (7879)
+        </td>
+        <td 
+            
+            >
+            0% (1520)
+        </td>
+        <td 
+            
+            >
+            21% (464551)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2149533)
+        </td>
+    </tr>
+    <tr>
+        <td>boolean type matches booleans, a boolean is not a boolean</td>
+        <td 
+            
+            >
+            10% (333112)
+        </td>
+        <td 
+            
+            >
+            0% (910)
+        </td>
+        <td 
+            
+            >
+            7% (245698)
+        </td>
+        <td 
+            
+            >
+            0% (9668)
+        </td>
+        <td 
+            
+            >
+            2% (98052)
+        </td>
+        <td 
+            
+            >
+            15% (519143)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (3289167)
+        </td>
+    </tr>
+    <tr>
+        <td>boolean type matches booleans, null is not a boolean</td>
+        <td 
+            
+            >
+            13% (260074)
+        </td>
+        <td 
+            
+            >
+            0% (884)
+        </td>
+        <td 
+            
+            >
+            33% (647964)
+        </td>
+        <td 
+            
+            >
+            0% (8958)
+        </td>
+        <td 
+            
+            >
+            0% (1507)
+        </td>
+        <td 
+            
+            >
+            22% (439467)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1934006)
+        </td>
+    </tr>
+    <tr>
+        <td>null type matches only the null object, an integer is not null</td>
+        <td 
+            
+            >
+            11% (204188)
+        </td>
+        <td 
+            
+            >
+            0% (919)
+        </td>
+        <td 
+            
+            >
+            40% (717250)
+        </td>
+        <td 
+            
+            >
+            0% (8073)
+        </td>
+        <td 
+            
+            >
+            0% (1568)
+        </td>
+        <td 
+            
+            >
+            23% (423508)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1790807)
+        </td>
+    </tr>
+    <tr>
+        <td>null type matches only the null object, a float is not null</td>
+        <td 
+            
+            >
+            10% (193545)
+        </td>
+        <td 
+            
+            >
+            0% (842)
+        </td>
+        <td 
+            
+            >
+            35% (624950)
+        </td>
+        <td 
+            
+            >
+            0% (7487)
+        </td>
+        <td 
+            
+            >
+            0% (1412)
+        </td>
+        <td 
+            
+            >
+            25% (450214)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1780440)
+        </td>
+    </tr>
+    <tr>
+        <td>null type matches only the null object, a string is not null</td>
+        <td 
+            
+            >
+            11% (209277)
+        </td>
+        <td 
+            
+            >
+            0% (860)
+        </td>
+        <td 
+            
+            >
+            37% (718153)
+        </td>
+        <td 
+            
+            >
+            0% (7895)
+        </td>
+        <td 
+            
+            >
+            0% (1375)
+        </td>
+        <td 
+            
+            >
+            20% (395595)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1899212)
+        </td>
+    </tr>
+    <tr>
+        <td>null type matches only the null object, an object is not null</td>
+        <td 
+            
+            >
+            9% (185218)
+        </td>
+        <td 
+            
+            >
+            0% (801)
+        </td>
+        <td 
+            
+            >
+            33% (658460)
+        </td>
+        <td 
+            
+            >
+            0% (7887)
+        </td>
+        <td 
+            
+            >
+            0% (1502)
+        </td>
+        <td 
+            
+            >
+            25% (506329)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1955406)
+        </td>
+    </tr>
+    <tr>
+        <td>null type matches only the null object, an array is not null</td>
+        <td 
+            
+            >
+            10% (217827)
+        </td>
+        <td 
+            
+            >
+            0% (984)
+        </td>
+        <td 
+            
+            >
+            30% (626220)
+        </td>
+        <td 
+            
+            >
+            0% (7715)
+        </td>
+        <td 
+            
+            >
+            0% (1573)
+        </td>
+        <td 
+            
+            >
+            20% (433047)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2074846)
+        </td>
+    </tr>
+    <tr>
+        <td>null type matches only the null object, a boolean is not null</td>
+        <td 
+            
+            >
+            10% (191313)
+        </td>
+        <td 
+            
+            >
+            0% (823)
+        </td>
+        <td 
+            
+            >
+            34% (607650)
+        </td>
+        <td 
+            
+            >
+            0% (8798)
+        </td>
+        <td 
+            
+            >
+            0% (1388)
+        </td>
+        <td 
+            
+            >
+            22% (396822)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1752188)
+        </td>
+    </tr>
+    <tr>
+        <td>null type matches only the null object, null is null</td>
+        <td 
+            
+            >
+            12% (330044)
+        </td>
+        <td 
+            
+            >
+            0% (872)
+        </td>
+        <td 
+            
+            >
+            12% (317363)
+        </td>
+        <td 
+            
+            >
+            0% (9171)
+        </td>
+        <td 
+            
+            >
+            3% (91288)
+        </td>
+        <td 
+            
+            >
+            19% (504306)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2591348)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple types can be specified in an array, an integer is valid</td>
+        <td 
+            
+            >
+            11% (267562)
+        </td>
+        <td 
+            
+            >
+            0% (946)
+        </td>
+        <td 
+            
+            >
+            11% (272883)
+        </td>
+        <td 
+            
+            >
+            0% (9713)
+        </td>
+        <td 
+            
+            >
+            2% (69992)
+        </td>
+        <td 
+            
+            >
+            24% (578891)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2411440)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple types can be specified in an array, a string is valid</td>
+        <td 
+            
+            >
+            10% (364314)
+        </td>
+        <td 
+            
+            >
+            0% (1263)
+        </td>
+        <td 
+            
+            >
+            3% (136190)
+        </td>
+        <td 
+            
+            >
+            0% (10820)
+        </td>
+        <td 
+            
+            >
+            2% (72924)
+        </td>
+        <td 
+            
+            >
+            18% (667576)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (3527510)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple types can be specified in an array, a float is invalid</td>
+        <td 
+            
+            >
+            6% (143163)
+        </td>
+        <td 
+            
+            >
+            0% (1023)
+        </td>
+        <td 
+            
+            >
+            23% (501248)
+        </td>
+        <td 
+            
+            >
+            0% (11472)
+        </td>
+        <td 
+            
+            >
+            0% (1875)
+        </td>
+        <td 
+            
+            >
+            25% (531438)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2108721)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple types can be specified in an array, an object is invalid</td>
+        <td 
+            
+            >
+            7% (149780)
+        </td>
+        <td 
+            
+            >
+            0% (863)
+        </td>
+        <td 
+            
+            >
+            27% (515469)
+        </td>
+        <td 
+            
+            >
+            0% (9498)
+        </td>
+        <td 
+            
+            >
+            0% (1656)
+        </td>
+        <td 
+            
+            >
+            30% (588523)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1902102)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple types can be specified in an array, an array is invalid</td>
+        <td 
+            
+            >
+            5% (118571)
+        </td>
+        <td 
+            
+            >
+            0% (1182)
+        </td>
+        <td 
+            
+            >
+            23% (496573)
+        </td>
+        <td 
+            
+            >
+            0% (7662)
+        </td>
+        <td 
+            
+            >
+            0% (1536)
+        </td>
+        <td 
+            
+            >
+            22% (466025)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (2086906)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple types can be specified in an array, a boolean is invalid</td>
+        <td 
+            
+            >
+            7% (130565)
+        </td>
+        <td 
+            
+            >
+            0% (876)
+        </td>
+        <td 
+            
+            >
+            25% (479019)
+        </td>
+        <td 
+            
+            >
+            0% (7663)
+        </td>
+        <td 
+            
+            >
+            0% (1597)
+        </td>
+        <td 
+            
+            >
+            29% (540340)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1855143)
+        </td>
+    </tr>
+    <tr>
+        <td>multiple types can be specified in an array, null is invalid</td>
+        <td 
+            
+            >
+            6% (111782)
+        </td>
+        <td 
+            
+            >
+            0% (788)
+        </td>
+        <td 
+            
+            >
+            25% (453164)
+        </td>
+        <td 
+            
+            >
+            0% (8054)
+        </td>
+        <td 
+            
+            >
+            0% (1831)
+        </td>
+        <td 
+            
+            >
+            26% (477328)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1783153)
+        </td>
+    </tr>
+    <tr>
+        <td>uniqueItems validation, unique array of integers is valid</td>
+        <td 
+            
+            >
+            17% (293513)
+        </td>
+        <td 
+            
+            >
+            0% (874)
+        </td>
+        <td 
+            
+            >
+            11% (193240)
+        </td>
+        <td 
+            
+            >
+            0% (11967)
+        </td>
+        <td 
+            
+            >
+            5% (101521)
+        </td>
+        <td 
+            
+            >
+            33% (568775)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1723041)
+        </td>
+    </tr>
+    <tr>
+        <td>uniqueItems validation, non-unique array of integers is invalid</td>
+        <td 
+            
+            >
+            8% (124868)
+        </td>
+        <td 
+            
+            >
+            0% (840)
+        </td>
+        <td 
+            
+            >
+            13% (196318)
+        </td>
+        <td 
+            
+            >
+            0% (10793)
+        </td>
+        <td 
+            
+            >
+            0% (1462)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1402964)
+        </td>
+    </tr>
+    <tr>
+        <td>uniqueItems validation, numbers are unique if mathematically unequal</td>
+        <td 
+            
+            >
+            9% (132642)
+        </td>
+        <td 
+            
+            >
+            0% (820)
+        </td>
+        <td 
+            
+            >
+            16% (215139)
+        </td>
+        <td 
+            
+            >
+            0% (11266)
+        </td>
+        <td 
+            
+            >
+            0% (1521)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1327833)
+        </td>
+    </tr>
+    <tr>
+        <td>uniqueItems validation, unique array of objects is valid</td>
+        <td 
+            
+            >
+            38% (237065)
+        </td>
+        <td 
+            
+            >
+            0% (906)
+        </td>
+        <td 
+            
+            >
+            12% (78875)
+        </td>
+        <td 
+            
+            >
+            1% (10375)
+        </td>
+        <td 
+            
+            >
+            15% (96236)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (610762)
+        </td>
+        <td 
+            
+            >
+            71% (434054)
+        </td>
+    </tr>
+    <tr>
+        <td>uniqueItems validation, non-unique array of objects is invalid</td>
+        <td 
+            
+            >
+            25% (101720)
+        </td>
+        <td 
+            
+            >
+            0% (869)
+        </td>
+        <td 
+            
+            >
+            18% (73996)
+        </td>
+        <td 
+            
+            >
+            2% (10301)
+        </td>
+        <td 
+            
+            >
+            0% (1493)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (404307)
+        </td>
+    </tr>
+    <tr>
+        <td>uniqueItems validation, unique array of nested objects is valid</td>
+        <td 
+            
+            >
+            19% (117945)
+        </td>
+        <td 
+            
+            >
+            0% (817)
+        </td>
+        <td 
+            
+            >
+            9% (60525)
+        </td>
+        <td 
+            
+            >
+            1% (11313)
+        </td>
+        <td 
+            
+            >
+            13% (78825)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (606076)
+        </td>
+        <td 
+            
+            >
+            28% (173220)
+        </td>
+    </tr>
+    <tr>
+        <td>uniqueItems validation, non-unique array of nested objects is invalid</td>
+        <td 
+            
+            >
+            48% (75370)
+        </td>
+        <td 
+            
+            >
+            0% (918)
+        </td>
+        <td 
+            
+            >
+            33% (52576)
+        </td>
+        <td 
+            
+            >
+            7% (10932)
+        </td>
+        <td 
+            
+            >
+            1% (1649)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (155474)
+        </td>
+    </tr>
+    <tr>
+        <td>uniqueItems validation, unique array of arrays is valid</td>
+        <td 
+            
+            >
+            16% (282642)
+        </td>
+        <td 
+            
+            >
+            0% (871)
+        </td>
+        <td 
+            
+            >
+            6% (106911)
+        </td>
+        <td 
+            
+            >
+            0% (10967)
+        </td>
+        <td 
+            
+            >
+            6% (118006)
+        </td>
+        <td 
+            
+            >
+            36% (624881)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1711181)
+        </td>
+    </tr>
+    <tr>
+        <td>uniqueItems validation, non-unique array of arrays is invalid</td>
+        <td 
+            
+            >
+            11% (123933)
+        </td>
+        <td 
+            
+            >
+            0% (829)
+        </td>
+        <td 
+            
+            >
+            5% (61288)
+        </td>
+        <td 
+            
+            >
+            1% (12664)
+        </td>
+        <td 
+            
+            >
+            0% (1562)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1120419)
+        </td>
+    </tr>
+    <tr>
+        <td>uniqueItems validation, 1 and true are unique</td>
+        <td 
+            
+            >
+            25% (426151)
+        </td>
+        <td 
+            
+            >
+            0% (1082)
+        </td>
+        <td 
+            
+            >
+            15% (249753)
+        </td>
+        <td 
+            
+            >
+            0% (12003)
+        </td>
+        <td 
+            
+            >
+            6% (105098)
+        </td>
+        <td 
+            
+            >
+            42% (694096)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1647983)
+        </td>
+    </tr>
+    <tr>
+        <td>uniqueItems validation, 0 and false are unique</td>
+        <td 
+            
+            >
+            18% (275600)
+        </td>
+        <td 
+            
+            >
+            0% (837)
+        </td>
+        <td 
+            
+            >
+            14% (207426)
+        </td>
+        <td 
+            
+            >
+            0% (14137)
+        </td>
+        <td 
+            
+            >
+            8% (125551)
+        </td>
+        <td 
+            
+            >
+            41% (603413)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (1450560)
+        </td>
+    </tr>
+    <tr>
+        <td>uniqueItems validation, unique heterogeneous types are valid</td>
+        <td 
+            
+            >
+            27% (200282)
+        </td>
+        <td 
+            
+            >
+            0% (883)
+        </td>
+        <td 
+            
+            >
+            10% (77387)
+        </td>
+        <td 
+            
+            >
+            1% (10751)
+        </td>
+        <td title="expected was true but validator returned false"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (727874)
+        </td>
+        <td 
+            
+            >
+            56% (414434)
+        </td>
+    </tr>
+    <tr>
+        <td>uniqueItems validation, non-unique heterogeneous types are invalid</td>
+        <td 
+            
+            >
+            26% (101098)
+        </td>
+        <td 
+            
+            >
+            0% (941)
+        </td>
+        <td 
+            
+            >
+            18% (70072)
+        </td>
+        <td 
+            
+            >
+            2% (11028)
+        </td>
+        <td 
+            
+            >
+            0% (1426)
+        </td>
+        <td title="expected was false but validator returned true"
+            class="failed"
+            >
+            0% (-1)
+        </td>
+        <td 
+            
+            class="fastest">
+            100% (379846)
+        </td>
+    </tr>
+</table>
+</body>
+</html>
