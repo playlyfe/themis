@@ -52,7 +52,6 @@ Tester.runOne = function (testName, testJson, testSchema, expectedResult, onlyTe
         try {
             givenResult = validatorObject.test(instance, json, schema);
         } catch (e) {
-            console.log(e.stack);
             fails[validatorObject.name] = e;
             givenResult = e;
         }

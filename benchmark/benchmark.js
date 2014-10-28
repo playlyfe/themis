@@ -22,7 +22,6 @@ Tester.registerValidator({
     }
 });
 
-/*
 Tester.registerValidator({
     name: "jayschema",
     setup: function () {
@@ -32,7 +31,6 @@ Tester.registerValidator({
         return instance.validate(json, schema).length === 0;
     }
 });
-*/
 
 Tester.registerValidator({
     name: "jjv",
@@ -43,7 +41,7 @@ Tester.registerValidator({
         return instance.validate(schema, json) === null;
     }
 });
-/*
+
 Tester.registerValidator({
     name: "jsonschema",
     setup: function () {
@@ -63,7 +61,7 @@ Tester.registerValidator({
         return instance.validateResult(json, schema).valid === true;
     }
 });
-*/
+
 
 Tester.registerValidator({
     name: "json-model",
@@ -82,49 +80,22 @@ Tester.registerValidator({
         return Themis.validator(schema);
     },
     test: function (instance, json, schema) {
-        //console.log("RES", instance(json), json);
+        //console.log("RES", JSON.stringify(instance(json), 2, 2), JSON.stringify(json,2,2));
         //console.log(instance.toString());
-        return instance(json).valid === true;
+        return instance(json, '0').valid === true;
     }
 });
-
-
 
 
 var basicObject = require("./basic_object.json");
 var basicSchema = require("./basic_schema_v4.json");
 Tester.runOne("basicObject", basicObject, basicSchema, true);
-Tester.runFile("../test/jsonSchemaTestSuite/tests/draft4/type.json");
-Tester.runFile("../test/jsonSchemaTestSuite/tests/draft4/maximum.json");
-Tester.runFile("../test/jsonSchemaTestSuite/tests/draft4/minimum.json");
-Tester.runFile("../test/jsonSchemaTestSuite/tests/draft4/maxLength.json");
-Tester.runFile("../test/jsonSchemaTestSuite/tests/draft4/minLength.json");
-Tester.runFile("../test/jsonSchemaTestSuite/tests/draft4/pattern.json");
-Tester.runFile("../test/jsonSchemaTestSuite/tests/draft4/additionalItems.json");
-Tester.runFile("../test/jsonSchemaTestSuite/tests/draft4/uniqueItems.json");
-Tester.runFile("../test/jsonSchemaTestSuite/tests/draft4/minProperties.json");
-Tester.runFile("../test/jsonSchemaTestSuite/tests/draft4/maxProperties.json");
-Tester.runFile("../test/jsonSchemaTestSuite/tests/draft4/required.json");
-Tester.runFile("../test/jsonSchemaTestSuite/tests/draft4/additionalProperties.json");
-Tester.runFile("../test/jsonSchemaTestSuite/tests/draft4/patternProperties.json");
-Tester.runFile("../test/jsonSchemaTestSuite/tests/draft4/properties.json");
-
-
-/*
 var advancedObject = require("./advanced_object.json");
 var advancedSchema = require("./advanced_schema_v4.json");
 Tester.runOne("advancedObject", advancedObject, advancedSchema, true);
-
 Tester.runDirectory(__dirname + "/../test/jsonSchemaTestSuite/tests/draft4/", {
-    excludeFiles: ["optional/zeroTerminatedFloats.json"],
+    excludeFiles: [],
     excludeTests: [
-        // no-one supports unicode tests
-        "maxLength validation, two supplementary Unicode code points is long enough",
-        "minLength validation, one supplementary Unicode code point is not long enough",
-        // these two tests consider different uri then is desired to be valid
-        "validation of URIs, an invalid URI",
-        "validation of URIs, an invalid URI though valid URI reference",
-        // these tests require validator to work with remote schema which they can't download in sync test
         "valid definition, valid definition schema",
         "invalid definition, invalid definition schema",
         "remote ref, containing refs itself, remote ref valid",
@@ -139,6 +110,6 @@ Tester.runDirectory(__dirname + "/../test/jsonSchemaTestSuite/tests/draft4/", {
         "change resolution scope, changed scope ref invalid"
     ]
 });
-*/
+
 Tester.saveResults("results.html", "results.template");
 
