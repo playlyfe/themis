@@ -242,7 +242,7 @@ console.log(require('util').inspect(report, { depth: 10, colors: true }));
 The Themis object contains methods to create validators and register formats.
 
 ### validator(schemas)
-Generate a new compiled validator from the provided schemas. The returned validator function has the can be called on a piece of `data` with a `schema_id` refering to the schema to be used for validation. The function can be reused any number of times. Check the examples above to see its usage.
+Generate a new compiled validator from the provided schemas. The returned validator function can be reused any number of times. Check the examples above to see its usage.
 
 ### registerFormat(format, validation_func)
 Register a new format and its associated validation function.
@@ -277,12 +277,11 @@ Fastest is themis#advancedObject
 
 For a more detailed analysis of performance check out the benchmarks against the other popular json schema validators available today.
 
-[Benchmark Results](rawgithub.com/playlyfe/themis/master/benchmark/results.html)
+[Benchmark Results](https://cdn.rawgit.com/playlyfe/themis/master/benchmark/results.html)
 
 ##TODO
 
 - Support remote reference fetching.
-- Support custom format validators.
 - Validate json schemas before attempting validation.
 - Add more benchmarks for different types of datasets.
 - Better validation errors.
