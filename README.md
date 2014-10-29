@@ -1,8 +1,8 @@
 #Themis
 
-Themis is a blazing fast compiled JSON Schema v4 validator. Themis was created for use in environments where there is a large amount of data that has to be validated against the same schema multiple times. Eg: REST API Servers.
+Themis is a blazing fast, compiled JSON Schema v4 validator. Themis was created for use in environments where there is a large amount of data that has to be validated against the same schema multiple times. Eg: *REST API Servers*.
 
-Themis (Greek: Θέμις) is an ancient Greek Titaness. She is described as "of good counsel", and is the personification of divine order, law, natural law and custom. Themis means "divine law" rather than human ordinance, literally "that which is put in place", compared with títhēmi (τίθημι), meaning "to put".
+Themis (Greek: Θέμις) is an ancient Greek Titaness, the goddess of divine order, law, natural law and custom, and a prophetic goddess &mdash; the divine voice who first instructed mankind in the primal laws of justice and morality.
 
 Themis was inspired by the z-schema and json-model validators and tries to provide the best of both worlds. Many thanks to [Martin Zagora](https://github.com/zaggino) for his work on z-schema 3 from which most of the validation logic was adapted.
 
