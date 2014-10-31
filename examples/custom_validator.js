@@ -1,6 +1,6 @@
 var Themis = require('../src/themis');
 
-Themis.registerValidator('matches', { rank: 66, type: 'string' }, function(schema, path) {
+Themis.registerValidator('matches', { order: ['after', 'format'],  type: 'string' }, function(schema, path) {
   var code = [
     "if (!(data === parent['"+ schema.matches +"'])) {",
       "report.valid = false;",

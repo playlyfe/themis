@@ -14,7 +14,10 @@
   "dependencies": {
     "uglify-js": "2.4.15"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "chai": "^1.9.2",
+    "mocha": "^2.0.1"
+  },
   "author": "Johny Jose <johny@playlyfe.com>",
   "license": "MIT"
 }

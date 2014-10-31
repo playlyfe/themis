@@ -45,7 +45,7 @@ var partial_data = {
 };
 
 // Generate the validator
-var validator = Themis.validator(schema);
+var validator = Themis.validator(schema, { enable_defaults: true });
 
 // now validate our data against the schema
 var report = validator(empty_data, 'simple_defaults');

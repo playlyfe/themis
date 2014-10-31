@@ -4,52 +4,55 @@ var UglifyJS = require("uglify-js");
 
 var KEYWORD_META = {
   // All types
-  'default': [-100, 'any'],
-  '$schema': [-1, 'any'],
-  '$ref': [-1, 'any'],
-  'title': [-1, 'any'],
-  'description': [-1, 'any'],
-  'definitions': [-1, 'any'],
+  'default': [-10000, 'any'],
+  '$schema': [-150, 'any'],
+  '$ref': [-140, 'any'],
+  'title': [-130, 'any'],
+  'description': [-120, 'any'],
+  'definitions': [-110, 'any'],
   'type': [0, 'any'],
   // Numeric
-  'multipleOf': [10, 'number'],
-  'minimum': [20, 'number'],
-  'exclusiveMinimum': [25, 'number'],
-  'maximum': [30, 'number'],
-  'exclusiveMaximum': [35, 'number'],
+  'multipleOf': [1000, 'number'],
+  'minimum': [2000, 'number'],
+  'exclusiveMinimum': [2500, 'number'],
+  'maximum': [3000, 'number'],
+  'exclusiveMaximum': [3500, 'number'],
   // Strings
-  'minLength': [40, 'string'],
-  'maxLength': [50, 'string'],
-  'pattern': [60, 'string'],
-  'format': [65, 'string'],
+  'minLength': [4000, 'string'],
+  'maxLength': [5000, 'string'],
+  'pattern': [6000, 'string'],
+  'format': [6500, 'string'],
   // Arrays
-  'additionalItems': [70, 'array'],
-  'items': [75, 'array'],
-  'minItems': [80, 'array'],
-  'maxItems': [90, 'array'],
-  'uniqueItems': [100, 'array'],
+  'additionalItems': [7000, 'array'],
+  'items': [7500, 'array'],
+  'minItems': [8000, 'array'],
+  'maxItems': [9000, 'array'],
+  'uniqueItems': [10000, 'array'],
   // Objects
-  'required': [110, 'object'],
-  'additionalProperties': [120, 'object'],
-  'patternProperties': [130, 'object'],
-  'properties': [140, 'object'],
-  'minProperties': [150, 'object'],
-  'maxProperties': [160, 'object'],
-  'dependencies': [170, 'object'],
+  'required': [11000, 'object'],
+  'additionalProperties': [12000, 'object'],
+  'patternProperties': [13000, 'object'],
+  'properties': [14000, 'object'],
+  'minProperties': [15000, 'object'],
+  'maxProperties': [16000, 'object'],
+  'dependencies': [17000, 'object'],
   // Any Type
-  'allOf': [190,'any'],
-  'anyOf': [200,'any'],
-  'oneOf': [210,'any'],
-  'not': [220, 'any'],
-  'enum': [230, 'any']
+  'allOf': [19000,'any'],
+  'anyOf': [20000,'any'],
+  'oneOf': [21000,'any'],
+  'not': [22000, 'any'],
+  'enum': [23000, 'any']
 };
 
 var Utils = {
 
+  rollback: function () {
+
+  },
+
   typeOf: function (data, _type)  {
     // We check if the raw typeof value if available before calculating it
     _type = (_type != null) ? _type : typeof data;
-
     switch (_type) {
       case 'object':
         if (data === null) {
@@ -81,11 +84,65 @@ var Utils = {
     return string.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, "_").length;
   },
 
+  calculateRef: function ($ref, schema_id) {
+    if ($ref[0] === '#') {
+      return schema_id + Utils.decodeJSONPointer($ref.slice(1));
+    } else {
+      return Utils.decodeJSONPointer($ref);
+    }
+  },
+
   decodeJSONPointer: function (str) {
       // http://tools.ietf.org/html/draft-ietf-appsawg-json-pointer-07#section-3
       return decodeURIComponent(str).replace(/~[0-1]/g, function (x) {
           return x === "~1" ? "/" : "~";
       });
+  },
+
+  stringify: function(data) {
+    var value, index, flag = false;
+    switch (Utils.typeOf(data)) {
+      case 'object':
+        value = "{";
+        for (index in data) {
+          if (!flag) {
+            flag = true
+            value += '"'+ index +'": ' + Utils.stringify(data[index]);
+          } else {
+            value += ', "' + index +'": '+ Utils.stringify(data[index]);
+          }
+        }
+        value += "}";
+        break;
+      case 'array':
+        value = "[";
+        for (index in data) {
+          if (!flag) {
+            flag = true
+            value += Utils.stringify(data[index]);
+          } else {
+            value += ', '+ Utils.stringify(data[index]);
+          }
+        }
+        value += "]";
+        break;
+      case 'undefined':
+        value = 'undefined';
+        break;
+      case 'string':
+        value = '"'+data+'"';
+        break;
+      case 'null':
+        value = 'null';
+        break;
+      case 'not-a-number':
+        value = 'NaN';
+        break;
+      default:
+        value = data;
+        break;
+    }
+    return value;
   },
 
   areEqual: function(json1, json2) {
@@ -349,7 +406,7 @@ var Utils = {
 };
 
 var ValidationGenerators = {
-  'type': function (schema, path) {
+  'type': function (schema, path, schema_id, options) {
     var code = [""], conditions;
 
     if (Utils.typeOf(schema.type) === 'array' && schema.type.length > 0) {
@@ -391,7 +448,7 @@ var ValidationGenerators = {
   },
   // Numeric Validations
   // http://json-schema.org/latest/json-schema-validation.html#rfc.section.5.1.1.2
-  multipleOf: function (schema, path) {
+  multipleOf: function (schema, path, schema_id, options) {
     var code = [
       "if (!(_typeOf(data / "+ schema.multipleOf+") === 'integer')) {",
         "report.valid = false;",
@@ -400,7 +457,7 @@ var ValidationGenerators = {
     ];
     return code;
   },
-  minimum: function (schema, path) {
+  minimum: function (schema, path, schema_id, options) {
     var code = [];
 
     if (schema.exclusiveMinimum !== true) {
@@ -421,12 +478,12 @@ var ValidationGenerators = {
 
     return code;
   },
-  exclusiveMinimum: function (schema, path) {
+  exclusiveMinimum: function (schema, path, schema_id, options) {
     // covered in minimum
     var code = [];
     return code;
   },
-  maximum: function (schema, path) {
+  maximum: function (schema, path, schema_id, options) {
     var code = [];
 
     if (schema.exclusiveMaximum !== true) {
@@ -447,13 +504,13 @@ var ValidationGenerators = {
 
     return code;
   },
-  exclusiveMaximum: function (schema, path) {
+  exclusiveMaximum: function (schema, path, schema_id, options) {
     // covered in maximum
     var code = [];
     return code;
   },
   // String Validations
-  minLength: function (schema, path) {
+  minLength: function (schema, path, schema_id, options) {
     var code = [];
 
     code.push(
@@ -465,7 +522,7 @@ var ValidationGenerators = {
 
     return code;
   },
-  maxLength: function (schema, path) {
+  maxLength: function (schema, path, schema_id, options) {
     var code = [];
 
     // We've already calculate _length so don't recalculate
@@ -483,7 +540,7 @@ var ValidationGenerators = {
 
     return code;
   },
-  pattern: function (schema, path) {
+  pattern: function (schema, path, schema_id, options) {
     var code = [];
 
     code.push(
@@ -495,7 +552,7 @@ var ValidationGenerators = {
 
     return code;
   },
-  format: function (schema, path) {
+  format: function (schema, path, schema_id, options) {
     var code = [];
 
     code.push(
@@ -508,7 +565,7 @@ var ValidationGenerators = {
     return code;
   },
   // Array Validations
-  additionalItems: function (schema, path) {
+  additionalItems: function (schema, path, schema_id, options) {
     var code = [];
 
     if (schema.additionalItems === false && Utils.typeOf(schema.items) === 'array') {
@@ -522,12 +579,12 @@ var ValidationGenerators = {
 
     return code;
   },
-  items: function (schema, path) {
+  items: function (schema, path, schema_id, options) {
     // covered in additionalItems
     var code = [];
     return code;
   },
-  maxItems: function (schema, path) {
+  maxItems: function (schema, path, schema_id, options) {
     var code = [];
 
     code.push(
@@ -539,7 +596,7 @@ var ValidationGenerators = {
 
     return code;
   },
-  minItems: function (schema, path) {
+  minItems: function (schema, path, schema_id, options) {
     var code = [];
 
     code.push(
@@ -551,7 +608,7 @@ var ValidationGenerators = {
 
     return code;
   },
-  uniqueItems: function (schema, path) {
+  uniqueItems: function (schema, path, schema_id, options) {
     var code = [];
 
     if (schema.uniqueItems === true) {
@@ -570,54 +627,54 @@ var ValidationGenerators = {
   },
   // Object Validations
 
-  required: function (schema, path) {
+  required: function (schema, path, schema_id, options) {
     var code = [];
     return code;
   },
-  additionalProperties: function (schema, path) {
+  additionalProperties: function (schema, path, schema_id, options) {
     var code = [];
 
     // Handled in properties validation
     if (schema.properties === undefined && schema.patternProperties === undefined ) {
-      code = code.concat(ValidationGenerators.properties(schema, path));
+      code = code.concat(ValidationGenerators.properties(schema, path, schema_id, options));
     }
 
     return code;
   },
-  patternProperties: function (schema, path) {
+  patternProperties: function (schema, path, schema_id, options) {
     var code = [];
 
     // Handled in properties validation
     if (schema.properties === undefined) {
-      code = code.concat(ValidationGenerators.properties(schema, path));
+      code = code.concat(ValidationGenerators.properties(schema, path, schema_id, options));
     }
 
     return code;
   },
-  properties: function (schema, path) {
+  properties: function (schema, path, schema_id, options) {
     var code = [];
     return code;
   },
-  minProperties: function (schema, path) {
+  minProperties: function (schema, path, schema_id, options) {
     var code = [];
     return code;
   },
-  maxProperties: function (schema, path) {
+  maxProperties: function (schema, path, schema_id, options) {
     var code = [];
     return code;
   },
 
-  dependencies: function (schema, path) {
+  dependencies: function (schema, path, schema_id, options) {
     var code = [];
     return code;
   },
 
   // Any type validations
-  default:  function (schema, path) {
+  default:  function (schema, path, schema_id, options) {
     var code = []
     return code;
   },
-  enum: function (schema, path) {
+  enum: function (schema, path, schema_id, options) {
     var code = [];
     var default_case = [];
     var index;
@@ -642,7 +699,7 @@ var ValidationGenerators = {
 
       } else {
         default_case.push(
-          "if (_areEqual(data, "+JSON.stringify(val)+")) { match = true; }"
+          "if (_areEqual(data, "+ Utils.stringify(val)+")) { match = true; }"
         );
       }
     }
@@ -668,13 +725,13 @@ var ValidationGenerators = {
       "}",
       "if (!match) {",
         "report.valid = false;",
-        "report.errors.push({ code: 'ENUM_MISMATCH', schema: '"+ path +"', params: { actual: data, expected: "+ JSON.stringify(schema.enum) +" } });",
+        "report.errors.push({ code: 'ENUM_MISMATCH', schema: '"+ path +"', params: { actual: data, expected: "+ Utils.stringify(schema.enum) +" } });",
       "}"
     );
 
     return code;
   },
-  allOf: function (schema, path) {
+  allOf: function (schema, path, schema_id, options) {
     var code = [];
     var index;
 
@@ -683,8 +740,23 @@ var ValidationGenerators = {
     );
 
     for (index = 0; index < schema.allOf.length; index++) {
+      if (Utils.typeOf(schema.allOf[index].$ref) === 'string' && Object.keys(schema.allOf[index]).length === 1) {
+
+        code.push(
+          "result = validators['"+ Utils.calculateRef(schema.allOf[index].$ref, schema_id) +"'](data, parent, root, Utils);"
+        );
+
+      } else {
+        code.push(
+          "result = validators['"+ path +"/allOf/"+ index +"'](data, parent, root, Utils);"
+        );
+      }
+
+      if (options.enable_defaults) {
+        code.push("if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }");
+      }
+
       code.push(
-        "result = validators['"+ path +"/allOf/"+ index +"'](data, parent, root, Utils);",
         "if (!result.valid) {",
           "report.valid = false;",
           "failed = true;",
@@ -702,7 +774,7 @@ var ValidationGenerators = {
 
     return code;
   },
-  anyOf: function (schema, path) {
+  anyOf: function (schema, path, schema_id, options) {
     var code = [];
     var index;
 
@@ -712,8 +784,22 @@ var ValidationGenerators = {
 
     for (index = 0; index < schema.anyOf.length; index++) {
       if (index === 0) {
+        if (Utils.typeOf(schema.anyOf[index].$ref) === 'string' && Object.keys(schema.anyOf[index]).length === 1) {
+          code.push(
+            "result = validators['"+ Utils.calculateRef(schema.anyOf[index].$ref, schema_id) +"'](data, parent, root, Utils);"
+          );
+
+        } else {
+          code.push(
+            "result = validators['"+ path +"/anyOf/"+ index +"'](data, parent, root, Utils);"
+          );
+        }
+
+        if (options.enable_defaults) {
+          code.push("if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }");
+        }
+
         code.push(
-          "result = validators['"+ path +"/anyOf/"+ index +"'](data, parent, root, Utils);",
           "if (result.valid) {",
             "passed = true;",
           "} else {",
@@ -723,7 +809,12 @@ var ValidationGenerators = {
       } else {
         code.push(
           "if (!passed) {",
-            "result = validators['"+ path + "/anyOf/"+ index +"'](data, parent, root, Utils);",
+            "result = validators['"+ path + "/anyOf/"+ index +"'](data, parent, root, Utils);"
+        );
+        if (options.enable_defaults) {
+          code.push("if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }");
+        }
+        code.push(
             "if (result.valid) {",
               "passed = true;",
             "} else {",
@@ -743,7 +834,7 @@ var ValidationGenerators = {
 
     return code;
   },
-  oneOf: function (schema, path) {
+  oneOf: function (schema, path, schema_id, options) {
     var code = [];
     var index;
     code.push(
@@ -751,8 +842,20 @@ var ValidationGenerators = {
     );
 
     for (index = 0; index < schema.oneOf.length; index++) {
+      if (Utils.typeOf(schema.oneOf[index].$ref) === 'string' && Object.keys(schema.oneOf[index]).length === 1) {
+        code.push(
+          "result = validators['"+ Utils.calculateRef(schema.oneOf[index].$ref, schema_id) +"'](data, parent, root, Utils);"
+        );
+
+      } else {
+        code.push(
+          "result = validators['"+ path +"/oneOf/"+ index +"'](data, parent, root, Utils);"
+        );
+      }
+      if (options.enable_defaults) {
+        code.push("if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }");
+      }
       code.push(
-        "result = validators['"+ path +"/oneOf/"+ index +"'](data, parent, root, Utils);",
         "subReports.push(result);",
         "if (result.valid) {",
           "pass_count++;",
@@ -764,66 +867,115 @@ var ValidationGenerators = {
       "if (pass_count === 0) {",
         "report.valid = false;",
         "report.errors.push({ code: 'ONE_OF_MISSING', schema: '"+ path +"', subReports: subReports });",
-        // rollback all changes
-        "var _len = subReports.length;",
-        "while (_len--) {",
-          "if (subReports[_len].rollback !== undefined) {",
-            "subReports[_len].rollback();",
-            "delete subReports[_len].rollback;",
-          "}",
-        "}",
       "} else if (pass_count > 1) {",
         "report.valid = false;",
         "report.errors.push({ code: 'ONE_OF_MULTIPLE', schema: '"+ path +"', subReports: subReports });",
-        // rollback all changes
-        "var _len = subReports.length;",
-        "while (_len--) {",
-          "if (subReports[_len].rollback !== undefined) {",
-            "subReports[_len].rollback();",
-            "delete subReports[_len].rollback;",
-          "}",
-        "}",
       "}"
     );
 
     return code;
   },
-  not: function (schema, path) {
+  not: function (schema, path, schema_id, options) {
     var code = [];
+    if (Utils.typeOf(schema.not.$ref) === 'string' && Object.keys(schema.not).length === 1) {
+      code.push(
+        "result = validators['"+ Utils.calculateRef(schema.not.$ref, schema_id) +"'](data, parent, root, Utils);"
+      );
+    } else {
+      code.push(
+        "result = validators['"+ path +"/not'](data, parent, root, Utils);"
+      );
+    }
+
+    if (options.enable_defaults) {
+      code.push("if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }")
+    }
+
     code.push(
-      "result = validators['"+ path +"/not'](data, parent, root, Utils);",
       "if (result.valid) {",
         "report.valid = false;",
-        "if (result.rollback !== undefined) { result.rollback(); }",
         "report.errors.push({ code: 'NOT_PASSED', schema: '"+ path +"', subReport: result });",
       "}"
     );
     return code;
   },
-  definitions: function (schema, path) {}
+  definitions: function (schema, path, schema_id, options) {}
 
 }
 
-var TransformGenerators = {};
-
-var ArrayGenerator = function (code, schema, path) {
+var ArrayGenerator = function (code, schema, path, schema_id, options) {
+  // TODO: Optimize using loop unrolling
   if (Array.isArray(schema.items)) {
+    var index, defaults = [], defaults_present = false;
+    defaults.length = schema.items.length;
+
+    for (index = 0; index < schema.items.length; index++) {
+      if (schema.items[index].default !== undefined) {
+        defaults_present = true;
+        defaults[index] = schema.items[index].default;
+      }
+    }
+
+    if (defaults_present) {
+      code.push(
+        "var defaults = "+ Utils.stringify(defaults) +";"
+      );
+    }
+
     code.push(
       "while (_length--) {",
-        "if (_length < "+ schema.items.length +") {",
+        "if (_length < "+ schema.items.length +") {"
+    );
+
+    // Apply default values
+    if (defaults_present && options.enable_defaults) {
+      code.push(
+        "if (data[_length] === undefined) {",
+          "data[_length] = defaults[_length];",
+          "rollbacks.push((function(array, index) { return function() { array[index] = undefined; } })(data, _length));",
+        "}"
+      );
+    }
+
+    code.push(
           // TODO: insert pre validation transformers
-          "result = validators['"+ path + "/items/' + _length" +"](data[_length], data, root, Utils);",
+          "result = validators['"+ path + "/items/' + _length" +"](data[_length], data, root, Utils);"
+    );
+    if (options.enable_defaults) {
+      code.push(
+          "if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }"
+      );
+    }
+    code.push(
           // TODO: insert post validation transformers
           "if (!result.valid) {",
             "report.valid = false;",
             "subReport.push(result);",
           "}"
-    )
+    );
+
     if (Utils.typeOf(schema.additionalItems) === "object") {
+
       code.push(
-        "} else {",
+        "} else {"
+      );
+
+      if ('default' in schema.additionalItems && options.enable_defaults) {
+        code.push(
+          "if (data[_length] === undefined) {",
+            "data[_length] = "+ Utils.stringify(schema.additionalItems.default) +";",
+            "rollbacks.push((function(array, index) { return function() { array[index] = undefined; } })(data, _length));",
+          "}"
+        );
+      }
+      code.push(
           // TODO: insert pre validation transformers
-          "result = validators['"+ path + "/additionalItems'](data[_length], data, root, Utils);",
+          "result = validators['"+ path + "/additionalItems'](data[_length], data, root, Utils);"
+      );
+      if (options.enable_defaults) {
+        code.push("if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }");
+      }
+      code.push(
           // TODO: insert post validation transformers
           "if (!result.valid) {",
             "report.valid = false;",
@@ -842,10 +994,28 @@ var ArrayGenerator = function (code, schema, path) {
     // If items is a schema, then the child instance must be valid against this schema,
     // regardless of its index, and regardless of the value of "additionalItems".
     code.push(
-      "if (_length > 0) report.subReport = [];",
-      "while (_length--) {",
+      "if (_length > 0) { report.subReport = []; }",
+      "while (_length--) {"
+    );
+
+    if ('default' in schema.items && options.enable_defaults) {
+      code.push(
+        "if (data[_length] === undefined) {",
+          "data[_length] = "+ Utils.stringify(schema.items.default) +";",
+          "rollbacks.push((function(array, index) { return function() { array[index] = undefined; } })(data, _length));",
+        "}"
+      );
+    }
+    code.push(
         // TODO: insert pre validation transformers
-        "result = validators['"+ path +"/items'](data[_length], data, root, Utils);",
+        "result = validators['"+ path +"/items'](data[_length], data, root, Utils);"
+    );
+    if (options.enable_defaults) {
+      code.push(
+        "if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }"
+      );
+    }
+    code.push(
         // TODO: insert post validation transformers
         "if (!result.valid) {",
           "report.valid = false;",
@@ -854,12 +1024,13 @@ var ArrayGenerator = function (code, schema, path) {
       "}"
     );
   }
+
   code.push(
     "if (subReport.length > 0) { report.subReport = subReport; }"
   );
 };
 
-var ObjectGenerator = function (code, schema, path) {
+var ObjectGenerator = function (code, schema, path, schema_id, options) {
   if (Utils.typeOf(schema.properties) === 'object' || Utils.typeOf(schema.patternProperties) === 'object' || Utils.typeOf(schema.additionalProperties === 'object')) {
     var additionalProperties = schema.additionalProperties;
     var index, index2, key, required_keys = [], defaults = {};
@@ -875,7 +1046,7 @@ var ObjectGenerator = function (code, schema, path) {
     if (Utils.typeOf(schema.properties) === 'object') {
       for (key in schema.properties) {
         properties.push(key);
-        if (schema.properties[key].default !== undefined) {
+        if (schema.properties[key].default !== undefined && options.enable_defaults) {
           defaults[key] = schema.properties[key].default;
           required_keys.push(key);
         }
@@ -885,7 +1056,7 @@ var ObjectGenerator = function (code, schema, path) {
     if (Utils.typeOf(schema.patternProperties) === 'object') {
       for (key in schema.patternProperties) {
         patternProperties.push(key);
-        if (schema.patternProperties[key].default !== undefined) {
+        if (schema.patternProperties[key].default !== undefined && options.enable_defaults) {
           defaults[key] = schema.properties[key].default;
           required_keys.push(key);
         }
@@ -898,11 +1069,15 @@ var ObjectGenerator = function (code, schema, path) {
     }
 
     code.push(
-      "var _matches = {}, _additionalKeys = [], defaults = "+ JSON.stringify(defaults) +" ;"
+      "var _matches = {}, _additionalKeys = [];"
     );
 
+    if (options.enable_defaults) {
+      code.push("var defaults = "+ Utils.stringify(defaults) +";");
+    }
+
     if (required_keys.length > 0) {
-      code.push("var required_keys = "+ JSON.stringify(required_keys) +", _rindex = "+ (required_keys.length) +" ;");
+      code.push("var required_keys = "+ Utils.stringify(required_keys) +", _rindex = "+ (required_keys.length) +" ;");
     }
 
     // Iterate through keys once
@@ -925,7 +1100,16 @@ var ObjectGenerator = function (code, schema, path) {
         code.push(
           "case '"+ Utils.escapeString(key) +"':",
             // TODO: insert pre validation transformers
-            "result = validators['"+ path +"/properties/"+ Utils.escapeString(key) +"'](data['"+ Utils.escapeString(key) +"'], data, root, Utils);",
+            "result = validators['"+ path +"/properties/"+ Utils.escapeString(key) +"'](data['"+ Utils.escapeString(key) +"'], data, root, Utils);"
+        );
+
+        if (options.enable_defaults) {
+          code.push(
+            "if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }"
+          );
+        }
+
+        code.push(
             // TODO: insert post validation transformers
             "_matches['"+ Utils.escapeString(key) +"'] = true;"
         );
@@ -948,7 +1132,14 @@ var ObjectGenerator = function (code, schema, path) {
           if (Utils.typeOf(schema.dependencies[key]) === 'object') {
             code.push(
               // TODO: insert pre validation transformers
-              "result = validators['"+ path +"/dependencies/"+ Utils.escapeString(key) +"'](data, parent, root, Utils);",
+              "result = validators['"+ path +"/dependencies/"+ Utils.escapeString(key) +"'](data, parent, root, Utils);"
+            );
+            if (options.enable_defaults) {
+              code.push(
+                "if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }"
+              );
+            }
+            code.push(
               // TODO: insert post validation transformers
               "if (!result.valid) {",
                 "report.valid = false;",
@@ -965,7 +1156,7 @@ var ObjectGenerator = function (code, schema, path) {
             code.push(
               "if (!("+ conditions.join(' && ') +")) {",
                 "report.valid = false;",
-                "report.errors.push({ code: 'OBJECT_DEPENDENCY_KEY', schema: '"+ path +"', params: { actual: null, expected: "+ JSON.stringify(required_values) +" } });",
+                "report.errors.push({ code: 'OBJECT_DEPENDENCY_KEY', schema: '"+ path +"', params: { actual: null, expected: "+ Utils.stringify(required_values) +" } });",
               "}"
             )
           }
@@ -984,7 +1175,14 @@ var ObjectGenerator = function (code, schema, path) {
           if (Utils.typeOf(schema.dependencies[key]) === 'object') {
             code.push(
               // TODO: insert pre validation transformers
-              "result = validators['"+ path +"/dependencies/"+ Utils.escapeString(key) +"'](data, parent, root, Utils);",
+              "result = validators['"+ path +"/dependencies/"+ Utils.escapeString(key) +"'](data, parent, root, Utils);"
+            );
+            if (options.enable_defaults) {
+              code.push(
+                "if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }"
+              );
+            }
+            code.push(
               // TODO: insert post validation transformers
               "if (!result.valid) {",
                 "report.valid = false;",
@@ -1001,7 +1199,7 @@ var ObjectGenerator = function (code, schema, path) {
             code.push(
               "if (!("+ conditions.join(' && ') +")) {",
                 "report.valid = false;",
-                "report.errors.push({ code: 'OBJECT_DEPENDENCY_KEY', schema: '"+ path +"', params: { actual: null, expected: "+ JSON.stringify(required_values) +" } });",
+                "report.errors.push({ code: 'OBJECT_DEPENDENCY_KEY', schema: '"+ path +"', params: { actual: null, expected: "+ Utils.stringify(required_values) +" } });",
               "}"
             )
           }
@@ -1021,7 +1219,14 @@ var ObjectGenerator = function (code, schema, path) {
         code.push(
           "if (/"+ Utils.escapeRegexp(patternProperties[index]) +"/.test(key)) {",
             // TODO: insert pre validation transformers
-            "result = validators['"+ path +"/patternProperties/"+ Utils.escapeRegexp(patternProperties[index]) +"'](data[key], data, root, Utils);",
+            "result = validators['"+ path +"/patternProperties/"+ Utils.escapeRegexp(patternProperties[index]) +"'](data[key], data, root, Utils);"
+        );
+        if (options.enable_defaults) {
+          code.push(
+            "if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }"
+          );
+        }
+        code.push(
             // TODO: insert post validation transformers
             "_matches[key] = true;",
             "if (!result.valid) {",
@@ -1038,7 +1243,14 @@ var ObjectGenerator = function (code, schema, path) {
       code.push(
         "if (!_matches[key]) {",
           // TODO: insert pre validation transformers
-          "result = validators['"+path+"/additionalProperties'](data[key], data, root, Utils);",
+          "result = validators['"+path+"/additionalProperties'](data[key], data, root, Utils);"
+      );
+      if (options.enable_defaults) {
+        code.push(
+          "if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }"
+        );
+      }
+      code.push(
           // TODO: insert post validation transformers
           "if (!result.valid) {",
             "report.valid = false;",
@@ -1059,33 +1271,47 @@ var ObjectGenerator = function (code, schema, path) {
 
     // Check if all required keys were found
     if (required_keys.length > 0) {
-      code.push(
-        "while (_rindex--) {",
-          "var val = required_keys[_rindex];",
-          // Apply default values
-          "if (_rindex >= "+ (Utils.typeOf(schema.required) === 'array' ? schema.required.length : 0 ) +" && !(val in _matches)) {",
-            "_matches[val] = true;",
-            "data[val] = defaults[val];",
-            // Validate default value
-            "result = validators['"+ path +"/properties/' + val](data[val], data, root, Utils);",
-            "if (!result.valid) {",
-              "report.valid = false;",
-              "subReport.push(result);",
-            "}",
-            // Store rollback function
-            "rollbacks.push((function (data, key) {",
-              "return function() {",
-                "delete data[key];",
+      if (options.enable_defaults) {
+        code.push(
+          "while (_rindex--) {",
+            "var val = required_keys[_rindex];",
+            // Apply default values
+            "if (_rindex >= "+ (Utils.typeOf(schema.required) === 'array' ? schema.required.length : 0 ) +" && !(val in _matches)) {",
+              "_matches[val] = true;",
+              "data[val] = defaults[val];",
+              // Validate default value
+              "result = validators['"+ path +"/properties/' + val](data[val], data, root, Utils);",
+              "if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }",
+              "if (!result.valid) {",
+                "report.valid = false;",
+                "subReport.push(result);",
               "}",
-            "})(data, val));",
-          "} else {",
+              // Store rollback function
+              "rollbacks.push((function (data, key) {",
+                "return function() {",
+                  "delete data[key];",
+                "}",
+              "})(data, val));",
+            "} else {",
+              "if (val !== null && !(val in _matches)) {",
+                "report.valid = false;",
+                "report.errors.push({ code: 'OBJECT_MISSING_REQUIRED_PROPERTY', schema: '"+ path +"', params: { actual: null, expected: val } });",
+              "}",
+            "}",
+          "}"
+        );
+      } else {
+        code.push(
+          "while (_rindex--) {",
+            "var val = required_keys[_rindex];",
             "if (val !== null && !(val in _matches)) {",
               "report.valid = false;",
               "report.errors.push({ code: 'OBJECT_MISSING_REQUIRED_PROPERTY', schema: '"+ path +"', params: { actual: null, expected: val } });",
             "}",
-          "}",
-        "}"
-      );
+          "}"
+        );
+      }
+
     }
 
     // Check if any additional properties were found
@@ -1118,34 +1344,12 @@ var ObjectGenerator = function (code, schema, path) {
     }
 
     code.push(
-      "if (!report.valid) {",
-        "var rb_index, sr_index;",
-        "if ((rb_index = rollbacks.length) > 0) {",
-          "while (rb_index--) {",
-            "rollbacks[rb_index]();",
-          "}",
-        "}",
-        "if ((sr_index = subReport.length) > 0) {",
-          "while (sr_index--) {",
-            "if (subReport[sr_index].rollback !== undefined) {",
-              "subReport.rollback()",
-            "}",
-          "}",
-        "}",
-        "report.subReport = subReport;",
-      "} else if (rollbacks.length > 0) {",
-        "report.rollback = function () {",
-          "var rb_index = rollbacks.length;",
-          "while (rb_index--) {",
-            "rollbacks[rb_index]();",
-          "}",
-        "}",
-      "}"
+      "if (subReport.length > 0) { report.subReport = subReport; }"
     );
   }
 };
 
-var SchemaGenerator = function (schema, path, schema_id, cache) {
+var SchemaGenerator = function (schema, path, schema_id, cache, options) {
 
   var block_type, keyword_rank, keywords = [], blocks = {
     any: { start: null, end: null },
@@ -1155,16 +1359,21 @@ var SchemaGenerator = function (schema, path, schema_id, cache) {
     object: { start: null, end: null }
   }, code = [
     "validators['"+ path +"'] = function (data, parent, root, Utils) {",
-      "var report = { valid: true, schema: '"+ path +"', errors: [] }, result, subReport = [], rollbacks = [];",
+      "var result, subReport = [];",
       "var _areEqual = Utils.areEqual;",
       "var _typeOf = Utils.typeOf;",
       "var _unicodeLength = Utils.unicodeLength;",
       "var _isUniqueArray = Utils.isUniqueArray;",
       "var _format = Utils.format;",
-      "var _type = typeof data;",
-      "var type = _typeOf(data, _type);",
+      "var _type = typeof data, type = _typeOf(data, _type);",
       "var _length = 0;"
   ];
+
+  if (options.enable_defaults) {
+    code.push("var _rollback = Utils.rollback, report = { valid: true, schema: '"+ path +"', errors: [], rollback: _rollback }, rollbacks = [];");
+  } else {
+    code.push("var report = { valid: true, schema: '"+ path +"', errors: [] }");
+  }
 
   for (key in schema) {
     // Calculate start and end validation for each type of block
@@ -1173,7 +1382,7 @@ var SchemaGenerator = function (schema, path, schema_id, cache) {
       if (cache[path + '/' + key] === undefined) {
         cache[path + '/' + key] = (function (key, schema, path) {
           return function() {
-            var schema_code = SchemaGenerator(schema[key], path + "/" + key, schema_id, cache);
+            var schema_code = SchemaGenerator(schema[key], path + "/" + key, schema_id, cache, options);
             code = Array.prototype.splice.apply(code, [10, 0].concat(schema_code));
             cache[path + '/' + key] = true;
           };
@@ -1228,7 +1437,7 @@ var SchemaGenerator = function (schema, path, schema_id, cache) {
         }
       }
 
-      code = code.concat(generator(schema, path));
+      code = code.concat(generator(schema, path, schema_id, options));
 
       // Close type check block
       if (blocks[keyword_type].end === KEYWORD_META[keyword][0]) {
@@ -1239,11 +1448,11 @@ var SchemaGenerator = function (schema, path, schema_id, cache) {
             code.push("}");
             break;
           case 'array':
-            ArrayGenerator(code, schema, path);
+            ArrayGenerator(code, schema, path, schema_id, options);
             code.push("}");
             break;
           case 'object':
-            ObjectGenerator(code, schema, path);
+            ObjectGenerator(code, schema, path, schema_id, options);
             code.push("}");
             break;
         }
@@ -1262,9 +1471,13 @@ var SchemaGenerator = function (schema, path, schema_id, cache) {
         ];
       } else {
         code.push(
-          "return validators['"+ schema_id + Utils.decodeJSONPointer(schema.$ref.slice(1)) +"'](data, parent, root, Utils);",
-          "}"
-        );
+            "result = validators['"+ schema_id + Utils.decodeJSONPointer(schema.$ref.slice(1)) +"'](data, parent, root, Utils);"
+        )
+        if (options.enable_defaults) {
+          code.push(
+            "if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }"
+          );
+        }
       }
       if (typeof cache[schema_id + Utils.decodeJSONPointer(schema.$ref.slice(1))] === 'function') {
         cache[schema_id + Utils.decodeJSONPointer(schema.$ref.slice(1))]();
@@ -1278,25 +1491,50 @@ var SchemaGenerator = function (schema, path, schema_id, cache) {
         ];
       } else {
         code.push(
-          "return validators['"+ Utils.decodeJSONPointer(schema.$ref) +"'](data, parent, root, Utils);",
-          "}"
+            "return validators['"+ Utils.decodeJSONPointer(schema.$ref) +"'](data, parent, root, Utils);"
         );
+        if (options.enable_defaults) {
+            code.push(
+            "if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }"
+            );
+        }
       }
       if (typeof cache[Utils.decodeJSONPointer(schema.$ref)] === 'function') {
         cache[Utils.decodeJSONPointer(schema.$ref)]();
       }
     }
-
-  } else {
-    code.push(
-        "return report;",
-      "};"
-    );
   }
+
+  if (code.length > 3) {
+    if (options.enable_defaults) {
+      code.push(
+          "var rb_index = rollbacks.length;",
+          "if (!report.valid && rb_index > 0) {",
+            "while (rb_index--) {",
+              "rollbacks[rb_index]();",
+            "}",
+          "} else if (rb_index > 0) {",
+            "report.rollback = function () {",
+              "while (rb_index--) {",
+                "rollbacks[rb_index]();",
+              "}",
+            "}",
+          "}",
+          "return report;",
+        "};"
+      );
+    } else {
+      code.push(
+          "return report;",
+        "};"
+      )
+    }
+  }
+
 
   if (code.length === 12) {
     code = [
-      "validators['"+ path +"'] = function (data, parent, root, Utils) { return { valid: true, errors: [] }; }"
+      "validators['"+ path +"'] = _stub;"
     ];
   }
 
@@ -1304,66 +1542,66 @@ var SchemaGenerator = function (schema, path, schema_id, cache) {
   if (Array.isArray(schema.items)) {
     var index;
     for (index = 0; index < schema.items.length; index++) {
-      code = code.concat(SchemaGenerator(schema.items[index], path + "/items/" + index, schema_id, cache));
+      code = code.concat(SchemaGenerator(schema.items[index], path + "/items/" + index, schema_id, cache, options));
     }
     if (Utils.typeOf(schema.additionalItems) === "object") {
-      code = code.concat(SchemaGenerator(schema.additionalItems, path + "/additionalItems", schema_id, cache));
+      code = code.concat(SchemaGenerator(schema.additionalItems, path + "/additionalItems", schema_id, cache, options));
     }
   } else if (typeof schema.items === "object") {
-    code = code.concat(SchemaGenerator(schema.items, path + "/items", schema_id, cache));
+    code = code.concat(SchemaGenerator(schema.items, path + "/items", schema_id, cache, options));
   }
   // Generate validators for objects
   var key, value;
   if (Utils.typeOf(schema.properties) == 'object') {
     for (key in schema.properties) {
       value = schema.properties[key];
-      code = code.concat(SchemaGenerator(value, path + "/properties/" + key, schema_id, cache));
+      code = code.concat(SchemaGenerator(value, path + "/properties/" + key, schema_id, cache, options));
     }
   }
   if (Utils.typeOf(schema.patternProperties) == 'object') {
     for (key in schema.patternProperties) {
       value = schema.patternProperties[key];
-      code = code.concat(SchemaGenerator(value, path + "/patternProperties/" + key, schema_id, cache));
+      code = code.concat(SchemaGenerator(value, path + "/patternProperties/" + key, schema_id, cache, options));
     }
   }
   if (Utils.typeOf(schema.additionalProperties) == 'object') {
-    code = code.concat(SchemaGenerator(schema.additionalProperties, path + "/additionalProperties", schema_id, cache));
+    code = code.concat(SchemaGenerator(schema.additionalProperties, path + "/additionalProperties", schema_id, cache, options));
   }
   if (Utils.typeOf(schema.dependencies) === 'object') {
     for (key in schema.dependencies) {
       value = schema.dependencies[key];
       if (Utils.typeOf(value) === 'object') {
-        code = code.concat(SchemaGenerator(value, path + "/dependencies/" + key, schema_id, cache));
+        code = code.concat(SchemaGenerator(value, path + "/dependencies/" + key, schema_id, cache, options));
       }
     }
   }
   if (Utils.typeOf(schema.allOf) === 'array' && schema.allOf.length > 0) {
     for (index in schema.allOf) {
       value = schema.allOf[index];
-      code = code.concat(SchemaGenerator(value, path + "/allOf/" + index, schema_id, cache));
+      code = code.concat(SchemaGenerator(value, path + "/allOf/" + index, schema_id, cache, options));
     }
   }
   if (Utils.typeOf(schema.anyOf) === 'array' && schema.anyOf.length > 0) {
     for (index in schema.anyOf) {
       value = schema.anyOf[index];
-      code = code.concat(SchemaGenerator(value, path + "/anyOf/" + index, schema_id, cache));
+      code = code.concat(SchemaGenerator(value, path + "/anyOf/" + index, schema_id, cache, options));
     }
   }
   if (Utils.typeOf(schema.oneOf) === 'array' && schema.oneOf.length > 0) {
     for (index in schema.oneOf) {
       value = schema.oneOf[index];
-      code = code.concat(SchemaGenerator(value, path + "/oneOf/" + index, schema_id, cache));
+      code = code.concat(SchemaGenerator(value, path + "/oneOf/" + index, schema_id, cache, options));
     }
   }
   if (Utils.typeOf(schema.not) === 'object') {
-    code = code.concat(SchemaGenerator(schema.not, path + "/not", schema_id, cache));
+    code = code.concat(SchemaGenerator(schema.not, path + "/not", schema_id, cache, options));
   }
 
   if (Utils.typeOf(schema.definitions) === 'object') {
     for (index in schema.definitions) {
       value = schema.definitions[index];
       if (!cache[path + "/definitions/" + index]) {
-        code = code.concat(SchemaGenerator(value, path + "/definitions/" + index, schema_id, cache));
+        code = code.concat(SchemaGenerator(value, path + "/definitions/" + index, schema_id, cache, options));
         cache[path + "/definitions/" + index] = true;
       }
     }
@@ -1383,25 +1621,32 @@ module.exports = {
   },
 
   registerValidator: function (keyword, meta, validation_func) {
-    KEYWORD_META[keyword] = [meta.rank, meta.type];
+    var rank;
+    if (meta.order[0] == 'after') {
+      rank = KEYWORD_META[meta.order[1]][0] + 1
+    } else if (meta.order[0] == 'before') {
+      rank = KEYWORD_META[meta.order[1]][0] - 1
+    }
+    KEYWORD_META[keyword] = [rank, meta.type];
     ValidationGenerators[keyword] = validation_func;
   },
 
-  registerTransformer: function (keyword, order, transform_gen_func) {
+  registerTransformer: function (keyword, meta, transform_gen_func) {
     if (Utils.transform === undefined) {
       Utils.transform[keyword] = {
         order: order,
         func: transform_func
       }
     } else {
-      throw new Error("The transformer '' has already been registered");
+      throw new Error("The transformer 'keyword' has already been registered");
     }
   },
 
-  validator: function (schemas, options) {
-    var body, index, generate, validator, schema, SCHEMA_ID, code;
+  buildValidator: function (schemas, options) {
+    var body, index, validator, schema, SCHEMA_ID, code;
     options = (options == null) ? {} : options;
     options.beautify = (options.beautify == null) ? true : options.beautify;
+    options.enable_defaults = (options.enable_defaults == null) ? false : options.enable_defaults;
 
     // TODO: Validate Schemas
     if (Utils.typeOf(schemas) === 'object') {
@@ -1409,14 +1654,24 @@ module.exports = {
     }
 
     body = [
-      "var validators = {};"
+      "var validators = {};",
     ];
+
+    if (options.enable_defaults) {
+      body.push(
+      "var _stub = function (data, parent, root, Utils) { return { valid: true, errors: [], rollback: function() {} }; }"
+      );
+    } else {
+      body.push(
+      "var _stub = function (data, parent, root, Utils) { return { valid: true, errors: [] }; }"
+      );
+    }
 
     // Generate validators for each schema provided
     for (index = 0; index < schemas.length; index++) {
       schema = schemas[index];
       SCHEMA_ID = (schema.id != null) ? schema.id : index;
-      body = body.concat(SchemaGenerator(schema, SCHEMA_ID, SCHEMA_ID, {}));
+      body = body.concat(SchemaGenerator(schema, SCHEMA_ID, SCHEMA_ID, {}, options));
     }
 
     body.push(
@@ -1446,10 +1701,16 @@ module.exports = {
       compressed_ast.print(stream);
       code = stream.toString();
     }
-    console.log(code);
+    return code;
+  },
+
+  validator: function (schemas, options) {
+    var generate;
+    var code = this.buildValidator(schemas, options);
+    //console.log(code);
     eval(code);
 
-    validator = generate();
+    var validator = generate();
 
     return function (data, schema) {
       if (!schema) throw Error('Please specify a schema');
