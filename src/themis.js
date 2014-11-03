@@ -124,6 +124,17 @@ var Utils = {
     }
   },
 
+  defaults: function(obj) {
+    if (!Utils.typeOf(obj) === 'object') return obj;
+    for (var i = 1, length = arguments.length; i < length; i++) {
+      var source = arguments[i];
+      for (var prop in source) {
+        if (obj[prop] === void 0) obj[prop] = source[prop];
+      }
+    }
+    return obj;
+  },
+
   typeOf: function (data, _type)  {
     // We check if the raw typeof value if available before calculating it
     _type = (_type != null) ? _type : typeof data;
@@ -628,7 +639,7 @@ var buildError = function (error_code, schema, schema_path, relative_schema_path
 
   if (validator_value != null && options.errors.validator_value) {
     code.push(
-      ", validator_value: _schema['"+ validator +"']"
+      ", validator_value: " + Utils.stringify(validator_value)
     );
   }
 
@@ -1848,6 +1859,8 @@ var SchemaGenerator = function (schema, schema_path, schema_id, cache, options) 
   return code;
 }
 
+var schema_validator = null, $schema = null;
+
 module.exports = {
 
   registerFormat: function (format, validation_func) {
@@ -1882,14 +1895,12 @@ module.exports = {
 
   buildValidator: function (schemas, options) {
     var body, index, validator, schema, SCHEMA_ID, code;
-    options = (options == null) ? {} : options;
-    options.beautify = (options.beautify == null) ? true : options.beautify;
-    options.enable_defaults = (options.enable_defaults == null) ? false : options.enable_defaults;
-    options.errors = (options.errors == null) ? {} : options.errors
-    options.errors.schema = (options.errors.schema == null) ? true: options.errors.schema;
-    options.errors.validator_value = (options.errors.validator_value == null) ? true: options.errors.validator_value;
-    options.errors.messages = (options.errors.messages == null) ? true: options.errors.messages;
-    // TODO: Validate Schemas
+
+    Utils.defaults(options.errors, {
+      schema: true,
+      validator_value: true,
+      messages: true
+    });
 
     body = [
       "var validators = {};"
@@ -1917,7 +1928,7 @@ module.exports = {
         "return validators[schema_id](data, _schema, null, data, '', Utils);",
       "}"
     );
-    //console.log(body.join('\n'));
+
     if (options.beautify) {
       // Generate readable code
       var ast = UglifyJS.parse("generate = function () {"+body.join("\n")+"}");
@@ -2004,10 +2015,251 @@ module.exports = {
   },
 
   validator: function (schemas, options) {
-    options = options == null ? {} : options;
+    options = (options == null ? {} : options);
+
+    Utils.defaults(options, {
+      beautify: true,
+      enable_defaults: false,
+      validate_schemas: false,
+      force_additional: true,
+      force_items: false,
+      force_max_length: false,
+      force_properties: false,
+      no_extra_keywords: false,
+      no_typeless: false,
+      no_empty_strings: false,
+      no_empty_arrays: false,
+      simple_ids: true,
+      errors: {}
+    });
 
     if (Utils.typeOf(schemas) === 'object') {
       schemas = [schemas];
+    }
+
+    // Validate Schemas
+    if (options.validate_schemas) {
+
+      if (schema_validator === null) {
+        $schema = require('./draftv4/schema.json');
+
+        if (options.simple_ids) {
+          delete $schema.allOf[0].properties.id.format;
+        }
+
+        if (options.force_additional) {
+          $schema.allOf.push({
+            oneOf: [
+              {
+                type: 'object',
+                required: ['additionalProperties'],
+                properties: {
+                  type: {
+                    enum: ['object']
+                  },
+                }
+              },
+              {
+                type: 'object',
+                required: ['additionalItems'],
+                properties: {
+                  type: {
+                    enum: ['array']
+                  }
+                }
+              },
+              {
+                type: 'object',
+                properties: {
+                  type: {
+                    enum: ['boolean', 'integer', 'null', 'number', 'string']
+                  }
+                }
+              }
+            ]
+          });
+        }
+
+        if (options.force_items) {
+          $schema.allOf.push({
+            oneOf: [
+              {
+                type: 'object',
+                required: ['items'],
+                properties: {
+                  type: {
+                    enum: ['array']
+                  }
+                }
+              },
+              {
+                type: 'object',
+                properties: {
+                  type: {
+                    enum: ['object', 'boolean', 'integer', 'null', 'number', 'string']
+                  }
+                }
+              }
+            ]
+          });
+        }
+
+        if (options.force_max_length) {
+          $schema.allOf.push({
+            oneOf: [
+              {
+                type: 'object',
+                required: ['maxLength'],
+                properties: {
+                  type: {
+                    enum: ['string']
+                  }
+                }
+              },
+              {
+                type: 'object',
+                properties: {
+                  type: {
+                    enum: ['array', 'object', 'boolean', 'integer', 'null', 'number']
+                  }
+                }
+              }
+            ]
+          });
+        }
+
+        if (options.force_properties) {
+          $schema.allOf.push({
+            anyOf: [
+              {
+                type: 'object',
+                required: ['properties'],
+                properties: {
+                  type: {
+                    enum: ['object']
+                  }
+                }
+              },
+              {
+                type: 'object',
+                required: ['patternProperties'],
+                properties: {
+                  type: {
+                    enum: ['object']
+                  }
+                }
+              },
+              {
+                type: 'object',
+                properties: {
+                  type: {
+                    enum: ['array', 'boolean', 'integer', 'null', 'number', 'string']
+                  }
+                }
+              }
+            ]
+          });
+        }
+
+        if (options.no_extra_keywords) {
+          $schema.allOf[0].additionalProperties = false
+        }
+
+        if (options.no_typeless) {
+          $schema.allOf.push({
+            type: 'object',
+            required: ['type']
+          });
+        }
+
+        if (options.no_empty_strings) {
+          $schema.allOf.push({
+            oneOf: [
+              {
+                type: 'object',
+                properties: {
+                  type: {
+                    enum: ['string']
+                  },
+                  minLength: {
+                    default: 1
+                  }
+                }
+              },
+              {
+                type: 'object',
+                properties: {
+                  type: {
+                    enum: ['array', 'object', 'boolean', 'integer', 'null', 'number']
+                  }
+                }
+              }
+            ]
+          });
+        }
+
+        if (options.no_empty_arrays) {
+          $schema.allOf.push({
+            oneOf: [
+              {
+                type: 'object',
+                properties: {
+                  type: {
+                    enum: ['array']
+                  },
+                  minItems: {
+                    default: 1
+                  }
+                }
+              },
+              {
+                type: 'object',
+                properties: {
+                  type: {
+                    enum: ['string', 'object', 'boolean', 'integer', 'null', 'number']
+                  }
+                }
+              }
+            ]
+          });
+        }
+
+        if (options.assume_additional !== undefined) {
+          $schema.allOf.push({
+            oneOf: [
+              {
+                type: 'object',
+                properties: {
+                  type: {
+                    enum: ['object']
+                  },
+                  additionalProperties: {
+                    default: options.assume_additional
+                  }
+                }
+              },
+              {
+                type: 'object',
+                properties: {
+                  type: {
+                    enum: ['array', 'string', 'boolean', 'integer', 'null', 'number']
+                  }
+                }
+              }
+            ]
+          })
+        }
+        schema_validator = this.validator($schema, { enable_defaults: true, validate_schemas: false, errors: { messages: false, schema: false, validator_value: true } })
+      }
+
+      for (var index = 0; index < schemas.length; index++) {
+        var report = schema_validator(schemas[index], 'http://json-schema.org/draft-04/schema#', { algorithm: 'best_match' });
+        report.schema_id = schemas[index].id;
+        if (!report.valid) {
+          //console.log(require('util').inspect(report, { depth: 100, colors: true }));
+          return report;
+        }
+      }
     }
 
     var generate;
@@ -2023,7 +2275,7 @@ module.exports = {
         options.algorithm = (options.algorithm == null) ? 'none': options.algorithm;
         var _schema = _schemas[schema_id];
         var report = validator(data, schema_id, _schema, Utils);
-        //delete report.rollback;
+        delete report.rollback;
         if (!report.valid) {
           if(options.algorithm !== 'none') { report = Utils.filterReports([report], options.algorithm)[0][0] };
           report.data = data;
