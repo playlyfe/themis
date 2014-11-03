@@ -1,6 +1,6 @@
 {
   "name": "themis",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A blazing fast JSON Schema v4 validator",
   "main": "src/themis.js",
   "scripts": {
