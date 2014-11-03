@@ -10,8 +10,40 @@ var tv4 = require("tv4");
 var JsonModel = require('json-model');
 var Themis = require('../src/themis');
 
+
 Tester.registerValidator({
-    name: "z-schema",
+    name: "themis[minimal]",
+    setup: function (schema) {
+        return Themis.validator(schema, { enable_defaults: false, errors: { messages: false, validator_value: false, schema: false } });
+    },
+    test: function (instance, json, schema) {
+        return instance(json, '0').valid === true;
+    }
+});
+
+Tester.registerValidator({
+    name: "themis[default]",
+    setup: function (schema) {
+        return Themis.validator(schema, { enable_defaults: true });
+    },
+    test: function (instance, json, schema) {
+        return instance(json, '0').valid === true;
+    }
+});
+
+Tester.registerValidator({
+    name: "json-model",
+    setup: function (schema) {
+        return JsonModel.validator(schema);
+    },
+    test: function (instance, json, schema) {
+        // If we're repeatedly testing the same schema, use the existing validator
+        return instance(json).valid === true;
+    }
+});
+
+Tester.registerValidator({
+    name: "z-schema 3",
     setup: function () {
         return new ZSchema({
             ignoreUnresolvableReferences: true
@@ -23,12 +55,12 @@ Tester.registerValidator({
 });
 
 Tester.registerValidator({
-    name: "jayschema",
+    name: "tv4",
     setup: function () {
-        return new JaySchema();
+        return tv4;
     },
     test: function (instance, json, schema) {
-        return instance.validate(json, schema).length === 0;
+        return instance.validateResult(json, schema).valid === true;
     }
 });
 
@@ -53,39 +85,14 @@ Tester.registerValidator({
 });
 
 Tester.registerValidator({
-    name: "tv4",
+    name: "jayschema",
     setup: function () {
-        return tv4;
+        return new JaySchema();
     },
     test: function (instance, json, schema) {
-        return instance.validateResult(json, schema).valid === true;
+        return instance.validate(json, schema).length === 0;
     }
 });
-
-
-Tester.registerValidator({
-    name: "json-model",
-    setup: function (schema) {
-        return JsonModel.validator(schema);
-    },
-    test: function (instance, json, schema) {
-        // If we're repeatedly testing the same schema, use the existing validator
-        return instance(json).valid === true;
-    }
-});
-
-Tester.registerValidator({
-    name: "themis",
-    setup: function (schema) {
-        return Themis.validator(schema);
-    },
-    test: function (instance, json, schema) {
-        //console.log("RES", JSON.stringify(instance(json), 2, 2), JSON.stringify(json,2,2));
-        //console.log(instance.toString());
-        return instance(json, '0').valid === true;
-    }
-});
-
 
 var basicObject = require("./basic_object.json");
 var basicSchema = require("./basic_schema_v4.json");
@@ -93,6 +100,7 @@ Tester.runOne("basicObject", basicObject, basicSchema, true);
 var advancedObject = require("./advanced_object.json");
 var advancedSchema = require("./advanced_schema_v4.json");
 Tester.runOne("advancedObject", advancedObject, advancedSchema, true);
+
 Tester.runDirectory(__dirname + "/../test/jsonSchemaTestSuite/tests/draft4/", {
     excludeFiles: [],
     excludeTests: [

@@ -72,7 +72,7 @@ var ERROR_MESSAGES = {
   OBJECT_PROPERTIES_MAXIMUM:              "_stringify(data) + ' has more than the maximum of ' + _schema.maxProperties + ' properties'",
   OBJECT_MISSING_REQUIRED_PROPERTY:       "'The required property \\\'' + val + '\\\' is missing'",
   OBJECT_ADDITIONAL_PROPERTIES:           "'Additional properties not allowed, ' + _stringify(_additionalKeys) + ' is unexpected'",
-  OBJECT_DEPENDENCY_KEY:                  "'Dependency failed - key must exist: {0} (due to key: {1})'",
+  OBJECT_DEPENDENCY_KEY:                  "'The keys ' + _stringify(_schema.dependencies[key]) + ' must exist due to key \"' + key + '\"'",
 
   // String errors
   MIN_LENGTH:                             "_stringify(data) + ' is too short, minimum ' + _schema.minLength",
@@ -102,10 +102,26 @@ var ERROR_MESSAGES = {
   */
 }
 
-
 var Utils = {
 
   rollback: function () {
+  },
+
+  dereferencePath: function (path, schema_id, schemas) {
+    if (path[0] === '#') {
+      if (path === '#') {
+        return schemas[schema_id];
+      } else {
+        var ref = schemas[schema_id];
+        var parts = path.slice(2).split('/').map(function (part) { return Utils.decodeJSONPointer(part); });
+        for (var index = 0; index < parts.length; index++) {
+          ref = ref[parts[index]];
+        }
+        return ref;
+      }
+    } else {
+      return schemas[path];
+    }
   },
 
   typeOf: function (data, _type)  {
@@ -137,17 +153,8 @@ var Utils = {
     };
 
   },
-
   unicodeLength: function (string) {
     return string.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, "_").length;
-  },
-
-  calculateRef: function ($ref, schema_id) {
-    if ($ref[0] === '#') {
-      return schema_id + Utils.decodeJSONPointer($ref.slice(1));
-    } else {
-      return Utils.decodeJSONPointer($ref);
-    }
   },
 
   decodeJSONPointer: function (str) {
@@ -164,58 +171,58 @@ var Utils = {
   },
 
   stringify: function(data) {
-    var value, index, flag = false;
+    var value = [], index, flag = false;
     var _stringify = Utils.stringify;
     switch (Utils.typeOf(data)) {
       case 'object':
-        value = "{";
+        value = ["{"];
         for (index in data) {
           if (!flag) {
             flag = true
-            value += ' "'+ index +'": ' + _stringify(data[index]);
+            value.push(' "'+ index +'": ' + _stringify(data[index]));
           } else {
-            value += ', "' + index +'": '+ _stringify(data[index]);
+            value.push(', "' + index +'": '+ _stringify(data[index]));
           }
         }
         if (flag) {
-          value += " }";
+          value.push(" }");
         } else {
-          value += "}";
+          value.push("}");
         }
         break;
       case 'array':
-        value = "[";
+        value = ["["];
         for (index in data) {
           if (!flag) {
             flag = true
-            value += ' ' + _stringify(data[index]);
+            value.push(' ' + _stringify(data[index]));
           } else {
-            value += ', '+ _stringify(data[index]);
+            value.push(', '+ _stringify(data[index]));
           }
         }
         if (flag) {
-          value += " ]";
+          value.push(" ]");
         } else {
-          value += "]";
+          value.push("]");
         }
         break;
       case 'undefined':
-        value = 'undefined';
+        value = ['undefined'];
         break;
       case 'string':
-        value = '"'+data+'"';
+        value = ['"'+data+'"'];
         break;
       case 'null':
-        value = 'null';
+        value = ['null'];
         break;
       case 'not-a-number':
-        value = 'NaN';
+        value = ['NaN'];
         break;
       default:
-        value = data;
+        value = [data];
         break;
     }
-    return value;
+    return value.join('');
   },
 
   areEqual: function(json1, json2) {
@@ -270,14 +277,15 @@ var Utils = {
   },
 
   isUniqueArray: function (arr, indexes) {
-    var i, j, l = arr.length, _areEqual = Utils.areEqual;
-    for (i = 0; i < l; i++) {
-        for (j = i + 1; j < l; j++) {
-            if (_areEqual(arr[i], arr[j])) {
-                if (indexes) { indexes.push(i, j); }
-                return false;
-            }
+    var l = arr.length;
+    var i = l , j = l, _areEqual = Utils.areEqual;
+    for (;i--;) {
+      for (j = i; j--;) {
+        if (_areEqual(arr[i], arr[j])) {
+          if (indexes) { indexes.push(i, j); }
+          return false;
         }
+      }
     }
     return true;
   },
@@ -304,8 +312,6 @@ var Utils = {
   filterErrors: function(errors, algorithm) {
     var _filterErrors = Utils.filterErrors;
     var _filterReports = Utils.filterReports;
-    //console.log("ERRRRRR");
-    //console.log(errors);
     switch (algorithm) {
       case 'none':
       case 'relevance':
@@ -363,7 +369,7 @@ var Utils = {
   filterReports: function (reports, algorithm) {
     var _filterErrors = Utils.filterErrors;
     var _filterReports = Utils.filterReports;
-    //console.log("RRR", reports);
+
     switch (algorithm) {
       case 'none':
       case 'relevance':
@@ -605,9 +611,20 @@ var buildError = function (error_code, schema, schema_path, relative_schema_path
       "code: '"+ error_code +"',",
       "path: path,",
       "instance: data,",
-      "message: "+ ERROR_MESSAGES[error_code].replace(/\{([^\}]+)\}/g, function(match, index) { return params[index]; }) +",",
       "validator: '"+ validator +"'"
   ];
+
+  if (options.errors.messages) {
+    if (options.errors.schema) {
+      code.push(
+        ", message: "+ ERROR_MESSAGES[error_code].replace(/\{([^\}]+)\}/g, function(match, index) { return params[index]; })
+      );
+    } else {
+      code.push(
+        ", message: "+ ERROR_MESSAGES[error_code].replace(/_schema\.([a-zA-Z0-9_]+)/g, function(match, index) { return Utils.stringify(schema[index]); })
+      );
+    }
+  }
 
   if (validator_value != null && options.errors.validator_value) {
     code.push(
@@ -617,7 +634,7 @@ var buildError = function (error_code, schema, schema_path, relative_schema_path
 
   if (schema.description !== undefined) {
     code.push(
-      ", description: '"+ schema.description +"',"
+      ", description: '"+ schema.description + "'"
     );
   }
 
@@ -628,8 +645,8 @@ var buildError = function (error_code, schema, schema_path, relative_schema_path
   }
 
   code.push(
-      ", relative_schema_path: '"+ relative_schema_path + "'",
-      ", absolute_schema_path: '"+ schema_path + ((validator_value == null) ? '' : relative_schema_path) + "'"
+    ", relative_schema_path: '"+ relative_schema_path + "'",
+    ", absolute_schema_path: '"+ schema_path + ((validator_value == null) ? '' : relative_schema_path) + "'"
   );
 
   if (build_context) {
@@ -682,7 +699,6 @@ var ValidationGenerators = {
     code.push(
       "report.valid = false;",
       buildError('INVALID_TYPE', schema, schema_path, '/type', 'type', schema.type, [schema.type, 'type'], options),
-      //"report.errors.push({ code: 'INVALID_TYPE', schema: '"+ schema_path +"', params: { actual: type, expected: '"+ schema.type + "' } });",
       "} else { validations_passed++; }"
     );
     return code;
@@ -694,7 +710,6 @@ var ValidationGenerators = {
       "if (!(_typeOf(data / "+ schema.multipleOf+") === 'integer')) {",
         "report.valid = false;",
         buildError('MULTIPLE_OF', schema, schema_path, '/multipleOf', 'multipleOf', schema.multipleOf, {}, options),
-        //"report.errors.push({ code: 'MULTIPLE_OF', schema: '"+ schema_path +"', params: { actual: data, expected: "+ schema.multipleOf +" } });",
       "} else { validations_passed++; }"
     ];
     return code;
@@ -707,7 +722,6 @@ var ValidationGenerators = {
         "if (data < "+ schema.minimum +") {",
           "report.valid = false;",
           buildError('MINIMUM', schema, schema_path, '/minimum', 'minimum', schema.minimum, {}, options),
-          //"report.errors.push({ code: 'MINIMUM', schema: '"+ schema_path +"', params: { actual: data, expected: "+ schema.minimum +" } });",
         "} else { validations_passed++; }"
       );
     } else {
@@ -715,7 +729,6 @@ var ValidationGenerators = {
         "if (data <= "+ schema.minimum +") {",
           "report.valid = false;",
           buildError('MINIMUM_EXCLUSIVE', schema, schema_path, '/exclusiveMinimum', 'exclusiveMinimum', schema.exclusiveMinimum, {}, options),
-          //"report.errors.push({ code: 'MINIMUM_EXCLUSIVE', schema: '"+ schema_path +"', params: { actual: data, expected: "+ schema.minimum +" } });",
         "} else { validations_passed++; }"
       );
     }
@@ -735,7 +748,6 @@ var ValidationGenerators = {
         "if (data > "+ schema.maximum +") {",
           "report.valid = false;",
           buildError('MAXIMUM', schema, schema_path, '/maximum', 'maximum', schema.maximum, {}, options),
-          //"report.errors.push({ code: 'MAXIMUM', schema: '"+ schema_path +"', params: { actual: data, expected: "+ schema.maximum +" } });",
         "} else { validations_passed++; }"
       );
     } else {
@@ -743,7 +755,6 @@ var ValidationGenerators = {
         "if (data >= "+ schema.maximum +") {",
           "report.valid = false;",
           buildError('MAXIMUM_EXCLUSIVE', schema, schema_path, '/exclusiveMaximum', 'exclusiveMaximum', schema.exclusiveMaximum, {}, options),
-          //"report.errors.push({ code: 'MAXIMUM_EXCLUSIVE', schema: '"+ schema_path +"', params: { actual: data, expected: "+ schema.maximum +" } });",
         "} else { validations_passed++; }"
       );
     }
@@ -763,7 +774,6 @@ var ValidationGenerators = {
       "if ((_length = _unicodeLength(data)) < "+ schema.minLength +") {",
         "report.valid = false;",
         buildError('MIN_LENGTH', schema, schema_path, '/minLength', 'minLength', schema.minLength, {}, options),
-        //"report.errors.push({ code: 'MIN_LENGTH', schema: '"+ schema_path +"', params: { actual: _length, expected: "+ schema.minLength +" } });",
       "} else { validations_passed++; }"
     );
 
@@ -782,7 +792,6 @@ var ValidationGenerators = {
     code.push(
         "report.valid = false;",
         buildError('MAX_LENGTH', schema, schema_path, '/maxLength', 'maxLength', schema.maxLength, {}, options),
-        //"report.errors.push({ code: 'MAX_LENGTH', schema: '"+ schema_path +"', params: { actual: _length, expected: "+ schema.maxLength +" } });",
       "} else { validations_passed++; }"
     );
 
@@ -795,7 +804,6 @@ var ValidationGenerators = {
       "if (!/"+ Utils.escapeRegexp(schema.pattern) +"/.test(data)) {",
         "report.valid = false;",
         buildError('PATTERN', schema, schema_path, '/pattern', 'pattern', schema.pattern, {}, options),
-        //"report.errors.push({ code: 'PATTERN', schema: '"+ schema_path +"', params: { actual: data, expected: '"+ schema.pattern +"' } });",
       "} else { validations_passed++; }"
     );
 
@@ -808,7 +816,6 @@ var ValidationGenerators = {
       "if (!_format['"+ schema.format +"'](data)) {",
         "report.valid = false;",
         buildError('INVALID_FORMAT', schema, schema_path, '/format', 'format', schema.format, [schema.format], options),
-        //"report.errors.push({ code: 'INVALID_FORMAT', schema: '"+ schema_path +"', params: { actual: data, expected: '"+ schema.format +"' } });",
       "} else { validations_passed++; }"
     );
 
@@ -823,7 +830,6 @@ var ValidationGenerators = {
         "if (_length > "+ schema.items.length +") {",
           "report.valid = false;",
           buildError('ARRAY_ADDITIONAL_ITEMS', schema, schema_path, '/additionalItems', 'additionalItems', schema.additionalItems, {}, options),
-          //"report.errors.push({ code: 'ARRAY_ADDITIONAL_ITEMS', schema: '"+ schema_path +"', params: { actual: _length, expected: "+ schema.items.length +" } });",
         "} else { validations_passed++; }"
       );
     }
@@ -842,7 +848,6 @@ var ValidationGenerators = {
       "if (_length > "+ schema.maxItems +") {",
         "report.valid = false;",
         buildError('ARRAY_LENGTH_LONG', schema, schema_path, '/maxItems', 'maxItems', schema.maxItems, {}, options),
-        //"report.errors.push({ code: 'ARRAY_LENGTH_LONG', schema: '"+ schema_path +"', params: { actual: _length, expected: "+ schema.maxItems +" } });",
       "} else { validations_passed++; }"
     );
 
@@ -855,7 +860,6 @@ var ValidationGenerators = {
       "if (_length < "+ schema.minItems +") {",
         "report.valid = false;",
         buildError('ARRAY_LENGTH_SHORT', schema, schema_path, '/minItems', 'minItems', schema.minItems, {}, options),
-        //"report.errors.push({ code: 'ARRAY_LENGTH_SHORT', schema: '"+ schema_path +"', params: { actual: _length, expected: "+ schema.minItems +" } });",
       "} else { validations_passed++; }"
     );
 
@@ -871,7 +875,6 @@ var ValidationGenerators = {
         "if (_isUniqueArray(data, matches) === false) {",
           "report.valid = false;",
           buildError('ARRAY_UNIQUE', schema, schema_path, '/uniqueItems', 'uniqueItems', schema.uniqueItems, {}, options),
-          //"report.errors.push({ code: 'ARRAY_UNIQUE', schema: '"+ schema_path +"', params: { actual: matches, expected: [] } });",
         "} else { validations_passed++; }"
       );
 
@@ -980,7 +983,6 @@ var ValidationGenerators = {
       "if (!match) {",
         "report.valid = false;",
         buildError('ENUM_MISMATCH', schema, schema_path, '/enum', 'enum', schema.enum, [Utils.escapeString(Utils.stringify(schema.enum))], options),
-        //"report.errors.push({ code: 'ENUM_MISMATCH', schema: '"+ schema_path +"', params: { actual: data, expected: "+ Utils.stringify(schema.enum) +" } });",
       "} else { validations_passed++; }"
     );
 
@@ -995,17 +997,9 @@ var ValidationGenerators = {
     );
 
     for (index = 0; index < schema.allOf.length; index++) {
-      if (Utils.typeOf(schema.allOf[index].$ref) === 'string' && Object.keys(schema.allOf[index]).length === 1) {
-
-        code.push(
-          "result = validators['"+ Utils.calculateRef(schema.allOf[index].$ref, schema_id) +"'](data, parent, root, path, Utils);"
-        );
-
-      } else {
-        code.push(
-          "result = validators['"+ schema_path +"/allOf/"+ index +"'](data, parent, root, path, Utils);"
-        );
-      }
+      code.push(
+        "result = validators['"+ schema_path +"/allOf/"+ index +"'](data,"+ ((options.errors.schema) ? ' _schema.allOf['+ index +'],': ' null,') +" parent, root, path, Utils);"
+      );
 
       if (options.enable_defaults) {
         code.push("if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }");
@@ -1022,7 +1016,6 @@ var ValidationGenerators = {
     code.push(
       "if (!report.valid) {",
         buildError('ALL_OF_FAILED', schema, schema_path, '/allOf', 'allOf', schema.allOf, [], options, true),
-        //"report.errors.push({ code: 'ALL_OF_FAILED', schema: '"+ schema_path +"', subReports: subReports });",
       "} else { validations_passed += context_validations_passed; }"
     );
 
@@ -1038,16 +1031,9 @@ var ValidationGenerators = {
 
     for (index = 0; index < schema.anyOf.length; index++) {
       if (index === 0) {
-        if (Utils.typeOf(schema.anyOf[index].$ref) === 'string' && Object.keys(schema.anyOf[index]).length === 1) {
-          code.push(
-            "result = validators['"+ Utils.calculateRef(schema.anyOf[index].$ref, schema_id) +"'](data, parent, root, path, Utils);"
-          );
-
-        } else {
-          code.push(
-            "result = validators['"+ schema_path +"/anyOf/"+ index +"'](data, parent, root, path, Utils);"
-          );
-        }
+        code.push(
+          "result = validators['"+ schema_path +"/anyOf/"+ index +"'](data,"+ ((options.errors.schema) ? ' _schema.anyOf['+ index +'],': ' null,') +" parent, root, path, Utils);"
+        );
 
         if (options.enable_defaults) {
           code.push("if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }");
@@ -1059,13 +1045,12 @@ var ValidationGenerators = {
             "context_validations_passed = result.passed;",
           "} else {",
             "context.push(result);",
-            //"subReports.push(result);",
           "}"
         );
       } else {
         code.push(
           "if (!passed) {",
-            "result = validators['"+ schema_path + "/anyOf/"+ index +"'](data, parent, root, path, Utils);"
+            "result = validators['"+ schema_path + "/anyOf/"+ index +"'](data,"+ ((options.errors.schema) ? ' _schema.anyOf['+ index +'],': ' null,') +" parent, root, path, Utils);"
         );
         if (options.enable_defaults) {
           code.push("if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }");
@@ -1076,7 +1061,6 @@ var ValidationGenerators = {
               "context_validations_passed = result.passed;",
             "} else {",
               "context.push(result);",
-              //"subReports.push(result);",
             "}",
           "}"
         );
@@ -1087,7 +1071,6 @@ var ValidationGenerators = {
       "if (!passed) {",
         "report.valid = false;",
         buildError('ANY_OF_MISSING', schema, schema_path, '/anyOf', 'anyOf', schema.anyOf, {}, options, true),
-        //"report.errors.push({ code: 'ANY_OF_MISSING', schema: '"+ schema_path +"', subReports: subReports });",
       "} else { validations_passed += context_validations_passed; }"
     );
 
@@ -1101,21 +1084,15 @@ var ValidationGenerators = {
     );
 
     for (index = 0; index < schema.oneOf.length; index++) {
-      if (Utils.typeOf(schema.oneOf[index].$ref) === 'string' && Object.keys(schema.oneOf[index]).length === 1) {
-        code.push(
-          "result = validators['"+ Utils.calculateRef(schema.oneOf[index].$ref, schema_id) +"'](data, parent, root, path, Utils);"
-        );
 
-      } else {
-        code.push(
-          "result = validators['"+ schema_path +"/oneOf/"+ index +"'](data, parent, root, path, Utils);"
-        );
-      }
+      code.push(
+        "result = validators['"+ schema_path +"/oneOf/"+ index +"'](data,"+ ((options.errors.schema) ? ' _schema.oneOf['+ index +'],': ' null,') +" parent, root, path, Utils);"
+      );
+
       if (options.enable_defaults) {
         code.push("if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }");
       }
       code.push(
-        //"subReports.push(result);",
         "if (result.valid) {",
           "pass_count++;",
           "pass_context.push({",
@@ -1134,12 +1111,10 @@ var ValidationGenerators = {
         "report.valid = false;",
         "context = fail_context;",
         buildError('ONE_OF_MISSING', schema, schema_path, '/oneOf', 'oneOf', schema.oneOf, {}, options, true),
-        //"report.errors.push({ code: 'ONE_OF_MISSING', schema: '"+ schema_path +"', subReports: subReports });",
       "} else if (pass_count > 1) {",
         "report.valid = false;",
         "context = pass_context;",
         buildError('ONE_OF_MULTIPLE', schema, schema_path, '/oneOf', 'oneOf', schema.oneOf, {}, options, true),
-        //"report.errors.push({ code: 'ONE_OF_MULTIPLE', schema: '"+ schema_path +"', subReports: subReports });",
       "} else { validations_passed += context_validations_passed; }"
     );
 
@@ -1147,15 +1122,10 @@ var ValidationGenerators = {
   },
   not: function (schema, schema_path, schema_id, options) {
     var code = [];
-    if (Utils.typeOf(schema.not.$ref) === 'string' && Object.keys(schema.not).length === 1) {
-      code.push(
-        "result = validators['"+ Utils.calculateRef(schema.not.$ref, schema_id) +"'](data, parent, root, path, Utils);"
-      );
-    } else {
-      code.push(
-        "result = validators['"+ schema_path +"/not'](data, parent, root, path, Utils);"
-      );
-    }
+
+    code.push(
+      "result = validators['"+ schema_path +"/not'](data,"+ ((options.errors.schema) ? ' _schema.not,': ' null,') +" parent, root, path, Utils);"
+    );
 
     if (options.enable_defaults) {
       code.push("if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }")
@@ -1165,7 +1135,6 @@ var ValidationGenerators = {
       "if (result.valid) {",
         "report.valid = false;",
         buildError('NOT_PASSED', schema.not, schema_path, '/not', 'not', schema.not, {}, options),
-        //"report.errors.push({ code: 'NOT_PASSED', schema: '"+ schema_path +"', subReport: result });",
       "} else { validations_passed += result.passed; }"
     );
     return code;
@@ -1210,7 +1179,7 @@ var ArrayGenerator = function (code, schema, schema_path, schema_id, options) {
 
     code.push(
           // TODO: insert pre validation transformers
-          "result = validators['"+ schema_path + "/items/' + _length" +"](data[_length], data, root, path + '/' + _length, Utils);"
+          "result = validators['"+ schema_path + "/items/' + _length" +"](data[_length],"+ ((options.errors.schema) ? ' _schema.items[_length],': ' null,') +" data, root, path + '/' + _length, Utils);"
     );
     if (options.enable_defaults) {
       code.push(
@@ -1222,8 +1191,7 @@ var ArrayGenerator = function (code, schema, schema_path, schema_id, options) {
           "if (!result.valid) {",
             "report.valid = false;",
             "report.errors = report.errors.concat(result.errors);",
-            //"subReport.push(result);",
-          "}"
+          "} else { validations_passed += result.passed; }"
     );
 
     if (Utils.typeOf(schema.additionalItems) === "object") {
@@ -1242,7 +1210,7 @@ var ArrayGenerator = function (code, schema, schema_path, schema_id, options) {
       }
       code.push(
           // TODO: insert pre validation transformers
-          "result = validators['"+ schema_path + "/additionalItems'](data[_length], data, root, path + '/' + _length, Utils);"
+          "result = validators['"+ schema_path + "/additionalItems'](data[_length],"+ ((options.errors.schema) ? ' _schema.additionalItems,': ' null,') +" data, root, path + '/' + _length, Utils);"
       );
       if (options.enable_defaults) {
         code.push("if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }");
@@ -1252,8 +1220,7 @@ var ArrayGenerator = function (code, schema, schema_path, schema_id, options) {
           "if (!result.valid) {",
             "report.valid = false;",
             "report.errors = report.errors.concat(result.errors);",
-            //"subReport.push(result);",
-          "}",
+          "} else { validations_passed += result.passed; }",
         "}",
       "}"
       );
@@ -1281,7 +1248,7 @@ var ArrayGenerator = function (code, schema, schema_path, schema_id, options) {
     }
     code.push(
         // TODO: insert pre validation transformers
-        "result = validators['"+ schema_path +"/items'](data[_length], data, root, path + '/' + _length, Utils);"
+        "result = validators['"+ schema_path +"/items'](data[_length],"+ ((options.errors.schema) ? ' _schema.items,': ' null,') +" data, root, path + '/' + _length, Utils);"
     );
     if (options.enable_defaults) {
       code.push(
@@ -1293,15 +1260,10 @@ var ArrayGenerator = function (code, schema, schema_path, schema_id, options) {
         "if (!result.valid) {",
           "report.valid = false;",
           "report.errors = report.errors.concat(result.errors);",
-          //"subReport.push(result);",
-        "}",
+        "} else { validations_passed += result.passed; }",
       "}"
     );
   }
-
-  //code.push(
-  //  "if (subReport.length > 0) { report.subReport = subReport; }"
-  //);
 };
 
 var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
@@ -1374,7 +1336,7 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
         code.push(
           "case '"+ Utils.escapeString(key) +"':",
             // TODO: insert pre validation transformers
-            "result = validators['"+ schema_path +"/properties/"+ Utils.escapeString(key) +"'](data['"+ Utils.escapeString(key) +"'], data, root, path + '/"+ Utils.escapeString(Utils.encodeJSONPointer(key)) +"', Utils);"
+            "result = validators['"+ schema_path +"/properties/"+ Utils.escapeString(key) +"'](data['"+ Utils.escapeString(key) +"'],"+ ((options.errors.schema) ? ' _schema.properties["' + Utils.escapeString(key) + '"],': ' null,') +" data, root, path + '/"+ Utils.escapeString(Utils.encodeJSONPointer(key)) +"', Utils);"
         );
 
         if (options.enable_defaults) {
@@ -1398,8 +1360,7 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
             "if (!result.valid) {",
               "report.valid = false;",
               "report.errors = report.errors.concat(result.errors);",
-              //"subReport.push(result);",
-            "}"
+            "} else { validations_passed += result.passed; }"
         );
 
         // Validate against dependant schema if present
@@ -1407,7 +1368,7 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
           if (Utils.typeOf(schema.dependencies[key]) === 'object') {
             code.push(
               // TODO: insert pre validation transformers
-              "result = validators['"+ schema_path +"/dependencies/"+ Utils.escapeString(key) +"'](data, parent, root, path, Utils);"
+              "result = validators['"+ schema_path +"/dependencies/"+ Utils.escapeString(key) +"'](data,"+ ((options.errors.schema) ? ' _schema.dependencies["'+ Utils.escapeString(key) +'"],': ' null,') +" parent, root, path, Utils);"
             );
             if (options.enable_defaults) {
               code.push(
@@ -1419,8 +1380,7 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
               "if (!result.valid) {",
                 "report.valid = false;",
                 "report.errors = report.errors.concat(result.errors);",
-                //"subReport.push(result);",
-              "}"
+              "} else { validations_passed += result.passed; }"
             );
           } else {
             // Ensure all keys are present
@@ -1433,7 +1393,6 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
               "if (!("+ conditions.join(' && ') +")) {",
                 "report.valid = false;",
                 buildError('OBJECT_DEPENDENCY_KEY', schema, schema_path, '/dependencies' , 'dependencies', schema.dependencies, {}, options),
-                //"report.errors.push({ code: 'OBJECT_DEPENDENCY_KEY', schema: '"+ schema_path +"', params: { actual: null, expected: "+ Utils.stringify(required_values) +" } });",
               "}"
             )
           }
@@ -1452,7 +1411,7 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
           if (Utils.typeOf(schema.dependencies[key]) === 'object') {
             code.push(
               // TODO: insert pre validation transformers
-              "result = validators['"+ schema_path +"/dependencies/"+ Utils.escapeString(key) +"'](data, parent, root, path, Utils);"
+              "result = validators['"+ schema_path +"/dependencies/"+ Utils.escapeString(key) +"'](data,"+ ((options.errors.schema) ? ' _schema.dependencies["'+ Utils.escapeString(key) +'"],': ' null,') +" parent, root, path, Utils);"
             );
             if (options.enable_defaults) {
               code.push(
@@ -1464,8 +1423,7 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
               "if (!result.valid) {",
                 "report.valid = false;",
                 "report.errors = report.errors.concat(result.errors);",
-                //"subReport.push(result);",
-              "}"
+              "} else { validations_passed += result.passed; }"
             );
           } else {
             // Ensure all keys are present
@@ -1478,7 +1436,6 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
               "if (!("+ conditions.join(' && ') +")) {",
                 "report.valid = false;",
                 buildError('OBJECT_DEPENDENCY_KEY', schema, schema_path, '/dependencies', 'dependencies', schema.dependencies, {}, options),
-                //"report.errors.push({ code: 'OBJECT_DEPENDENCY_KEY', schema: '"+ schema_path +"', params: { actual: null, expected: "+ Utils.stringify(required_values) +" } });",
               "} else { validations_passed++; }"
             )
           }
@@ -1498,7 +1455,7 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
         code.push(
           "if (/"+ Utils.escapeRegexp(patternProperties[index]) +"/.test(key)) {",
             // TODO: insert pre validation transformers
-            "result = validators['"+ schema_path +"/patternProperties/"+ Utils.escapeRegexp(patternProperties[index]) +"'](data[key], data, root, path + '/' + _encodeJSONPointer(key), Utils);"
+            "result = validators['"+ schema_path +"/patternProperties/"+ Utils.escapeRegexp(patternProperties[index]) +"'](data[key],"+ ((options.errors.schema) ? ' _schema.patternProperties["'+ Utils.escapeRegexp(patternProperties[index]) +'"] ,': ' null,') +" data, root, path + '/' + _encodeJSONPointer(key), Utils);"
         );
         if (options.enable_defaults) {
           code.push(
@@ -1511,8 +1468,7 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
             "if (!result.valid) {",
               "report.valid = false;",
               "report.errors = report.errors.concat(result.errors);",
-              //"subReport.push(result);",
-            "}",
+            "} else { validations_passed += result.passed; }",
           "}"
         );
       }
@@ -1523,7 +1479,7 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
       code.push(
         "if (!_matches[key]) {",
           // TODO: insert pre validation transformers
-          "result = validators['"+schema_path+"/additionalProperties'](data[key], data, root, path + '/' + _encodeJSONPointer(key), Utils);"
+          "result = validators['"+schema_path+"/additionalProperties'](data[key],"+ ((options.errors.schema) ? ' _schema.additionalProperties,': ' null,') +" data, root, path + '/' + _encodeJSONPointer(key), Utils);"
       );
       if (options.enable_defaults) {
         code.push(
@@ -1535,8 +1491,7 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
           "if (!result.valid) {",
             "report.valid = false;",
             "report.errors = report.errors.concat(result.errors);",
-            //"subReport.push(result);",
-          "}",
+          "} else { validations_passed += result.passed; }",
         "}"
       );
     } else if (additionalProperties === false) {
@@ -1554,20 +1509,19 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
     if (required_keys.length > 0) {
       if (options.enable_defaults) {
         code.push(
-          "while (_rindex--) {",
+          "for (;_rindex--;) {",
             "var val = required_keys[_rindex];",
             // Apply default values
             "if (_rindex >= "+ (Utils.typeOf(schema.required) === 'array' ? schema.required.length : 0 ) +" && !(val in _matches)) {",
               "_matches[val] = true;",
               "data[val] = defaults[val];",
               // Validate default value
-              "result = validators['"+ schema_path +"/properties/' + val](data[val], data, root, path + '/' + _encodeJSONPointer(val), Utils);",
+              "result = validators['"+ schema_path +"/properties/' + val](data[val],"+ ((options.errors.schema) ? ' _schema.properties[val],': ' null,') +" data, root, path + '/' + _encodeJSONPointer(val), Utils);",
               "if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }",
               "if (!result.valid) {",
                 "report.valid = false;",
                 "report.errors = report.errors.concat(result.errors);",
-                //"subReport.push(result);",
-              "}",
+              "} else { validations_passed += result.passed; }",
               // Store rollback function
               "rollbacks.push((function (data, key) {",
                 "return function() {",
@@ -1578,19 +1532,17 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
               "if (val !== null && !(val in _matches)) {",
                 "report.valid = false;",
                 buildError('OBJECT_MISSING_REQUIRED_PROPERTY', schema, schema_path, '/required', 'required', schema.required, {}, options),
-                //"report.errors.push({ code: 'OBJECT_MISSING_REQUIRED_PROPERTY', schema: '"+ schema_path +"', params: { actual: null, expected: val } });",
               "} else { validations_passed++; }",
             "}",
           "}"
         );
       } else {
         code.push(
-          "while (_rindex--) {",
+          "for (;_rindex--;) {",
             "var val = required_keys[_rindex];",
             "if (val !== null && !(val in _matches)) {",
               "report.valid = false;",
               buildError('OBJECT_MISSING_REQUIRED_PROPERTY', schema, schema_path, '/required', 'required', schema.required, {}, options),
-              //"report.errors.push({ code: 'OBJECT_MISSING_REQUIRED_PROPERTY', schema: '"+ schema_path +"', params: { actual: null, expected: val } });",
             "} else { validations_passed++; }",
           "}"
         );
@@ -1604,7 +1556,6 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
         "if (_additionalKeys.length > 0) {",
           "report.valid = false;",
           buildError('OBJECT_ADDITIONAL_PROPERTIES', schema, schema_path, '/additionalProperties', 'additionalProperties', schema.additionalProperties, {}, options),
-          //"report.errors.push({ code: 'OBJECT_ADDITIONAL_PROPERTIES', schema: '"+ schema_path +"', params: { actual: _additionalKeys } });",
         "} else { validations_passed++; }"
       );
     }
@@ -1615,7 +1566,6 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
         "if (_length < "+ schema.minProperties +") {",
           "report.valid = false;",
           buildError('OBJECT_PROPERTIES_MINIMUM', schema, schema_path, '/minProperties', 'minProperties', schema.minProperties, {}, options),
-          //"report.errors.push({ code: 'OBJECT_PROPERTIES_MINIMUM', schema: '"+ schema_path +"', params: { actual: _length, expected: "+ schema.minProperties +" } });",
         "} else { validations_passed++; }"
       );
     }
@@ -1625,15 +1575,9 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
         "if (_length > "+ schema.maxProperties +") {",
           "report.valid = false;",
           buildError('OBJECT_PROPERTIES_MAXIMUM', schema, schema_path, '/maxProperties', 'maxProperties', schema.maxProperties, {}, options),
-          //"report.errors.push({ code: 'OBJECT_PROPERTIES_MAXIMUM', schema: '"+ schema_path +"', params: { actual: _length, expected: "+ schema.maxProperties +" } });",
         "} else { validations_passed++; }"
       );
     }
-
-    /*
-    code.push(
-      "if (subReport.length > 0) { report.subReport = subReport; }"
-    );*/
   }
 };
 
@@ -1646,7 +1590,7 @@ var SchemaGenerator = function (schema, schema_path, schema_id, cache, options) 
     array: { start: null, end: null },
     object: { start: null, end: null }
   }, code = [
-    "validators['"+ schema_path +"'] = function (data, parent, root, path, Utils) {",
+    "validators['"+ schema_path +"'] = function (data, _schema, parent, root, path, Utils) {",
       "var result, validations_passed = 0;",
       "var _areEqual = Utils.areEqual, _stringify = Utils.stringify;",
       "var _typeOf = Utils.typeOf;",
@@ -1654,13 +1598,13 @@ var SchemaGenerator = function (schema, schema_path, schema_id, cache, options) 
       "var _isUniqueArray = Utils.isUniqueArray;",
       "var _format = Utils.format;",
       "var _type = typeof data, type = _typeOf(data, _type);",
-      "var _length = 0, _schema = "+ Utils.stringify(schema) +";"
+      "var _length = 0;"
   ];
 
   if (options.enable_defaults) {
-    code.push("var _rollback = Utils.rollback, report = { valid: true, errors: [], rollback: _rollback }, rollbacks = [];");
+    code.push("var _rollback = Utils.rollback, report = { valid: true, errors: [], rollback: _rollback, passed: 0 }, rollbacks = [];");
   } else {
-    code.push("var report = { valid: true, errors: [] }");
+    code.push("var report = { valid: true, errors: [], passed: 0 };");
   }
 
   for (key in schema) {
@@ -1753,13 +1697,15 @@ var SchemaGenerator = function (schema, schema_path, schema_id, cache, options) 
     if (schema.$ref[0] === '#') {
       if (code.length === 10) {
         code = [
-          "validators['"+ schema_path +"'] = function (data, parent, root, path, Utils) {",
-            "return validators['"+ schema_id + Utils.decodeJSONPointer(schema.$ref.slice(1)) +"'](data, parent, root, path, Utils);",
+          "validators['"+ schema_path +"'] = function (data, _schema, parent, root, path, Utils) {",
+            "return validators['"+ schema_id + Utils.decodeJSONPointer(schema.$ref.slice(1)) +"'](data, _schema, parent, root, path, Utils);",
           "}"
         ];
       } else {
         code.push(
-            "result = validators['"+ schema_id + Utils.decodeJSONPointer(schema.$ref.slice(1)) +"'](data, parent, root, path, Utils);"
+            "result = validators['"+ schema_id + Utils.decodeJSONPointer(schema.$ref.slice(1)) +"'](data, _schema, parent, root, path, Utils);",
+            "if (!result.valid) report.valid = false;",
+            "report.errors = report.errors.concat(result.errors);"
         )
         if (options.enable_defaults) {
           code.push(
@@ -1773,13 +1719,15 @@ var SchemaGenerator = function (schema, schema_path, schema_id, cache, options) 
     } else {
       if (code.length === 10) {
         code = [
-          "validators['"+ schema_path +"'] = function (data, parent, root, path, Utils) {",
-            "return validators['"+ Utils.decodeJSONPointer(schema.$ref) +"'](data, parent, root, path, Utils);",
+          "validators['"+ schema_path +"'] = function (data, _schema, parent, root, path, Utils) {",
+            "return validators['"+ Utils.decodeJSONPointer(schema.$ref) +"'](data, _schema, parent, root, path, Utils);",
           "}"
         ];
       } else {
         code.push(
-            "return validators['"+ Utils.decodeJSONPointer(schema.$ref) +"'](data, parent, root, path, Utils);"
+            "result = validators['"+ Utils.decodeJSONPointer(schema.$ref) +"'](data, _schema, parent, root, path, Utils);",
+            "if (!result.valid) report.valid = false;",
+            "report.errors = report.errors.concat(result.errors);"
         );
         if (options.enable_defaults) {
             code.push(
@@ -1940,22 +1888,20 @@ module.exports = {
     options.errors = (options.errors == null) ? {} : options.errors
     options.errors.schema = (options.errors.schema == null) ? true: options.errors.schema;
     options.errors.validator_value = (options.errors.validator_value == null) ? true: options.errors.validator_value;
+    options.errors.messages = (options.errors.messages == null) ? true: options.errors.messages;
     // TODO: Validate Schemas
-    if (Utils.typeOf(schemas) === 'object') {
-      schemas = [schemas];
-    }
 
     body = [
-      "var validators = {};",
+      "var validators = {};"
     ];
 
     if (options.enable_defaults) {
       body.push(
-      "var _stub = function (data, parent, root, path, Utils) { return { valid: true, errors: [], rollback: Utils.rollback }; }"
+      "var _stub = function (data, _schema, parent, root, path, Utils) { return { valid: true, errors: [], rollback: Utils.rollback, passed: 0 }; }"
       );
     } else {
       body.push(
-      "var _stub = function (data, parent, root, path, Utils) { return { valid: true, errors: [] }; }"
+      "var _stub = function (data, _schema, parent, root, path, Utils) { return { valid: true, errors: [], passed: 0 }; }"
       );
     }
 
@@ -1965,14 +1911,13 @@ module.exports = {
       SCHEMA_ID = (schema.id != null) ? schema.id : index;
       body = body.concat(SchemaGenerator(schema, SCHEMA_ID, SCHEMA_ID, {}, options));
     }
-
     body.push(
       // Validation Function
-      "return function (data, schema, Utils) {",
-        "return validators[schema](data, null, data, '', Utils);",
+      "return function (data, schema_id, _schema, Utils) {",
+        "return validators[schema_id](data, _schema, null, data, '', Utils);",
       "}"
     );
-    //console.log(body.join("\n"));
+    //console.log(body.join('\n'));
     if (options.beautify) {
       // Generate readable code
       var ast = UglifyJS.parse("generate = function () {"+body.join("\n")+"}");
@@ -1996,36 +1941,104 @@ module.exports = {
     return code;
   },
 
+  buildSchemas: function (schema_data, options) {
+    var _schemas = {}, index, schemas, buffer = [], schema_id;
+
+    // Create a deep clone of schemas
+    eval("schemas = "+ Utils.stringify(schema_data) +";");
+    index = schemas.length;
+
+    // Index all schemas
+    for (;index--;) {
+      schema_id = (schemas[index].id != null) ? schemas[index].id: index;
+      _schemas[schema_id] = schemas[index];
+      buffer[index] = [schemas[index], schema_id];
+    }
+
+    // Build refs
+    index = buffer.length;
+    while (buffer.length > 0) {
+      var schema_data = buffer.shift();
+      var schema = schema_data[0];
+      var schema_id = schema_data[1];
+      for (var key in schema) {
+        switch (key) {
+          case 'not':
+          case 'additionalItems':
+          case 'additionalProperties':
+            if (Utils.typeOf(schema[key].$ref) === 'string') {
+              schema[key] = Utils.dereferencePath(schema[key].$ref, schema_id, _schemas);
+            } else {
+              buffer.push([schema[key], schema_id]);
+            }
+            break;
+          case 'items':
+          case 'oneOf':
+          case 'allOf':
+          case 'anyOf':
+            if (Utils.typeOf(schema[key]) === 'array') {
+              for (var _key in schema[key]) {
+                if (Utils.typeOf(schema[key][_key].$ref) === 'string') {
+                  schema[key][_key] = Utils.dereferencePath(schema[key][_key].$ref, schema_id, _schemas);
+                } else {
+                  buffer.push([schema[key][_key], schema_id]);
+                }
+              }
+            }
+            break;
+          case 'definitions':
+          case 'properties':
+          case 'patternProperties':
+            for (var _key in schema[key]) {
+              if (Utils.typeOf(schema[key][_key].$ref) === 'string') {
+                schema[key][_key] = Utils.dereferencePath(schema[key][_key].$ref, schema_id, _schemas);
+              } else {
+                buffer.push([schema[key][_key], schema_id]);
+              }
+            }
+            break;
+        }
+      }
+    }
+    return _schemas;
+  },
+
   validator: function (schemas, options) {
     options = options == null ? {} : options;
 
+    if (Utils.typeOf(schemas) === 'object') {
+      schemas = [schemas];
+    }
+
     var generate;
+    var _schemas = this.buildSchemas(schemas, options);
     var code = this.buildValidator(schemas, options);
-    //console.log(code);
     eval(code);
     var validator = generate();
 
     if (options.enable_defaults) {
-      return function (data, schema, options) {
-        if (!schema) throw Error('Please specify a schema');
+      return function (data, schema_id, options) {
+        if (!schema_id) throw Error('Please specify a schema');
         options = (options == null) ? {} : options;
         options.algorithm = (options.algorithm == null) ? 'none': options.algorithm;
-        var report = validator(data, schema, Utils);
-        delete report.rollback;
+        var _schema = _schemas[schema_id];
+        var report = validator(data, schema_id, _schema, Utils);
+        //delete report.rollback;
         if (!report.valid) {
-          report = Utils.filterReports([report], options.algorithm)[0][0];
+          if(options.algorithm !== 'none') { report = Utils.filterReports([report], options.algorithm)[0][0] };
           report.data = data;
         }
         return report;
       };
     } else {
-      return function (data, schema, options) {
-        if (!schema) throw Error('Please specify a schema');
+      return function (data, schema_id, options) {
+        if (!schema_id) throw Error('Please specify a schema');
         options = (options == null) ? {} : options;
         options.algorithm = (options.algorithm == null) ? 'none': options.algorithm;
-        var report = validator(data, schema, Utils);
+        var _schema = _schemas[schema_id];
+        var report = validator(data, schema_id, _schema, Utils);
         if (!report.valid) {
-          report = Utils.filterReports([report], options.algorithm)[0][0];
+          if(options.algorithm !== 'none') { report = Utils.filterReports([report], options.algorithm)[0][0] };
           report.data = data;
         }
         return report;

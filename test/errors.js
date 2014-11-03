@@ -2,90 +2,6 @@
 var Themis = require('../src/themis');
 var util = require('util');
 
-Themis.registerFormat('taskRef', function(str) {
-  if (!/^[a-zA-Z_][a-zA-Z0-9_]*(?:~[a-zA-Z_][a-zA-Z0-9_]*)?$/.test(str)) {
-    throw new Error('Invalid task reference string');
-  }
-  return true;
-});
-
-Themis.registerFormat('trigger', function(str) {
-  if (!/^([a-zA-Z0-9_-]+:)?[a-zA-Z0-9_-]+(~[a-zA-Z0-9_-]+)?$/.test(str)) {
-    throw new Error('Invalid trigger');
-  }
-  return true;
-});
-
-Themis.registerFormat('username', function(str) {
-  if (!/^[a-zA-Z0-9_\.-]+$/.test(str)) {
-    throw new Error('Invalid username');
-  }
-  return true;
-});
-
-Themis.registerFormat('password', function(str) {
-  if (!/^(?=.{6,}).*$/.test(str)) {
-    throw new Error('Password must be atleast 6 characters long');
-  }
-  return true;
-});
-
-Themis.registerFormat('identifier', function(str) {
-  if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(str)) {
-    throw new Error('Invalid identifier');
-  }
-  return true;
-});
-
-Themis.registerFormat('image', function(str) {
-  if (!/^[a-zA-Z0-9,\/_-]*$/.test(str)) {
-    throw new Error('Invalid image path');
-  }
-  return true;
-});
-
-Themis.registerFormat('simpleText', function(str) {
-  if (!/^[\s\w\d,;:~\.`"'\?\(\)\[\]\{\}\\\/|\!\&_\+\=#-]*$/.test(str)) {
-    throw new Error('Invalid text');
-  }
-  return true;
-});
-
-Themis.registerFormat('objectID', function(str) {
-  if (!/^[0-9a-f]{24}$/.test(str)) {
-    throw new Error('Invalid Mongo ObjectID');
-  }
-  return true;
-});
-
-Themis.registerFormat('longInteger', function(str) {
-  if (!/^-?\d+$/.test(str)) {
-    throw new Error("Invalid integer: " + str);
-  }
-  return true;
-});
-
-Themis.registerFormat('positiveLongInteger', function(str) {
-  if (!/^\d+$/.test(str)) {
-    throw new Error("Invalid positive integer: " + str);
-  }
-  return true;
-});
-
-Themis.registerFormat('positiveLimit', function(str) {
-  if (!/^(?:\d+|Infinity)$/.test(str)) {
-    throw new Error("Invalid positive integer limit: " + str);
-  }
-  return true;
-});
-
-Themis.registerFormat('negativeLimit', function(str) {
-  if (!/^(?:-?\d+|-Infinity)$/.test(str)) {
-    throw new Error("Invalid negative integer limit: " + str);
-  }
-  return true;
-});
-
 describe('The error messages', function () {
 
   it('has an INVALID_TYPE check', function () {
@@ -491,7 +407,7 @@ describe('The error messages', function () {
               additionalItems: false },
            relative_schema_path: '/additionalItems',
            absolute_schema_path: '0/additionalItems' } ],
-      passed: 1,
+      passed: 3,
       data: [ 'a', 1, { foo: 'bar' } ] });
   });
 
@@ -728,29 +644,56 @@ describe('The error messages', function () {
       data: { x: 'foo', y: 'bar' } });
   });
 
-  it.skip('has a OBJECT_DEPENDENCY_KEY check', function () {
+  it('has a OBJECT_DEPENDENCY_KEY check', function () {
     var schema = {
-      type: 'number',
-      maximum: 5,
-      exclusiveMaximum: true
+      type: 'object',
+      dependencies: {
+        foo: {
+          type: 'object',
+          properties: {
+            bar: {
+              type: 'number'
+            }
+          }
+        },
+        bar: ['foo', 'baz']
+      }
     };
-    var data = 5;
+    var data = { foo: true, bar: true };
     var report = Themis.validator(schema)(data, '0');
+
     report.should.deep.equal({ valid: false,
       errors:
-       [ { code: 'MAXIMUM_EXCLUSIVE',
+       [ { code: 'INVALID_TYPE',
+           path: '/bar',
+           instance: true,
+           validator: 'type',
+           message: 'true should be of type number not boolean',
+           validator_value: 'number',
+           schema: { type: 'number' },
+           relative_schema_path: '/type',
+           absolute_schema_path: '0/dependencies/foo/properties/bar/type' },
+         { code: 'OBJECT_DEPENDENCY_KEY',
            path: '',
-           instance: 5,
-           message: '5 is greater than or equal to the maximum of 5',
-           validator: 'exclusiveMaximum',
-           validator_value: true,
+           instance: { foo: true, bar: true },
+           validator: 'dependencies',
+           message: 'The keys [ "foo", "baz" ] must exist due to key "bar"',
+           validator_value:
+            { foo:
+               { type: 'object',
+                 properties: { bar: { type: 'number' } } },
+              bar: [ 'foo', 'baz' ] },
            schema:
-            { type: 'number',
-              maximum: 5,
-              exclusiveMaximum: true },
-           relative_schema_path: '/exclusiveMaximum',
-           absolute_schema_path: '0/exclusiveMaximum' } ],
-      data: 5 });
+            { type: 'object',
+              dependencies:
+               { foo:
+                  { type: 'object',
+                    properties: { bar: { type: 'number' } } },
+                 bar: [ 'foo', 'baz' ] } },
+           relative_schema_path: '/dependencies',
+           absolute_schema_path: '0/dependencies' } ],
+      passed: 1,
+      data: { foo: true, bar: true } });
   });
 
   it('has a MIN_LENGTH check', function () {
@@ -851,17 +794,17 @@ describe('The error algorithms', function () {
             type: {
               type: 'string',
               enum: ['point']
-            }
-          },
-          data: {
-            type: 'object',
-            required: ['x', 'y'],
-            properties: {
-              x: {
-                type: 'number'
-              },
-              y: {
-                type: 'number'
+            },
+            data: {
+              type: 'object',
+              required: ['x', 'y'],
+              properties: {
+                x: {
+                  type: 'number'
+                },
+                y: {
+                  type: 'number'
+                }
               }
             }
           }
@@ -963,7 +906,7 @@ describe('The error algorithms', function () {
              absolute_schema_path: 'shape/oneOf',
              context:
               [ { valid: false,
-                  passed: 2,
+                  passed: 4,
                   errors:
                    [ { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
                        path: '',
@@ -972,7 +915,7 @@ describe('The error algorithms', function () {
                        validator: 'required',
                        relative_schema_path: '/required',
                        absolute_schema_path: 'triangle/required' } ] } ] } ],
-        passed: 2,
+        passed: 4,
         data: { type: 'triangle' } });
 
       data = { type: 'triangle', data: [] };
@@ -989,7 +932,7 @@ describe('The error algorithms', function () {
              absolute_schema_path: 'shape/oneOf',
              context:
               [ { valid: false,
-                  passed: 3,
+                  passed: 5,
                   errors:
                    [ { code: 'ARRAY_LENGTH_SHORT',
                        path: '/data',
@@ -998,7 +941,7 @@ describe('The error algorithms', function () {
                        validator: 'minItems',
                        relative_schema_path: '/minItems',
                        absolute_schema_path: 'triangle/properties/data/minItems' } ] } ] } ],
-        passed: 2,
+        passed: 4,
         data: { type: 'triangle', data: [] } });
 
       data = { type: 'triangle', data: [{ type: 'point' }, { type: 'box' }, { type: 'point' }] };
@@ -1049,14 +992,238 @@ describe('The error algorithms', function () {
                        validator: 'required',
                        relative_schema_path: '/required',
                        absolute_schema_path: 'point/required' } ],
-                  passed: 3 } ] } ],
-        passed: 2,
+                  passed: 5 } ] } ],
+        passed: 4,
         data:
          { type: 'triangle',
            data:
             [ { type: 'point' },
               { type: 'box' },
               { type: 'point' } ] } });
+
+      data = { type: 'triangle', data: [{ type: 'point', data: {} }, { type: 'point', data: {} }, { type: 'point', data: {} }] };
+      report = validator(data, 'shape', { algorithm: 'best_match' });
+
+      report.should.deep.equal({ valid: false,
+        errors:
+         [ { code: 'ONE_OF_MISSING',
+             path: '',
+             instance:
+              { type: 'triangle',
+                data:
+                 [ { type: 'point', data: {} },
+                   { type: 'point', data: {} },
+                   { type: 'point', data: {} } ] },
+             validator: 'oneOf',
+             message: '{ "type": "triangle", "data": [ { "type": "point", "data": {} }, { "type": "point", "data": {} }, { "type": "point", "data": {} } ] } is not valid under any of the given schemas',
+             relative_schema_path: '/oneOf',
+             absolute_schema_path: 'shape/oneOf',
+             context:
+              [ { valid: false,
+                  errors:
+                   [ { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
+                       path: '/data/0/data',
+                       instance: {},
+                       validator: 'required',
+                       message: 'The required property \'x\' is missing',
+                       relative_schema_path: '/required',
+                       absolute_schema_path: 'point/properties/data/required' },
+                     { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
+                       path: '/data/0/data',
+                       instance: {},
+                       validator: 'required',
+                       message: 'The required property \'y\' is missing',
+                       relative_schema_path: '/required',
+                       absolute_schema_path: 'point/properties/data/required' },
+                     { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
+                       path: '/data/1/data',
+                       instance: {},
+                       validator: 'required',
+                       message: 'The required property \'x\' is missing',
+                       relative_schema_path: '/required',
+                       absolute_schema_path: 'point/properties/data/required' },
+                     { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
+                       path: '/data/1/data',
+                       instance: {},
+                       validator: 'required',
+                       message: 'The required property \'y\' is missing',
+                       relative_schema_path: '/required',
+                       absolute_schema_path: 'point/properties/data/required' },
+                     { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
+                       path: '/data/2/data',
+                       instance: {},
+                       validator: 'required',
+                       message: 'The required property \'x\' is missing',
+                       relative_schema_path: '/required',
+                       absolute_schema_path: 'point/properties/data/required' },
+                     { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
+                       path: '/data/2/data',
+                       instance: {},
+                       validator: 'required',
+                       message: 'The required property \'y\' is missing',
+                       relative_schema_path: '/required',
+                       absolute_schema_path: 'point/properties/data/required' } ],
+                  passed: 5 } ] } ],
+        passed: 4,
+        data:
+         { type: 'triangle',
+           data:
+            [ { type: 'point', data: {} },
+              { type: 'point', data: {} },
+              { type: 'point', data: {} } ] } });
+
+      data = { type: 'box', data: [{ type: 'point', data: {} }, { type: 'point', data: {} }, { type: 'point', data: {} }] };
+
+      report = validator(data, 'shape', { algorithm: 'best_match' });
+
+      report.should.deep.equal({ valid: false,
+        errors:
+         [ { code: 'ONE_OF_MISSING',
+             path: '',
+             instance:
+              { type: 'box',
+                data:
+                 [ { type: 'point', data: {} },
+                   { type: 'point', data: {} },
+                   { type: 'point', data: {} } ] },
+             validator: 'oneOf',
+             message: '{ "type": "box", "data": [ { "type": "point", "data": {} }, { "type": "point", "data": {} }, { "type": "point", "data": {} } ] } is not valid under any of the given schemas',
+             relative_schema_path: '/oneOf',
+             absolute_schema_path: 'shape/oneOf',
+             context:
+              [ { valid: false,
+                  errors:
+                   [ { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
+                       path: '/data/0/data',
+                       instance: {},
+                       validator: 'required',
+                       message: 'The required property \'x\' is missing',
+                       relative_schema_path: '/required',
+                       absolute_schema_path: 'point/properties/data/required' },
+                     { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
+                       path: '/data/0/data',
+                       instance: {},
+                       validator: 'required',
+                       message: 'The required property \'y\' is missing',
+                       relative_schema_path: '/required',
+                       absolute_schema_path: 'point/properties/data/required' },
+                     { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
+                       path: '/data/1/data',
+                       instance: {},
+                       validator: 'required',
+                       message: 'The required property \'x\' is missing',
+                       relative_schema_path: '/required',
+                       absolute_schema_path: 'point/properties/data/required' },
+                     { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
+                       path: '/data/1/data',
+                       instance: {},
+                       validator: 'required',
+                       message: 'The required property \'y\' is missing',
+                       relative_schema_path: '/required',
+                       absolute_schema_path: 'point/properties/data/required' },
+                     { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
+                       path: '/data/2/data',
+                       instance: {},
+                       validator: 'required',
+                       message: 'The required property \'x\' is missing',
+                       relative_schema_path: '/required',
+                       absolute_schema_path: 'point/properties/data/required' },
+                     { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
+                       path: '/data/2/data',
+                       instance: {},
+                       validator: 'required',
+                       message: 'The required property \'y\' is missing',
+                       relative_schema_path: '/required',
+                       absolute_schema_path: 'point/properties/data/required' },
+                     { code: 'ARRAY_LENGTH_SHORT',
+                       path: '/data',
+                       instance:
+                        [ { type: 'point', data: {} },
+                          { type: 'point', data: {} },
+                          { type: 'point', data: {} } ],
+                       validator: 'minItems',
+                       message: '[ { "type": "point", "data": {} }, { "type": "point", "data": {} }, { "type": "point", "data": {} } ] is too short, minimum 4',
+                       relative_schema_path: '/minItems',
+                       absolute_schema_path: 'box/properties/data/minItems' } ],
+                  passed: 5 } ] } ],
+        passed: 4,
+        data:
+         { type: 'box',
+           data:
+            [ { type: 'point', data: {} },
+              { type: 'point', data: {} },
+              { type: 'point', data: {} } ] } });
+
+      data = { data: [{ type: 'point', data: {} }, { type: 'point', data: {} }, { type: 'point', data: {} }] };
+
+      report = validator(data, 'shape', { algorithm: 'best_match' });
+
+      report.should.deep.equal({ valid: false,
+        errors:
+         [ { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
+             path: '',
+             instance:
+              { data:
+                 [ { type: 'point', data: {} },
+                   { type: 'point', data: {} },
+                   { type: 'point', data: {} } ] },
+             validator: 'required',
+             message: 'The required property \'type\' is missing',
+             relative_schema_path: '/required',
+             absolute_schema_path: 'shape/required' } ],
+        passed: 1,
+        data:
+         { data:
+            [ { type: 'point', data: {} },
+              { type: 'point', data: {} },
+              { type: 'point', data: {} } ] } });
+
+      data = { type: 'triangle', data: [{ type: 'point', data: { x: 1, y: 1} }, { type: 'point', data: { x: 1, y: 1 } }, { type: 'point', data: { x: 1} }] };
+
+      report = validator(data, 'shape', { algorithm: 'best_match' });
+
+      report.should.deep.equal({ valid: false,
+        errors:
+         [ { code: 'ONE_OF_MISSING',
+             path: '',
+             instance:
+              { type: 'triangle',
+                data:
+                 [ { type: 'point',
+                     data: { x: 1, y: 1 } },
+                   { type: 'point',
+                     data: { x: 1, y: 1 } },
+                   { type: 'point', data: { x: 1 } } ] },
+             validator: 'oneOf',
+             message: '{ "type": "triangle", "data": [ { "type": "point", "data": { "x": 1, "y": 1 } }, { "type": "point", "data": { "x": 1, "y": 1 } }, { "type": "point", "data": { "x": 1 } } ] } is not valid under any of the given schemas',
+             relative_schema_path: '/oneOf',
+             absolute_schema_path: 'shape/oneOf',
+             context:
+              [ { valid: false,
+                  errors:
+                   [ { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
+                       path: '/data/2/data',
+                       instance: { x: 1 },
+                       validator: 'required',
+                       message: 'The required property \'y\' is missing',
+                       relative_schema_path: '/required',
+                       absolute_schema_path: 'point/properties/data/required' } ],
+                  passed: 5 } ] } ],
+        passed: 4,
+        data:
+         { type: 'triangle',
+           data:
+            [ { type: 'point',
+                data: { x: 1, y: 1 } },
+              { type: 'point',
+                data: { x: 1, y: 1 } },
+              { type: 'point', data: { x: 1 } } ] } });
+
+      data = { type: 'triangle', data: [{ type: 'point', data: { x: 1, y: 1} }, { type: 'point', data: { x: 1, y: 1 } }, { type: 'point', data: { x: 1, y: 1} }] };
+
+      report = validator(data, 'shape', { algorithm: 'best_match' });
+
+      report.should.deep.equal({ valid: true, passed: 42, errors: [] });
 
     });
 
