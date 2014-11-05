@@ -1,6 +1,9 @@
+/*jslint node: true, forin: true, evil: true, passfail: false*/
+
 "use strict";
 
 var UglifyJS = require("uglify-js");
+var fs = require('fs');
 
 var KEYWORD_META = {
   // All types
@@ -37,9 +40,9 @@ var KEYWORD_META = {
   'maxProperties': [16000, 'object'],
   'dependencies': [17000, 'object'],
   // Any Type
-  'allOf': [19000,'any'],
-  'anyOf': [20000,'any'],
-  'oneOf': [21000,'any'],
+  'allOf': [19000, 'any'],
+  'anyOf': [20000, 'any'],
+  'oneOf': [21000, 'any'],
   'not': [22000, 'any'],
   'enum': [23000, 'any']
 };
@@ -79,91 +82,65 @@ var ERROR_MESSAGES = {
   MAX_LENGTH:                             "_stringify(data) + ' is too long, maximum ' + _schema.maxLength",
   PATTERN:                                "_stringify(data) + ' should match the pattern ' + _schema.pattern",
 
-  // Schema validation errors
-  /*
-  KEYWORD_TYPE_EXPECTED:                  "'Keyword \\\'{0}\\\' is expected to be of type \\\'{1}\\\''",
-  KEYWORD_UNDEFINED_STRICT:               "'Keyword \\\'{0}\\\' must be defined in strict mode'",
-  KEYWORD_UNEXPECTED:                     "'Keyword \\\'{0}\\\' is not expected to appear in the schema'",
-  KEYWORD_MUST_BE:                        "'Keyword \\\'{0}\\\' must be {1}'",
-  KEYWORD_DEPENDENCY:                     "'Keyword \\\'{0}\\\' requires keyword \\\'{1}\\\''",
-  KEYWORD_PATTERN:                        "'Keyword \\\'{0}\\\' is not a valid RegExp pattern: {1}'",
-  KEYWORD_VALUE_TYPE:                     "'Each element of keyword \\\'{0}\\\' array must be a \\\'{1}\\\''",
-  UNKNOWN_FORMAT:                         "'There is no validation function for format \\\'{0}\\\''",
-  CUSTOM_MODE_FORCE_PROPERTIES:           "'{0} must define at least one property if present'",
-
-  // Remote errors
-  REF_UNRESOLVED:                         "'Reference has not been resolved during compilation: {0}'",
-  UNRESOLVABLE_REFERENCE:                 "'Reference could not be resolved: {0}'",
-  SCHEMA_NOT_REACHABLE:                   "'Validator was not able to read schema with uri: {0}'",
-  SCHEMA_TYPE_EXPECTED:                   "'Schema is expected to be of type \\\'object\\\''",
-  SCHEMA_NOT_AN_OBJECT:                   "'Schema is not an object: {0}'",
-  ASYNC_TIMEOUT:                          "'{0} asynchronous task(s) have timed out after {1} ms'",
-  PARENT_SCHEMA_VALIDATION_FAILED:        "'Schema failed to validate against its parent schema, see inner errors for details.'"
-  */
-}
+};
 
 var Utils = {
 
-  rollback: function () {
-  },
+  rollback: function () { return; },
 
   dereferencePath: function (path, schema_id, schemas) {
     if (path[0] === '#') {
-      if (path === '#') {
-        return schemas[schema_id];
-      } else {
-        var ref = schemas[schema_id];
-        var parts = path.slice(2).split('/').map(function (part) { return Utils.decodeJSONPointer(part); });
-        for (var index = 0; index < parts.length; index++) {
-          ref = ref[parts[index]];
-        }
-        return ref;
+      if (path === '#') { return schemas[schema_id]; }
+      var index, ref = schemas[schema_id];
+      var parts = path.slice(2).split('/').map(function (part) { return Utils.decodeJSONPointer(part); });
+      for (index = 0; index < parts.length; index++) {
+        ref = ref[parts[index]];
       }
-    } else {
-      return schemas[path];
+      return ref;
     }
+    return schemas[path];
   },
 
-  defaults: function(obj) {
-    if (!Utils.typeOf(obj) === 'object') return obj;
-    for (var i = 1, length = arguments.length; i < length; i++) {
-      var source = arguments[i];
-      for (var prop in source) {
-        if (obj[prop] === void 0) obj[prop] = source[prop];
+  defaults: function (obj) {
+    var i, length, source, prop;
+    if (Utils.typeOf(obj) !== 'object') { return obj; }
+    for (i = 1, length = arguments.length; i < length; i++) {
+      source = arguments[i];
+      for (prop in source) {
+        if (obj[prop] === undefined) { obj[prop] = source[prop]; }
       }
     }
     return obj;
   },
 
-  typeOf: function (data, _type)  {
-    // We check if the raw typeof value if available before calculating it
-    _type = (_type != null) ? _type : typeof data;
+  typeOf: function (data, _type) {
+    // We check if the raw typeof value is available before calculating it
+    _type = (_type !== undefined) ? _type : typeof data;
     switch (_type) {
-      case 'object':
-        if (data === null) {
-          return 'null';
-        } else if (Array.isArray(data)) {
-          return 'array';
-        } else {
-          return 'object';
+    case 'object':
+      if (data === null) {
+        return 'null';
+      }
+      if (Array.isArray(data)) {
+        return 'array';
+      }
+      return 'object';
+    case 'number':
+      if (Number.isFinite(data)) {
+        if (data % 1 === 0) {
+          return 'integer';
         }
-      case 'number':
-        if (Number.isFinite(data)) {
-          if (data % 1 === 0) {
-            return 'integer';
-          } else {
-            return 'number';
-          }
-        } else if (Number.isNaN(data)) {
-          return 'not-a-number';
-        } else {
-          return 'unknown-number';
-        }
-      default:
-        return _type;
-    };
-
+        return 'number';
+      }
+      if (Number.isNaN(data)) {
+        return 'not-a-number';
+      }
+      return 'unknown-number';
+    default:
+      return _type;
+    }
   },
+
   unicodeLength: function (string) {
     return string.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, "_").length;
   },
@@ -171,72 +148,72 @@ var Utils = {
   decodeJSONPointer: function (str) {
     // http://tools.ietf.org/html/draft-ietf-appsawg-json-pointer-07#section-3
     return decodeURIComponent(str).replace(/~[0-1]/g, function (x) {
-        return x === "~1" ? "/" : "~";
+      return x === "~1" ? "/" : "~";
     });
   },
 
-  encodeJSONPointer: function(str) {
+  encodeJSONPointer: function (str) {
     return str.replace(/~|\//g, function (x) {
       return x === "~" ? "~0" : "~1";
     });
   },
 
-  stringify: function(data) {
+  stringify: function (data) {
     var value = [], index, flag = false;
     var _stringify = Utils.stringify;
     switch (Utils.typeOf(data)) {
-      case 'object':
-        value = ["{"];
-        for (index in data) {
-          if (!flag) {
-            flag = true
-            value.push(' "'+ index +'": ' + _stringify(data[index]));
-          } else {
-            value.push(', "' + index +'": '+ _stringify(data[index]));
-          }
-        }
-        if (flag) {
-          value.push(" }");
+    case 'object':
+      value = ["{"];
+      for (index in data) {
+        if (!flag) {
+          flag = true;
+          value.push(' "' + index + '": ' + _stringify(data[index]));
         } else {
-          value.push("}");
+          value.push(', "' + index + '": ' + _stringify(data[index]));
         }
-        break;
-      case 'array':
-        value = ["["];
-        for (index in data) {
-          if (!flag) {
-            flag = true
-            value.push(' ' + _stringify(data[index]));
-          } else {
-            value.push(', '+ _stringify(data[index]));
-          }
-        }
-        if (flag) {
-          value.push(" ]");
+      }
+      if (flag) {
+        value.push(" }");
+      } else {
+        value.push("}");
+      }
+      break;
+    case 'array':
+      value = ["["];
+      for (index in data) {
+        if (!flag) {
+          flag = true;
+          value.push(' ' + _stringify(data[index]));
         } else {
-          value.push("]");
+          value.push(', ' + _stringify(data[index]));
         }
-        break;
-      case 'undefined':
-        value = ['undefined'];
-        break;
-      case 'string':
-        value = ['"'+data+'"'];
-        break;
-      case 'null':
-        value = ['null'];
-        break;
-      case 'not-a-number':
-        value = ['NaN'];
-        break;
-      default:
-        value = [data];
-        break;
+      }
+      if (flag) {
+        value.push(" ]");
+      } else {
+        value.push("]");
+      }
+      break;
+    case 'undefined':
+      value = ['undefined'];
+      break;
+    case 'string':
+      value = ['"' + data + '"'];
+      break;
+    case 'null':
+      value = ['null'];
+      break;
+    case 'not-a-number':
+      value = ['NaN'];
+      break;
+    default:
+      value = [data];
+      break;
     }
     return value.join('');
   },
 
-  areEqual: function(json1, json2) {
+  areEqual: function (json1, json2) {
       // http://json-schema.org/latest/json-schema-core.html#rfc.section.3.6
 
       // Two JSON values are said to be equal if and only if:
@@ -244,52 +221,53 @@ var Utils = {
       // both are booleans, and have the same value; or
       // both are strings, and have the same value; or
       // both are numbers, and have the same mathematical value; or
-      if (json1 === json2) {
-          return true;
+    if (json1 === json2) {
+      return true;
+    }
+
+    var i, len, _areEqual = Utils.areEqual, _typeOf = Utils.typeOf;
+
+    // both are arrays, and:
+    if (Array.isArray(json1) && Array.isArray(json2)) {
+      // have the same number of items; and
+      if (json1.length !== json2.length) {
+        return false;
       }
-
-      var i, len, _areEqual = Utils.areEqual, _typeOf = Utils.typeOf;
-
-      // both are arrays, and:
-      if (Array.isArray(json1) && Array.isArray(json2)) {
-          // have the same number of items; and
-          if (json1.length !== json2.length) {
-              return false;
-          }
-          // items at the same index are equal according to this definition; or
-          len = json1.length;
-          for (i = 0; i < len; i++) {
-              if (!_areEqual(json1[i], json2[i])) {
-                  return false;
-              }
-          }
-          return true;
+      // items at the same index are equal according to this definition; or
+      len = json1.length;
+      for (i = 0; i < len; i++) {
+        if (!_areEqual(json1[i], json2[i])) {
+          return false;
+        }
       }
+      return true;
+    }
 
-      // both are objects, and:
-      if (_typeOf(json1) === "object" && _typeOf(json2) === "object") {
-          // have the same set of property names; and
-          var keys1 = Object.keys(json1);
-          var keys2 = Object.keys(json2);
-          if (!_areEqual(keys1, keys2)) {
-              return false;
-          }
-          // values for a same property name are equal according to this definition.
-          len = keys1.length;
-          for (i = 0; i < len; i++) {
-              if (!_areEqual(json1[keys1[i]], json2[keys1[i]])) {
-                  return false;
-              }
-          }
-          return true;
+    // both are objects, and:
+    if (_typeOf(json1) === "object" && _typeOf(json2) === "object") {
+      // have the same set of property names; and
+      var keys1 = Object.keys(json1);
+      var keys2 = Object.keys(json2);
+      if (!_areEqual(keys1, keys2)) {
+        return false;
       }
+      // values for a same property name are equal according to this definition.
+      len = keys1.length;
+      for (i = 0; i < len; i++) {
+        if (!_areEqual(json1[keys1[i]], json2[keys1[i]])) {
+          return false;
+        }
+      }
+      return true;
+    }
 
-      return false;
+    return false;
   },
 
   isUniqueArray: function (arr, indexes) {
     var l = arr.length;
-    var i = l , j = l, _areEqual = Utils.areEqual;
+    var i = l, j = l, _areEqual = Utils.areEqual;
+    /*jslint evil: true*/
     for (;i--;) {
       for (j = i; j--;) {
         if (_areEqual(arr[i], arr[j])) {
@@ -298,6 +276,7 @@ var Utils = {
         }
       }
     }
+    /*jslint evil: false*/
     return true;
   },
 
@@ -1857,9 +1836,145 @@ var SchemaGenerator = function (schema, schema_path, schema_id, cache, options) 
   }
 
   return code;
-}
+};
 
 var schema_validator = null, $schema = null;
+
+var buildValidator = function (schemas, options) {
+  var body, index, validator, schema, SCHEMA_ID, code;
+
+  Utils.defaults(options.errors, {
+    schema: true,
+    validator_value: true,
+    messages: true
+  });
+
+  body = [
+    "var validators = {};"
+  ];
+
+  if (options.enable_defaults) {
+    body.push(
+    "var _stub = function (data, _schema, parent, root, path, Utils) { return { valid: true, errors: [], rollback: Utils.rollback, passed: 0 }; }"
+    );
+  } else {
+    body.push(
+    "var _stub = function (data, _schema, parent, root, path, Utils) { return { valid: true, errors: [], passed: 0 }; }"
+    );
+  }
+
+  // Generate validators for each schema provided
+  for (index = 0; index < schemas.length; index++) {
+    schema = schemas[index];
+    SCHEMA_ID = (schema.id != null) ? schema.id : index;
+    body = body.concat(SchemaGenerator(schema, SCHEMA_ID, SCHEMA_ID, {}, options));
+  }
+
+  if (options.file) {
+    body.push(
+      "module.exports = {",
+        "schemas: " + Utils.stringify(schemas) + ",",
+        "validator: function(data, schema_id, _schema, Utils) {",
+          "return validators[schema_id](data, _schema, null, data, '', Utils);",
+        "}",
+      "}"
+    );
+    body = body.join("\n");
+  } else {
+    body.push(
+      // Validation Function
+      "return function (data, schema_id, _schema, Utils) {",
+        "return validators[schema_id](data, _schema, null, data, '', Utils);",
+      "}"
+    );
+    body = "generate = function () {" + body.join("\n") + "}";
+  }
+
+  if (options.beautify) {
+    // Generate readable code
+    var ast;
+    ast = UglifyJS.parse(body);
+    ast.figure_out_scope();
+    var stream = UglifyJS.OutputStream({ beautify: true });
+    ast.print(stream);
+    code = stream.toString();
+  } else {
+    // Generate compressed code
+    var ast = UglifyJS.parse(body);
+    ast.figure_out_scope();
+    var compressor = UglifyJS.Compressor({ warnings: false });
+    var compressed_ast = ast.transform(compressor);
+    compressed_ast.figure_out_scope();
+    compressed_ast.compute_char_frequency();
+    compressed_ast.mangle_names();
+    var stream = UglifyJS.OutputStream({ beautify: true });
+    compressed_ast.print(stream);
+    code = stream.toString();
+  }
+  return code;
+};
+
+var buildSchemas = function (schema_data, options) {
+  var _schemas = {}, index, schemas, buffer = [], schema_id;
+
+  // Create a deep clone of schemas
+  eval("schemas = "+ Utils.stringify(schema_data) +";");
+  index = schemas.length;
+
+  // Index all schemas
+  for (;index--;) {
+    schema_id = (schemas[index].id != null) ? schemas[index].id: index;
+    _schemas[schema_id] = schemas[index];
+    buffer[index] = [schemas[index], schema_id];
+  }
+
+  // Build refs
+  index = buffer.length;
+  while (buffer.length > 0) {
+    var schema_data = buffer.shift();
+    var schema = schema_data[0];
+    var schema_id = schema_data[1];
+    for (var key in schema) {
+      switch (key) {
+        case 'not':
+        case 'additionalItems':
+        case 'additionalProperties':
+          if (Utils.typeOf(schema[key].$ref) === 'string') {
+            schema[key] = Utils.dereferencePath(schema[key].$ref, schema_id, _schemas);
+          } else {
+            buffer.push([schema[key], schema_id]);
+          }
+          break;
+        case 'items':
+        case 'oneOf':
+        case 'allOf':
+        case 'anyOf':
+          if (Utils.typeOf(schema[key]) === 'array') {
+            for (var _key in schema[key]) {
+              if (Utils.typeOf(schema[key][_key].$ref) === 'string') {
+                schema[key][_key] = Utils.dereferencePath(schema[key][_key].$ref, schema_id, _schemas);
+              } else {
+                buffer.push([schema[key][_key], schema_id]);
+              }
+            }
+          }
+          break;
+        case 'definitions':
+        case 'properties':
+        case 'patternProperties':
+          for (var _key in schema[key]) {
+            if (Utils.typeOf(schema[key][_key].$ref) === 'string') {
+              schema[key][_key] = Utils.dereferencePath(schema[key][_key].$ref, schema_id, _schemas);
+            } else {
+              buffer.push([schema[key][_key], schema_id]);
+            }
+          }
+          break;
+      }
+    }
+  }
+  return _schemas;
+};
 
 module.exports = {
 
@@ -1893,131 +2008,286 @@ module.exports = {
     }
   },
 
-  buildValidator: function (schemas, options) {
-    var body, index, validator, schema, SCHEMA_ID, code;
+  writeToFile: function(schemas, options, filename) {
+    options = (options == null ? {} : options);
+    options.file = true;
 
-    Utils.defaults(options.errors, {
-      schema: true,
-      validator_value: true,
-      messages: true
+    Utils.defaults(options, {
+      beautify: false,
+      enable_defaults: false,
+      validate_schemas: false,
+      force_additional: true,
+      force_items: false,
+      force_max_length: false,
+      force_properties: false,
+      no_extra_keywords: false,
+      no_typeless: false,
+      no_empty_strings: false,
+      no_empty_arrays: false,
+      simple_ids: true,
+      errors: {}
     });
 
-    body = [
-      "var validators = {};"
-    ];
-
-    if (options.enable_defaults) {
-      body.push(
-      "var _stub = function (data, _schema, parent, root, path, Utils) { return { valid: true, errors: [], rollback: Utils.rollback, passed: 0 }; }"
-      );
-    } else {
-      body.push(
-      "var _stub = function (data, _schema, parent, root, path, Utils) { return { valid: true, errors: [], passed: 0 }; }"
-      );
+    if (Utils.typeOf(schemas) === 'object') {
+      schemas = [schemas];
     }
 
-    // Generate validators for each schema provided
-    for (index = 0; index < schemas.length; index++) {
-      schema = schemas[index];
-      SCHEMA_ID = (schema.id != null) ? schema.id : index;
-      body = body.concat(SchemaGenerator(schema, SCHEMA_ID, SCHEMA_ID, {}, options));
-    }
-    body.push(
-      // Validation Function
-      "return function (data, schema_id, _schema, Utils) {",
-        "return validators[schema_id](data, _schema, null, data, '', Utils);",
-      "}"
-    );
+    // Validate Schemas
+    if (options.validate_schemas) {
 
-    if (options.beautify) {
-      // Generate readable code
-      var ast = UglifyJS.parse("generate = function () {"+body.join("\n")+"}");
-      ast.figure_out_scope();
-      var stream = UglifyJS.OutputStream({ beautify: true });
-      ast.print(stream);
-      code = stream.toString();
-    } else {
-      // Generate compressed code
-      var ast = UglifyJS.parse("generate = function () {"+body.join("\n")+"}");
-      ast.figure_out_scope();
-      var compressor = UglifyJS.Compressor({ warnings: false });
-      var compressed_ast = ast.transform(compressor);
-      compressed_ast.figure_out_scope();
-      compressed_ast.compute_char_frequency();
-      compressed_ast.mangle_names();
-      var stream = UglifyJS.OutputStream({ beautify: true });
-      compressed_ast.print(stream);
-      code = stream.toString();
-    }
-    return code;
-  },
+      if (schema_validator === null) {
+        $schema = require('./draftv4/schema.json');
 
-  buildSchemas: function (schema_data, options) {
-    var _schemas = {}, index, schemas, buffer = [], schema_id;
+        if (options.simple_ids) {
+          delete $schema.allOf[0].properties.id.format;
+        }
 
-    // Create a deep clone of schemas
-    eval("schemas = "+ Utils.stringify(schema_data) +";");
-    index = schemas.length;
-
-    // Index all schemas
-    for (;index--;) {
-      schema_id = (schemas[index].id != null) ? schemas[index].id: index;
-      _schemas[schema_id] = schemas[index];
-      buffer[index] = [schemas[index], schema_id];
-    }
-
-    // Build refs
-    index = buffer.length;
-    while (buffer.length > 0) {
-      var schema_data = buffer.shift();
-      var schema = schema_data[0];
-      var schema_id = schema_data[1];
-      for (var key in schema) {
-        switch (key) {
-          case 'not':
-          case 'additionalItems':
-          case 'additionalProperties':
-            if (Utils.typeOf(schema[key].$ref) === 'string') {
-              schema[key] = Utils.dereferencePath(schema[key].$ref, schema_id, _schemas);
-            } else {
-              buffer.push([schema[key], schema_id]);
-            }
-            break;
-          case 'items':
-          case 'oneOf':
-          case 'allOf':
-          case 'anyOf':
-            if (Utils.typeOf(schema[key]) === 'array') {
-              for (var _key in schema[key]) {
-                if (Utils.typeOf(schema[key][_key].$ref) === 'string') {
-                  schema[key][_key] = Utils.dereferencePath(schema[key][_key].$ref, schema_id, _schemas);
-                } else {
-                  buffer.push([schema[key][_key], schema_id]);
+        if (options.force_additional) {
+          $schema.allOf.push({
+            oneOf: [
+              {
+                type: 'object',
+                required: ['additionalProperties'],
+                properties: {
+                  type: {
+                    enum: ['object']
+                  },
+                }
+              },
+              {
+                type: 'object',
+                required: ['additionalItems'],
+                properties: {
+                  type: {
+                    enum: ['array']
+                  }
+                }
+              },
+              {
+                type: 'object',
+                properties: {
+                  type: {
+                    enum: ['boolean', 'integer', 'null', 'number', 'string']
+                  }
                 }
               }
-            }
-            break;
-          case 'definitions':
-          case 'properties':
-          case 'patternProperties':
-            for (var _key in schema[key]) {
-              if (Utils.typeOf(schema[key][_key].$ref) === 'string') {
-                schema[key][_key] = Utils.dereferencePath(schema[key][_key].$ref, schema_id, _schemas);
-              } else {
-                buffer.push([schema[key][_key], schema_id]);
+            ]
+          });
+        }
+
+        if (options.force_items) {
+          $schema.allOf.push({
+            oneOf: [
+              {
+                type: 'object',
+                required: ['items'],
+                properties: {
+                  type: {
+                    enum: ['array']
+                  }
+                }
+              },
+              {
+                type: 'object',
+                properties: {
+                  type: {
+                    enum: ['object', 'boolean', 'integer', 'null', 'number', 'string']
+                  }
+                }
               }
-            }
-            break;
+            ]
+          });
+        }
+
+        if (options.force_max_length) {
+          $schema.allOf.push({
+            oneOf: [
+              {
+                type: 'object',
+                required: ['maxLength'],
+                properties: {
+                  type: {
+                    enum: ['string']
+                  }
+                }
+              },
+              {
+                type: 'object',
+                properties: {
+                  type: {
+                    enum: ['array', 'object', 'boolean', 'integer', 'null', 'number']
+                  }
+                }
+              }
+            ]
+          });
+        }
+
+        if (options.force_properties) {
+          $schema.allOf.push({
+            anyOf: [
+              {
+                type: 'object',
+                required: ['properties'],
+                properties: {
+                  type: {
+                    enum: ['object']
+                  }
+                }
+              },
+              {
+                type: 'object',
+                required: ['patternProperties'],
+                properties: {
+                  type: {
+                    enum: ['object']
+                  }
+                }
+              },
+              {
+                type: 'object',
+                properties: {
+                  type: {
+                    enum: ['array', 'boolean', 'integer', 'null', 'number', 'string']
+                  }
+                }
+              }
+            ]
+          });
+        }
+
+        if (options.no_extra_keywords) {
+          $schema.allOf[0].additionalProperties = false
+        }
+
+        if (options.no_typeless) {
+          $schema.allOf.push({
+            type: 'object',
+            required: ['type']
+          });
+        }
+
+        if (options.no_empty_strings) {
+          $schema.allOf.push({
+            oneOf: [
+              {
+                type: 'object',
+                properties: {
+                  type: {
+                    enum: ['string']
+                  },
+                  minLength: {
+                    default: 1
+                  }
+                }
+              },
+              {
+                type: 'object',
+                properties: {
+                  type: {
+                    enum: ['array', 'object', 'boolean', 'integer', 'null', 'number']
+                  }
+                }
+              }
+            ]
+          });
+        }
+
+        if (options.no_empty_arrays) {
+          $schema.allOf.push({
+            oneOf: [
+              {
+                type: 'object',
+                properties: {
+                  type: {
+                    enum: ['array']
+                  },
+                  minItems: {
+                    default: 1
+                  }
+                }
+              },
+              {
+                type: 'object',
+                properties: {
+                  type: {
+                    enum: ['string', 'object', 'boolean', 'integer', 'null', 'number']
+                  }
+                }
+              }
+            ]
+          });
+        }
+
+        if (options.assume_additional !== undefined) {
+          $schema.allOf.push({
+            oneOf: [
+              {
+                type: 'object',
+                properties: {
+                  type: {
+                    enum: ['object']
+                  },
+                  additionalProperties: {
+                    default: options.assume_additional
+                  }
+                }
+              },
+              {
+                type: 'object',
+                properties: {
+                  type: {
+                    enum: ['array', 'string', 'boolean', 'integer', 'null', 'number']
+                  }
+                }
+              }
+            ]
+          })
+        }
+        schema_validator = this.validator($schema, { enable_defaults: true, validate_schemas: false, errors: { messages: false, schema: false, validator_value: true } })
+      }
+
+      for (var index = 0; index < schemas.length; index++) {
+        var report = schema_validator(schemas[index], 'http://json-schema.org/draft-04/schema#', { algorithm: 'best_match' });
+        report.schema_id = schemas[index].id;
+        if (!report.valid) {
+          //console.log(require('util').inspect(report, { depth: 100, colors: true }));
+          return report;
         }
       }
     }
-    return _schemas;
+
+    var generate;
+    var code = buildValidator(schemas, options);
+
+    fs.writeFileSync(filename, code);
+  },
+
+  loadFromFile: function(filename) {
+    var data = require(filename);
+    var _schemas = buildSchemas(data.schemas);
+    var validator = data.validator;
+    console.log(data);
+    return function (data, schema_id, options) {
+      if (!schema_id) throw Error('Please specify a schema');
+      options = (options == null) ? {} : options;
+      options.algorithm = (options.algorithm == null) ? 'none': options.algorithm;
+      var _schema = _schemas[schema_id];
+      var report = validator(data, schema_id, _schema, Utils);
+      delete report.rollback;
+      if (!report.valid) {
+        if(options.algorithm !== 'none') { report = Utils.filterReports([report], options.algorithm)[0][0] };
+        report.data = data;
+      }
+      return report;
+    };
   },
 
   validator: function (schemas, options) {
     options = (options == null ? {} : options);
 
     Utils.defaults(options, {
+      file: false,
       beautify: true,
       enable_defaults: false,
       validate_schemas: false,
@@ -2263,8 +2533,8 @@ module.exports = {
     }
 
     var generate;
-    var _schemas = this.buildSchemas(schemas, options);
-    var code = this.buildValidator(schemas, options);
+    var _schemas = buildSchemas(schemas, options);
+    var code = buildValidator(schemas, options);
     eval(code);
     var validator = generate();
 
