@@ -1957,6 +1957,12 @@ var buildSchemas = function (schema_data, options) {
                 buffer.push([schema[key][_key], schema_id]);
               }
             }
+          } else if (Utils.typeOf(schema[key]) === 'object') {
+            if (Utils.typeOf(schema[key].$ref) === 'string') {
+              schema[key] = Utils.dereferencePath(schema[key].$ref, schema_id, _schemas);
+            } else {
+              buffer.push([schema[key], schema_id]);
+            }
           }
           break;
         case 'definitions':
@@ -2259,7 +2265,6 @@ module.exports = {
 
     var generate;
     var code = buildValidator(schemas, options);
-
     fs.writeFileSync(filename, code);
   },
 
@@ -2267,7 +2272,6 @@ module.exports = {
     var data = require(filename);
     var _schemas = buildSchemas(data.schemas);
     var validator = data.validator;
-    console.log(data);
     return function (data, schema_id, options) {
       if (!schema_id) throw Error('Please specify a schema');
       options = (options == null) ? {} : options;
