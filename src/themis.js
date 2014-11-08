@@ -337,7 +337,7 @@ var Utils = {
               best_score = -1;
               best_match = null;
             }
-            score = error.relative_schema_path.split('/').length;
+            score = error.schema_path.split('/').length;
             if (best_match == null || best_score > score) {
               best_score = score;
               best_match = [];
@@ -377,6 +377,7 @@ var Utils = {
         while (index--) {
           var report = reports[index];
           var score = report.passed;
+          delete report.passed;
           if (best_reports == null || score > best_report_score) {
             best_report_score = score;
             best_reports = [];
@@ -600,8 +601,8 @@ var buildError = function (error_code, schema, schema_path, relative_schema_path
     "report.errors.push({",
       "code: '"+ error_code +"',",
       "path: path,",
-      "instance: data,",
-      "validator: '"+ validator +"'"
+      "instance: data, ",
+      "schema_path: '"+ schema_path + ((validator_value == null) ? '' : relative_schema_path) + "'"
   ];
 
   if (options.errors.messages) {
@@ -616,9 +617,10 @@ var buildError = function (error_code, schema, schema_path, relative_schema_path
     }
   }
 
-  if (validator_value != null && options.errors.validator_value) {
+  if (options.errors.validator) {
     code.push(
-      ", validator_value: " + Utils.stringify(validator_value)
+      ", validator_value: " + Utils.stringify(validator_value),
+      ", validator: '"+ validator +"'"
     );
   }
 
@@ -630,14 +632,11 @@ var buildError = function (error_code, schema, schema_path, relative_schema_path
 
   if (options.errors.schema) {
     code.push(
-      ", schema: _schema "
+      ", schema: _schema ",
+      ", relative_schema_path: '"+ relative_schema_path + "'",
+      ", absolute_schema_path: '"+ schema_path + ((validator_value == null) ? '' : relative_schema_path) + "'"
     );
   }
-
-  code.push(
-    ", relative_schema_path: '"+ relative_schema_path + "'",
-    ", absolute_schema_path: '"+ schema_path + ((validator_value == null) ? '' : relative_schema_path) + "'"
-  );
 
   if (build_context) {
     code.push(
@@ -1844,8 +1843,8 @@ var buildValidator = function (schemas, options) {
   var body, index, validator, schema, SCHEMA_ID, code;
 
   Utils.defaults(options.errors, {
-    schema: true,
-    validator_value: true,
+    schema: false,
+    validator: false,
     messages: true
   });
 
