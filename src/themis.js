@@ -1,66 +1,66 @@
-/*jslint node: true, forin: true, evil: true, passfail: false*/
+/*jshint node: true, strict: true, unused: false, evil: true, loopfunc: true*/
 
 "use strict";
 
 var UglifyJS = require("uglify-js");
-var fs = require('fs');
+var fs = require("fs");
 
 var KEYWORD_META = {
   // All types
-  'default': [-10000, 'any'],
-  '$schema': [-150, 'any'],
-  '$ref': [-140, 'any'],
-  'title': [-130, 'any'],
-  'description': [-120, 'any'],
-  'definitions': [-110, 'any'],
-  'type': [0, 'any'],
+  "default": [-10000, "any"],
+  "$schema": [-150, "any"],
+  "$ref": [-140, "any"],
+  "title": [-130, "any"],
+  "description": [-120, "any"],
+  "definitions": [-110, "any"],
+  "type": [0, "any"],
   // Numeric
-  'multipleOf': [1000, 'number'],
-  'minimum': [2000, 'number'],
-  'exclusiveMinimum': [2500, 'number'],
-  'maximum': [3000, 'number'],
-  'exclusiveMaximum': [3500, 'number'],
+  "multipleOf": [1000, "number"],
+  "minimum": [2000, "number"],
+  "exclusiveMinimum": [2500, "number"],
+  "maximum": [3000, "number"],
+  "exclusiveMaximum": [3500, "number"],
   // Strings
-  'minLength': [4000, 'string'],
-  'maxLength': [5000, 'string'],
-  'pattern': [6000, 'string'],
-  'format': [6500, 'string'],
+  "minLength": [4000, "string"],
+  "maxLength": [5000, "string"],
+  "pattern": [6000, "string"],
+  "format": [6500, "string"],
   // Arrays
-  'additionalItems': [7000, 'array'],
-  'items': [7500, 'array'],
-  'minItems': [8000, 'array'],
-  'maxItems': [9000, 'array'],
-  'uniqueItems': [10000, 'array'],
+  "additionalItems": [7000, "array"],
+  "items": [7500, "array"],
+  "minItems": [8000, "array"],
+  "maxItems": [9000, "array"],
+  "uniqueItems": [10000, "array"],
   // Objects
-  'required': [11000, 'object'],
-  'additionalProperties': [12000, 'object'],
-  'patternProperties': [13000, 'object'],
-  'properties': [14000, 'object'],
-  'minProperties': [15000, 'object'],
-  'maxProperties': [16000, 'object'],
-  'dependencies': [17000, 'object'],
+  "required": [11000, "object"],
+  "additionalProperties": [12000, "object"],
+  "patternProperties": [13000, "object"],
+  "properties": [14000, "object"],
+  "minProperties": [15000, "object"],
+  "maxProperties": [16000, "object"],
+  "dependencies": [17000, "object"],
   // Any Type
-  'allOf': [19000, 'any'],
-  'anyOf': [20000, 'any'],
-  'oneOf': [21000, 'any'],
-  'not': [22000, 'any'],
-  'enum': [23000, 'any']
+  "allOf": [19000, "any"],
+  "anyOf": [20000, "any"],
+  "oneOf": [21000, "any"],
+  "not": [22000, "any"],
+  "enum": [23000, "any"]
 };
 
 var ERROR_MESSAGES = {
-  INVALID_TYPE:                           "_stringify(data) + ' should be of type ' + _schema.type + ' not ' + type",
+  INVALID_TYPE:                           "'Data should be of type ' + _schema.type + ' not ' + type",
   INVALID_FORMAT:                         "_stringify(data) + ' should match format ' + _schema.format",
   ENUM_MISMATCH:                          "_stringify(data) + ' is not one of ' + _stringify(_schema.enum)",
-  ALL_OF_FAILED:                          "_stringify(data) + ' is not valid under all of the given schemas'",
-  ANY_OF_MISSING:                         "_stringify(data) + ' is not valid under any of the given schemas'",
-  ONE_OF_MISSING:                         "_stringify(data) + ' is not valid under any of the given schemas'",
-  ONE_OF_MULTIPLE:                        "_stringify(data) + ' is valid under each of the given schemas, but should be valid under only one of them'",
-  NOT_PASSED:                             "_stringify(data) + ' should not match the given schema'",
+  ALL_OF_FAILED:                          "'Data is not valid under all of the given schemas'",
+  ANY_OF_MISSING:                         "'Data is not valid under any of the given schemas'",
+  ONE_OF_MISSING:                         "'Data is not valid under any of the given schemas'",
+  ONE_OF_MULTIPLE:                        "'Data is valid under each of the given schemas, but should be valid under only one of them'",
+  NOT_PASSED:                             "'Data should not match the given schema'",
 
   // Array errors
-  ARRAY_LENGTH_SHORT:                     "_stringify(data) + ' is too short, minimum ' + _schema.minItems",
-  ARRAY_LENGTH_LONG:                      "_stringify(data) + ' is too long, maximum ' + _schema.maxItems",
-  ARRAY_UNIQUE:                           "_stringify(data) + ' has non unique elements'",
+  ARRAY_LENGTH_SHORT:                     "'Array is too short, minimum ' + _schema.minItems",
+  ARRAY_LENGTH_LONG:                      "'Array is too long, maximum ' + _schema.maxItems",
+  ARRAY_UNIQUE:                           "'Array has non unique elements'",
   ARRAY_ADDITIONAL_ITEMS:                 "'Additional items not allowed, ' + _stringify(data.slice(_schema.items.length)) + ' is unexpected'",
 
   // Numeric errors
@@ -71,8 +71,8 @@ var ERROR_MESSAGES = {
   MAXIMUM_EXCLUSIVE:                      "_stringify(data) + ' is greater than or equal to the maximum of ' + _schema.maximum",
 
   // Object errors
-  OBJECT_PROPERTIES_MINIMUM:              "_stringify(data) + ' has less than the minimum of ' + _schema.minProperties + ' properties'",
-  OBJECT_PROPERTIES_MAXIMUM:              "_stringify(data) + ' has more than the maximum of ' + _schema.maxProperties + ' properties'",
+  OBJECT_PROPERTIES_MINIMUM:              "'Object has less than the minimum of ' + _schema.minProperties + ' properties'",
+  OBJECT_PROPERTIES_MAXIMUM:              "'Object has more than the maximum of ' + _schema.maxProperties + ' properties'",
   OBJECT_MISSING_REQUIRED_PROPERTY:       "'The required property \\\'' + val + '\\\' is missing'",
   OBJECT_ADDITIONAL_PROPERTIES:           "'Additional properties not allowed, ' + _stringify(_additionalKeys) + ' is unexpected'",
   OBJECT_DEPENDENCY_KEY:                  "'The keys ' + _stringify(_schema.dependencies[key]) + ' must exist due to key \"' + key + '\"'",
@@ -89,10 +89,10 @@ var Utils = {
   rollback: function () { return; },
 
   dereferencePath: function (path, schema_id, schemas) {
-    if (path[0] === '#') {
-      if (path === '#') { return schemas[schema_id]; }
+    if (path[0] === "#") {
+      if (path === "#") { return schemas[schema_id]; }
       var index, ref = schemas[schema_id];
-      var parts = path.slice(2).split('/').map(function (part) { return Utils.decodeJSONPointer(part); });
+      var parts = path.slice(2).split("/").map(function (part) { return Utils.decodeJSONPointer(part); });
       for (index = 0; index < parts.length; index++) {
         ref = ref[parts[index]];
       }
@@ -103,7 +103,7 @@ var Utils = {
 
   defaults: function (obj) {
     var i, length, source, prop;
-    if (Utils.typeOf(obj) !== 'object') { return obj; }
+    if (Utils.typeOf(obj) !== "object") { return obj; }
     for (i = 1, length = arguments.length; i < length; i++) {
       source = arguments[i];
       for (prop in source) {
@@ -117,25 +117,25 @@ var Utils = {
     // We check if the raw typeof value is available before calculating it
     _type = (_type !== undefined) ? _type : typeof data;
     switch (_type) {
-    case 'object':
+    case "object":
       if (data === null) {
-        return 'null';
+        return "null";
       }
       if (Array.isArray(data)) {
-        return 'array';
+        return "array";
       }
-      return 'object';
-    case 'number':
+      return "object";
+    case "number":
       if (Number.isFinite(data)) {
         if (data % 1 === 0) {
-          return 'integer';
+          return "integer";
         }
-        return 'number';
+        return "number";
       }
       if (Number.isNaN(data)) {
-        return 'not-a-number';
+        return "not-a-number";
       }
-      return 'unknown-number';
+      return "unknown-number";
     default:
       return _type;
     }
@@ -162,14 +162,14 @@ var Utils = {
     var value = [], index, flag = false;
     var _stringify = Utils.stringify;
     switch (Utils.typeOf(data)) {
-    case 'object':
+    case "object":
       value = ["{"];
       for (index in data) {
         if (!flag) {
           flag = true;
-          value.push(' "' + index + '": ' + _stringify(data[index]));
+          value.push(" \"" + index + "\": " + _stringify(data[index]));
         } else {
-          value.push(', "' + index + '": ' + _stringify(data[index]));
+          value.push(", \"" + index + "\": " + _stringify(data[index]));
         }
       }
       if (flag) {
@@ -178,14 +178,14 @@ var Utils = {
         value.push("}");
       }
       break;
-    case 'array':
+    case "array":
       value = ["["];
       for (index in data) {
         if (!flag) {
           flag = true;
-          value.push(' ' + _stringify(data[index]));
+          value.push(" " + _stringify(data[index]));
         } else {
-          value.push(', ' + _stringify(data[index]));
+          value.push(", " + _stringify(data[index]));
         }
       }
       if (flag) {
@@ -194,23 +194,23 @@ var Utils = {
         value.push("]");
       }
       break;
-    case 'undefined':
-      value = ['undefined'];
+    case "undefined":
+      value = ["undefined"];
       break;
-    case 'string':
-      value = ['"' + data + '"'];
+    case "string":
+      value = ["\"" + data + "\""];
       break;
-    case 'null':
-      value = ['null'];
+    case "null":
+      value = ["null"];
       break;
-    case 'not-a-number':
-      value = ['NaN'];
+    case "not-a-number":
+      value = ["NaN"];
       break;
     default:
       value = [data];
       break;
     }
-    return value.join('');
+    return value.join("");
   },
 
   areEqual: function (json1, json2) {
@@ -300,17 +300,16 @@ var Utils = {
   },
 
   filterErrors: function(errors, algorithm) {
-    var _filterErrors = Utils.filterErrors;
     var _filterReports = Utils.filterReports;
     switch (algorithm) {
-      case 'none':
-      case 'relevance':
+      case "none":
+      case "relevance":
         return [errors, 0];
-      case 'best_match':
+      case "best_match":
         var index = errors.length;
         var best_match = null;
         var best_score = -1;
-        var weak = ['anyOf', 'oneOf'];
+        var weak = ["anyOf", "oneOf"];
         var allow_weak = true;
 
         while (index--) {
@@ -319,9 +318,9 @@ var Utils = {
 
           if (weak.indexOf(error.validator) >= 0) {
             if (allow_weak) {
-              var result = _filterReports(error.context, algorithm);
+              result = _filterReports(error.context, algorithm);
               score = result[1];
-              if (best_match == null || best_score < score) {
+              if (best_match === null || best_score < score) {
                 best_score = score;
                 best_match = [];
                 error.context = result[0];
@@ -337,8 +336,8 @@ var Utils = {
               best_score = -1;
               best_match = null;
             }
-            score = error.schema_path.split('/').length;
-            if (best_match == null || best_score > score) {
+            score = error.relative_schema_path.split("/").length;
+            if (best_match === null || best_score > score) {
               best_score = score;
               best_match = [];
               best_match.push(error);
@@ -358,27 +357,25 @@ var Utils = {
 
   filterReports: function (reports, algorithm) {
     var _filterErrors = Utils.filterErrors;
-    var _filterReports = Utils.filterReports;
 
     switch (algorithm) {
-      case 'none':
-      case 'relevance':
+      case "none":
+      case "relevance":
         return [reports, 0];
-        break;
-      case 'best_match':
+      case "best_match":
         var index = reports.length;
         var best_match = null;
         var best_score = -1;
         var best_error_score = -1;
         var best_reports = null;
         var best_report_score = -1;
+        var report, result, score;
 
         // Find the reports with the highest passed validations
         while (index--) {
-          var report = reports[index];
-          var score = report.passed;
-          delete report.passed;
-          if (best_reports == null || score > best_report_score) {
+          report = reports[index];
+          score = report.passed;
+          if (best_reports === null || score > best_report_score) {
             best_report_score = score;
             best_reports = [];
             best_reports.push(report);
@@ -390,12 +387,12 @@ var Utils = {
         // Find the report with the least errors
         index = best_reports.length;
         while (index--) {
-          var report = best_reports[index];
+          report = best_reports[index];
           if (report.valid) continue;
-          var result = _filterErrors(report.errors, algorithm);
-          var score = report.errors.length;
+          result = _filterErrors(report.errors, algorithm);
+          score = report.errors.length;
           report.errors = result[0];
-          if (best_match == null || best_score > score)  {
+          if (best_match === null || best_score > score)  {
             best_score = score;
             best_match = [];
             best_match.push(report);
@@ -410,7 +407,7 @@ var Utils = {
           }
         }
 
-        if (best_match == null) {
+        if (best_match === null) {
           return [reports, 0];
         } else {
           return [best_match, best_error_score];
@@ -527,7 +524,7 @@ var Utils = {
     },
     "regex": function (str) {
         try {
-            RegExp(str);
+            new RegExp(str);
             return true;
         } catch (e) {
             return false;
@@ -545,7 +542,7 @@ var Utils = {
     "uri": function (uri) {
         // http://mathiasbynens.be/demo/url-regex
         // https://gist.github.com/dperini/729294
-        return typeof uri !== "string" || RegExp(
+        return typeof uri !== "string" || new RegExp(
             "^" +
                 // protocol identifier
                 "(?:(?:https?|ftp)://)" +
@@ -601,8 +598,8 @@ var buildError = function (error_code, schema, schema_path, relative_schema_path
     "report.errors.push({",
       "code: '"+ error_code +"',",
       "path: path,",
-      "instance: data, ",
-      "schema_path: '"+ schema_path + ((validator_value == null) ? '' : relative_schema_path) + "'"
+      "instance: data,",
+      "validator: '"+ validator +"'"
   ];
 
   if (options.errors.messages) {
@@ -617,10 +614,9 @@ var buildError = function (error_code, schema, schema_path, relative_schema_path
     }
   }
 
-  if (options.errors.validator) {
+  if (validator_value !== null && options.errors.validator_value) {
     code.push(
-      ", validator_value: " + Utils.stringify(validator_value),
-      ", validator: '"+ validator +"'"
+      ", validator_value: " + Utils.stringify(validator_value)
     );
   }
 
@@ -632,11 +628,14 @@ var buildError = function (error_code, schema, schema_path, relative_schema_path
 
   if (options.errors.schema) {
     code.push(
-      ", schema: _schema ",
-      ", relative_schema_path: '"+ relative_schema_path + "'",
-      ", absolute_schema_path: '"+ schema_path + ((validator_value == null) ? '' : relative_schema_path) + "'"
+      ", schema: _schema "
     );
   }
+
+  code.push(
+    ", relative_schema_path: '"+ relative_schema_path + "'",
+    ", absolute_schema_path: '"+ schema_path + ((validator_value === null) ? "" : relative_schema_path) + "'"
+  );
 
   if (build_context) {
     code.push(
@@ -652,10 +651,10 @@ var buildError = function (error_code, schema, schema_path, relative_schema_path
 };
 
 var ValidationGenerators = {
-  'type': function (schema, schema_path, schema_id, options) {
+  "type": function (schema, schema_path, schema_id, options) {
     var code = [""], conditions;
 
-    if (Utils.typeOf(schema.type) === 'array' && schema.type.length > 0) {
+    if (Utils.typeOf(schema.type) === "array" && schema.type.length > 0) {
       if ( schema.type.length === 1 ) {
         code.push("if (type !== '" + schema.type[0] +"') {");
       } else {
@@ -663,12 +662,12 @@ var ValidationGenerators = {
           "type !== '"+ schema.type[0] +"'"
         ];
 
-        if (schema.type[0] === 'number') {
+        if (schema.type[0] === "number") {
           conditions.push("type !== 'integer'");
         }
 
         for (var index = 1; index < schema.type.length; index++) {
-          if (schema.type[index] === 'number') {
+          if (schema.type[index] === "number") {
             conditions.push("type !== '"+ schema.type[index] +"' && type !== 'integer'");
           } else {
             conditions.push("type !== '"+ schema.type[index] +"'");
@@ -678,7 +677,7 @@ var ValidationGenerators = {
         code.push("if ("+ conditions.join(" && ") +") {");
       }
     } else {
-      if (schema.type === 'number') {
+      if (schema.type === "number") {
         code.push("if (type !== '" + schema.type +"' && type !== 'integer') {");
       } else {
         code.push("if (type !== '" + schema.type +"') {");
@@ -687,7 +686,7 @@ var ValidationGenerators = {
 
     code.push(
       "report.valid = false;",
-      buildError('INVALID_TYPE', schema, schema_path, '/type', 'type', schema.type, [schema.type, 'type'], options),
+      buildError("INVALID_TYPE", schema, schema_path, "/type", "type", schema.type, [schema.type, "type"], options),
       "} else { validations_passed++; }"
     );
     return code;
@@ -698,7 +697,7 @@ var ValidationGenerators = {
     var code = [
       "if (!(_typeOf(data / "+ schema.multipleOf+") === 'integer')) {",
         "report.valid = false;",
-        buildError('MULTIPLE_OF', schema, schema_path, '/multipleOf', 'multipleOf', schema.multipleOf, {}, options),
+        buildError("MULTIPLE_OF", schema, schema_path, "/multipleOf", "multipleOf", schema.multipleOf, {}, options),
       "} else { validations_passed++; }"
     ];
     return code;
@@ -710,14 +709,14 @@ var ValidationGenerators = {
       code.push(
         "if (data < "+ schema.minimum +") {",
           "report.valid = false;",
-          buildError('MINIMUM', schema, schema_path, '/minimum', 'minimum', schema.minimum, {}, options),
+          buildError("MINIMUM", schema, schema_path, "/minimum", "minimum", schema.minimum, {}, options),
         "} else { validations_passed++; }"
       );
     } else {
       code.push(
         "if (data <= "+ schema.minimum +") {",
           "report.valid = false;",
-          buildError('MINIMUM_EXCLUSIVE', schema, schema_path, '/exclusiveMinimum', 'exclusiveMinimum', schema.exclusiveMinimum, {}, options),
+          buildError("MINIMUM_EXCLUSIVE", schema, schema_path, "/exclusiveMinimum", "exclusiveMinimum", schema.exclusiveMinimum, {}, options),
         "} else { validations_passed++; }"
       );
     }
@@ -736,14 +735,14 @@ var ValidationGenerators = {
       code.push(
         "if (data > "+ schema.maximum +") {",
           "report.valid = false;",
-          buildError('MAXIMUM', schema, schema_path, '/maximum', 'maximum', schema.maximum, {}, options),
+          buildError("MAXIMUM", schema, schema_path, "/maximum", "maximum", schema.maximum, {}, options),
         "} else { validations_passed++; }"
       );
     } else {
       code.push(
         "if (data >= "+ schema.maximum +") {",
           "report.valid = false;",
-          buildError('MAXIMUM_EXCLUSIVE', schema, schema_path, '/exclusiveMaximum', 'exclusiveMaximum', schema.exclusiveMaximum, {}, options),
+          buildError("MAXIMUM_EXCLUSIVE", schema, schema_path, "/exclusiveMaximum", "exclusiveMaximum", schema.exclusiveMaximum, {}, options),
         "} else { validations_passed++; }"
       );
     }
@@ -762,7 +761,7 @@ var ValidationGenerators = {
     code.push(
       "if ((_length = _unicodeLength(data)) < "+ schema.minLength +") {",
         "report.valid = false;",
-        buildError('MIN_LENGTH', schema, schema_path, '/minLength', 'minLength', schema.minLength, {}, options),
+        buildError("MIN_LENGTH", schema, schema_path, "/minLength", "minLength", schema.minLength, {}, options),
       "} else { validations_passed++; }"
     );
 
@@ -772,7 +771,7 @@ var ValidationGenerators = {
     var code = [];
 
     // We've already calculate _length so don't recalculate
-    if (schema.minLength != null) {
+    if (schema.minLength !== undefined) {
       code.push("if (_length > "+ schema.maxLength +") {");
     } else {
       code.push("if ((_length = _unicodeLength(data)) > "+ schema.maxLength +") {");
@@ -780,7 +779,7 @@ var ValidationGenerators = {
 
     code.push(
         "report.valid = false;",
-        buildError('MAX_LENGTH', schema, schema_path, '/maxLength', 'maxLength', schema.maxLength, {}, options),
+        buildError("MAX_LENGTH", schema, schema_path, "/maxLength", "maxLength", schema.maxLength, {}, options),
       "} else { validations_passed++; }"
     );
 
@@ -792,7 +791,7 @@ var ValidationGenerators = {
     code.push(
       "if (!/"+ Utils.escapeRegexp(schema.pattern) +"/.test(data)) {",
         "report.valid = false;",
-        buildError('PATTERN', schema, schema_path, '/pattern', 'pattern', schema.pattern, {}, options),
+        buildError("PATTERN", schema, schema_path, "/pattern", "pattern", schema.pattern, {}, options),
       "} else { validations_passed++; }"
     );
 
@@ -804,7 +803,7 @@ var ValidationGenerators = {
     code.push(
       "if (!_format['"+ schema.format +"'](data)) {",
         "report.valid = false;",
-        buildError('INVALID_FORMAT', schema, schema_path, '/format', 'format', schema.format, [schema.format], options),
+        buildError("INVALID_FORMAT", schema, schema_path, "/format", "format", schema.format, [schema.format], options),
       "} else { validations_passed++; }"
     );
 
@@ -814,11 +813,11 @@ var ValidationGenerators = {
   additionalItems: function (schema, schema_path, schema_id, options) {
     var code = [];
 
-    if (schema.additionalItems === false && Utils.typeOf(schema.items) === 'array') {
+    if (schema.additionalItems === false && Utils.typeOf(schema.items) === "array") {
       code.push(
         "if (_length > "+ schema.items.length +") {",
           "report.valid = false;",
-          buildError('ARRAY_ADDITIONAL_ITEMS', schema, schema_path, '/additionalItems', 'additionalItems', schema.additionalItems, {}, options),
+          buildError("ARRAY_ADDITIONAL_ITEMS", schema, schema_path, "/additionalItems", "additionalItems", schema.additionalItems, {}, options),
         "} else { validations_passed++; }"
       );
     }
@@ -836,7 +835,7 @@ var ValidationGenerators = {
     code.push(
       "if (_length > "+ schema.maxItems +") {",
         "report.valid = false;",
-        buildError('ARRAY_LENGTH_LONG', schema, schema_path, '/maxItems', 'maxItems', schema.maxItems, {}, options),
+        buildError("ARRAY_LENGTH_LONG", schema, schema_path, "/maxItems", "maxItems", schema.maxItems, {}, options),
       "} else { validations_passed++; }"
     );
 
@@ -848,7 +847,7 @@ var ValidationGenerators = {
     code.push(
       "if (_length < "+ schema.minItems +") {",
         "report.valid = false;",
-        buildError('ARRAY_LENGTH_SHORT', schema, schema_path, '/minItems', 'minItems', schema.minItems, {}, options),
+        buildError("ARRAY_LENGTH_SHORT", schema, schema_path, "/minItems", "minItems", schema.minItems, {}, options),
       "} else { validations_passed++; }"
     );
 
@@ -863,7 +862,7 @@ var ValidationGenerators = {
         "var matches = [];",
         "if (_isUniqueArray(data, matches) === false) {",
           "report.valid = false;",
-          buildError('ARRAY_UNIQUE', schema, schema_path, '/uniqueItems', 'uniqueItems', schema.uniqueItems, {}, options),
+          buildError("ARRAY_UNIQUE", schema, schema_path, "/uniqueItems", "uniqueItems", schema.uniqueItems, {}, options),
         "} else { validations_passed++; }"
       );
 
@@ -917,7 +916,7 @@ var ValidationGenerators = {
 
   // Any type validations
   default:  function (schema, schema_path, schema_id, options) {
-    var code = []
+    var code = [];
     return code;
   },
   enum: function (schema, schema_path, schema_id, options) {
@@ -932,16 +931,16 @@ var ValidationGenerators = {
     // filter out simple types
     for (index = 0; index < schema.enum.length; index++) {
       var val = schema.enum[index];
-      if (['number', 'integer', 'boolean', 'null'].indexOf(Utils.typeOf(val)) >= 0) {
+      if (["number", "integer", "boolean", "null"].indexOf(Utils.typeOf(val)) >= 0) {
         flag = true;
         code.push(
           "case "+val+":"
         );
-      } else if (Utils.typeOf(val) === 'string') {
+      } else if (Utils.typeOf(val) === "string") {
         flag = true;
         code.push(
           "case '"+ Utils.escapeString(val) +"':"
-        )
+        );
 
       } else {
         default_case.push(
@@ -971,7 +970,7 @@ var ValidationGenerators = {
       "}",
       "if (!match) {",
         "report.valid = false;",
-        buildError('ENUM_MISMATCH', schema, schema_path, '/enum', 'enum', schema.enum, [Utils.escapeString(Utils.stringify(schema.enum))], options),
+        buildError("ENUM_MISMATCH", schema, schema_path, "/enum", "enum", schema.enum, [Utils.escapeString(Utils.stringify(schema.enum))], options),
       "} else { validations_passed++; }"
     );
 
@@ -987,7 +986,7 @@ var ValidationGenerators = {
 
     for (index = 0; index < schema.allOf.length; index++) {
       code.push(
-        "result = validators['"+ schema_path +"/allOf/"+ index +"'](data,"+ ((options.errors.schema) ? ' _schema.allOf['+ index +'],': ' null,') +" parent, root, path, Utils);"
+        "result = validators['"+ schema_path +"/allOf/"+ index +"'](data,"+ ((options.errors.schema) ? " _schema.allOf["+ index +"],": " null,") +" parent, root, path, Utils);"
       );
 
       if (options.enable_defaults) {
@@ -1004,7 +1003,7 @@ var ValidationGenerators = {
 
     code.push(
       "if (!report.valid) {",
-        buildError('ALL_OF_FAILED', schema, schema_path, '/allOf', 'allOf', schema.allOf, [], options, true),
+        buildError("ALL_OF_FAILED", schema, schema_path, "/allOf", "allOf", schema.allOf, [], options, true),
       "} else { validations_passed += context_validations_passed; }"
     );
 
@@ -1021,7 +1020,7 @@ var ValidationGenerators = {
     for (index = 0; index < schema.anyOf.length; index++) {
       if (index === 0) {
         code.push(
-          "result = validators['"+ schema_path +"/anyOf/"+ index +"'](data,"+ ((options.errors.schema) ? ' _schema.anyOf['+ index +'],': ' null,') +" parent, root, path, Utils);"
+          "result = validators['"+ schema_path +"/anyOf/"+ index +"'](data,"+ ((options.errors.schema) ? " _schema.anyOf["+ index +"],": " null,") +" parent, root, path, Utils);"
         );
 
         if (options.enable_defaults) {
@@ -1039,7 +1038,7 @@ var ValidationGenerators = {
       } else {
         code.push(
           "if (!passed) {",
-            "result = validators['"+ schema_path + "/anyOf/"+ index +"'](data,"+ ((options.errors.schema) ? ' _schema.anyOf['+ index +'],': ' null,') +" parent, root, path, Utils);"
+            "result = validators['"+ schema_path + "/anyOf/"+ index +"'](data,"+ ((options.errors.schema) ? " _schema.anyOf["+ index +"],": " null,") +" parent, root, path, Utils);"
         );
         if (options.enable_defaults) {
           code.push("if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }");
@@ -1054,12 +1053,12 @@ var ValidationGenerators = {
           "}"
         );
       }
-    };
+    }
 
     code.push(
       "if (!passed) {",
         "report.valid = false;",
-        buildError('ANY_OF_MISSING', schema, schema_path, '/anyOf', 'anyOf', schema.anyOf, {}, options, true),
+        buildError("ANY_OF_MISSING", schema, schema_path, "/anyOf", "anyOf", schema.anyOf, {}, options, true),
       "} else { validations_passed += context_validations_passed; }"
     );
 
@@ -1075,7 +1074,7 @@ var ValidationGenerators = {
     for (index = 0; index < schema.oneOf.length; index++) {
 
       code.push(
-        "result = validators['"+ schema_path +"/oneOf/"+ index +"'](data,"+ ((options.errors.schema) ? ' _schema.oneOf['+ index +'],': ' null,') +" parent, root, path, Utils);"
+        "result = validators['"+ schema_path +"/oneOf/"+ index +"'](data,"+ ((options.errors.schema) ? " _schema.oneOf["+ index +"],": " null,") +" parent, root, path, Utils);"
       );
 
       if (options.enable_defaults) {
@@ -1099,11 +1098,11 @@ var ValidationGenerators = {
       "if (pass_count === 0) {",
         "report.valid = false;",
         "context = fail_context;",
-        buildError('ONE_OF_MISSING', schema, schema_path, '/oneOf', 'oneOf', schema.oneOf, {}, options, true),
+        buildError("ONE_OF_MISSING", schema, schema_path, "/oneOf", "oneOf", schema.oneOf, {}, options, true),
       "} else if (pass_count > 1) {",
         "report.valid = false;",
         "context = pass_context;",
-        buildError('ONE_OF_MULTIPLE', schema, schema_path, '/oneOf', 'oneOf', schema.oneOf, {}, options, true),
+        buildError("ONE_OF_MULTIPLE", schema, schema_path, "/oneOf", "oneOf", schema.oneOf, {}, options, true),
       "} else { validations_passed += context_validations_passed; }"
     );
 
@@ -1113,26 +1112,26 @@ var ValidationGenerators = {
     var code = [];
 
     code.push(
-      "result = validators['"+ schema_path +"/not'](data,"+ ((options.errors.schema) ? ' _schema.not,': ' null,') +" parent, root, path, Utils);"
+      "result = validators['"+ schema_path +"/not'](data,"+ ((options.errors.schema) ? " _schema.not,": " null,") +" parent, root, path, Utils);"
     );
 
     if (options.enable_defaults) {
-      code.push("if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }")
+      code.push("if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }");
     }
 
     code.push(
       "if (result.valid) {",
         "report.valid = false;",
-        buildError('NOT_PASSED', schema.not, schema_path, '/not', 'not', schema.not, {}, options),
+        buildError("NOT_PASSED", schema.not, schema_path, "/not", "not", schema.not, {}, options),
       "} else { validations_passed += result.passed; }"
     );
     return code;
   },
   definitions: function (schema, schema_path, schema_id, options) {}
 
-}
+};
 
-var ArrayGenerator = function (code, schema, schema_path, schema_id, options) {
+var generateArrayValidator = function (code, schema, schema_path, schema_id, options) {
   // TODO: Optimize using loop unrolling
   if (Array.isArray(schema.items)) {
     var index, defaults = [], defaults_present = false;
@@ -1168,7 +1167,7 @@ var ArrayGenerator = function (code, schema, schema_path, schema_id, options) {
 
     code.push(
           // TODO: insert pre validation transformers
-          "result = validators['"+ schema_path + "/items/' + _length" +"](data[_length],"+ ((options.errors.schema) ? ' _schema.items[_length],': ' null,') +" data, root, path + '/' + _length, Utils);"
+          "result = validators['"+ schema_path + "/items/' + _length" +"](data[_length],"+ ((options.errors.schema) ? " _schema.items[_length],": " null,") +" data, root, path + '/' + _length, Utils);"
     );
     if (options.enable_defaults) {
       code.push(
@@ -1189,7 +1188,7 @@ var ArrayGenerator = function (code, schema, schema_path, schema_id, options) {
         "} else {"
       );
 
-      if ('default' in schema.additionalItems && options.enable_defaults) {
+      if ("default" in schema.additionalItems && options.enable_defaults) {
         code.push(
           "if (data[_length] === undefined) {",
             "data[_length] = "+ Utils.stringify(schema.additionalItems.default) +";",
@@ -1199,7 +1198,7 @@ var ArrayGenerator = function (code, schema, schema_path, schema_id, options) {
       }
       code.push(
           // TODO: insert pre validation transformers
-          "result = validators['"+ schema_path + "/additionalItems'](data[_length],"+ ((options.errors.schema) ? ' _schema.additionalItems,': ' null,') +" data, root, path + '/' + _length, Utils);"
+          "result = validators['"+ schema_path + "/additionalItems'](data[_length],"+ ((options.errors.schema) ? " _schema.additionalItems,": " null,") +" data, root, path + '/' + _length, Utils);"
       );
       if (options.enable_defaults) {
         code.push("if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }");
@@ -1227,7 +1226,7 @@ var ArrayGenerator = function (code, schema, schema_path, schema_id, options) {
       "while (_length--) {"
     );
 
-    if ('default' in schema.items && options.enable_defaults) {
+    if ("default" in schema.items && options.enable_defaults) {
       code.push(
         "if (data[_length] === undefined) {",
           "data[_length] = "+ Utils.stringify(schema.items.default) +";",
@@ -1237,7 +1236,7 @@ var ArrayGenerator = function (code, schema, schema_path, schema_id, options) {
     }
     code.push(
         // TODO: insert pre validation transformers
-        "result = validators['"+ schema_path +"/items'](data[_length],"+ ((options.errors.schema) ? ' _schema.items,': ' null,') +" data, root, path + '/' + _length, Utils);"
+        "result = validators['"+ schema_path +"/items'](data[_length],"+ ((options.errors.schema) ? " _schema.items,": " null,") +" data, root, path + '/' + _length, Utils);"
     );
     if (options.enable_defaults) {
       code.push(
@@ -1255,20 +1254,20 @@ var ArrayGenerator = function (code, schema, schema_path, schema_id, options) {
   }
 };
 
-var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
-  if (Utils.typeOf(schema.properties) === 'object' || Utils.typeOf(schema.patternProperties) === 'object' || Utils.typeOf(schema.additionalProperties === 'object')) {
+var generateObjectValidator = function (code, schema, schema_path, schema_id, options) {
+  if (Utils.typeOf(schema.properties) === "object" || Utils.typeOf(schema.patternProperties) === "object" || Utils.typeOf(schema.additionalProperties === "object")) {
     var additionalProperties = schema.additionalProperties;
-    var index, index2, key, required_keys = [], defaults = {};
+    var index, index2, key, required_keys = [], defaults = {}, required_values, conditions;
     var properties = [];
     var patternProperties = [];
 
-    if (Utils.typeOf(schema.required) === 'array') {
+    if (Utils.typeOf(schema.required) === "array") {
       for (index = 0; index < schema.required.length; index++) {
         required_keys.push(schema.required[index]);
       }
     }
 
-    if (Utils.typeOf(schema.properties) === 'object') {
+    if (Utils.typeOf(schema.properties) === "object") {
       for (key in schema.properties) {
         properties.push(key);
         if (schema.properties[key].default !== undefined && options.enable_defaults) {
@@ -1278,7 +1277,7 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
       }
     }
 
-    if (Utils.typeOf(schema.patternProperties) === 'object') {
+    if (Utils.typeOf(schema.patternProperties) === "object") {
       for (key in schema.patternProperties) {
         patternProperties.push(key);
         if (schema.patternProperties[key].default !== undefined && options.enable_defaults) {
@@ -1312,7 +1311,7 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
     );
 
     // Check if any properties or dependencies have been defined
-    if (properties.length > 0 || (Utils.typeOf(schema.dependencies) === 'object' && Object.keys(schema.dependencies).length > 0 )) {
+    if (properties.length > 0 || (Utils.typeOf(schema.dependencies) === "object" && Object.keys(schema.dependencies).length > 0 )) {
       code.push(
         "switch (key) {"
       );
@@ -1325,7 +1324,7 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
         code.push(
           "case '"+ Utils.escapeString(key) +"':",
             // TODO: insert pre validation transformers
-            "result = validators['"+ schema_path +"/properties/"+ Utils.escapeString(key) +"'](data['"+ Utils.escapeString(key) +"'],"+ ((options.errors.schema) ? ' _schema.properties["' + Utils.escapeString(key) + '"],': ' null,') +" data, root, path + '/"+ Utils.escapeString(Utils.encodeJSONPointer(key)) +"', Utils);"
+            "result = validators['"+ schema_path +"/properties/"+ Utils.escapeString(key) +"'](data['"+ Utils.escapeString(key) +"'],"+ ((options.errors.schema) ? " _schema.properties[\"" + Utils.escapeString(key) + "\"],": " null,") +" data, root, path + '/"+ Utils.escapeString(Utils.encodeJSONPointer(key)) +"', Utils);"
         );
 
         if (options.enable_defaults) {
@@ -1339,7 +1338,7 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
             "_matches['"+ Utils.escapeString(key) +"'] = true;"
         );
 
-        if (Utils.typeOf(schema.required) === 'array' && schema.required.length > 0 && (rpos = schema.required.indexOf(key)) >= 0) {
+        if (Utils.typeOf(schema.required) === "array" && schema.required.length > 0 && (rpos = schema.required.indexOf(key)) >= 0) {
           code.push(
             "required_keys["+ rpos +"] = null;"
           );
@@ -1353,11 +1352,11 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
         );
 
         // Validate against dependant schema if present
-        if (Utils.typeOf(schema.dependencies) === 'object' && key in schema.dependencies) {
-          if (Utils.typeOf(schema.dependencies[key]) === 'object') {
+        if (Utils.typeOf(schema.dependencies) === "object" && key in schema.dependencies) {
+          if (Utils.typeOf(schema.dependencies[key]) === "object") {
             code.push(
               // TODO: insert pre validation transformers
-              "result = validators['"+ schema_path +"/dependencies/"+ Utils.escapeString(key) +"'](data,"+ ((options.errors.schema) ? ' _schema.dependencies["'+ Utils.escapeString(key) +'"],': ' null,') +" parent, root, path, Utils);"
+              "result = validators['"+ schema_path +"/dependencies/"+ Utils.escapeString(key) +"'](data,"+ ((options.errors.schema) ? " _schema.dependencies[\""+ Utils.escapeString(key) +"\"],": " null,") +" parent, root, path, Utils);"
             );
             if (options.enable_defaults) {
               code.push(
@@ -1373,17 +1372,17 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
             );
           } else {
             // Ensure all keys are present
-            var conditions = []
-            var required_values = schema.dependencies[key];
+            conditions = [];
+            required_values = schema.dependencies[key];
             for (index2 = 0; index2 < required_values.length; index2++) {
               conditions.push("'"+ Utils.escapeString(required_values[index2]) +"' in data");
             }
             code.push(
-              "if (!("+ conditions.join(' && ') +")) {",
+              "if (!("+ conditions.join(" && ") +")) {",
                 "report.valid = false;",
-                buildError('OBJECT_DEPENDENCY_KEY', schema, schema_path, '/dependencies' , 'dependencies', schema.dependencies, {}, options),
+                buildError("OBJECT_DEPENDENCY_KEY", schema, schema_path, "/dependencies" , "dependencies", schema.dependencies, {}, options),
               "}"
-            )
+            );
           }
         }
         code.push(
@@ -1397,10 +1396,10 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
           code.push(
             "case '"+ Utils.escapeString(key) +"':"
           );
-          if (Utils.typeOf(schema.dependencies[key]) === 'object') {
+          if (Utils.typeOf(schema.dependencies[key]) === "object") {
             code.push(
               // TODO: insert pre validation transformers
-              "result = validators['"+ schema_path +"/dependencies/"+ Utils.escapeString(key) +"'](data,"+ ((options.errors.schema) ? ' _schema.dependencies["'+ Utils.escapeString(key) +'"],': ' null,') +" parent, root, path, Utils);"
+              "result = validators['"+ schema_path +"/dependencies/"+ Utils.escapeString(key) +"'](data,"+ ((options.errors.schema) ? " _schema.dependencies[\""+ Utils.escapeString(key) +"\"],": " null,") +" parent, root, path, Utils);"
             );
             if (options.enable_defaults) {
               code.push(
@@ -1416,17 +1415,17 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
             );
           } else {
             // Ensure all keys are present
-            var conditions = []
-            var required_values = schema.dependencies[key];
+            conditions = [];
+            required_values = schema.dependencies[key];
             for (index2 = 0; index2 < required_values.length; index2++) {
               conditions.push("'"+ Utils.escapeString(required_values[index2]) +"' in data");
             }
             code.push(
-              "if (!("+ conditions.join(' && ') +")) {",
+              "if (!("+ conditions.join(" && ") +")) {",
                 "report.valid = false;",
-                buildError('OBJECT_DEPENDENCY_KEY', schema, schema_path, '/dependencies', 'dependencies', schema.dependencies, {}, options),
+                buildError("OBJECT_DEPENDENCY_KEY", schema, schema_path, "/dependencies", "dependencies", schema.dependencies, {}, options),
               "} else { validations_passed++; }"
-            )
+            );
           }
           code.push(
             "break;"
@@ -1444,7 +1443,7 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
         code.push(
           "if (/"+ Utils.escapeRegexp(patternProperties[index]) +"/.test(key)) {",
             // TODO: insert pre validation transformers
-            "result = validators['"+ schema_path +"/patternProperties/"+ Utils.escapeRegexp(patternProperties[index]) +"'](data[key],"+ ((options.errors.schema) ? ' _schema.patternProperties["'+ Utils.escapeRegexp(patternProperties[index]) +'"] ,': ' null,') +" data, root, path + '/' + _encodeJSONPointer(key), Utils);"
+            "result = validators['"+ schema_path +"/patternProperties/"+ Utils.escapeRegexp(patternProperties[index]) +"'](data[key],"+ ((options.errors.schema) ? " _schema.patternProperties[\""+ Utils.escapeRegexp(patternProperties[index]) +"\"] ,": " null,") +" data, root, path + '/' + _encodeJSONPointer(key), Utils);"
         );
         if (options.enable_defaults) {
           code.push(
@@ -1464,11 +1463,11 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
     }
 
     // If additional properties is a schema check against it
-    if (Utils.typeOf(schema.additionalProperties) === 'object') {
+    if (Utils.typeOf(schema.additionalProperties) === "object") {
       code.push(
         "if (!_matches[key]) {",
           // TODO: insert pre validation transformers
-          "result = validators['"+schema_path+"/additionalProperties'](data[key],"+ ((options.errors.schema) ? ' _schema.additionalProperties,': ' null,') +" data, root, path + '/' + _encodeJSONPointer(key), Utils);"
+          "result = validators['"+schema_path+"/additionalProperties'](data[key],"+ ((options.errors.schema) ? " _schema.additionalProperties,": " null,") +" data, root, path + '/' + _encodeJSONPointer(key), Utils);"
       );
       if (options.enable_defaults) {
         code.push(
@@ -1501,11 +1500,11 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
           "for (;_rindex--;) {",
             "var val = required_keys[_rindex];",
             // Apply default values
-            "if (_rindex >= "+ (Utils.typeOf(schema.required) === 'array' ? schema.required.length : 0 ) +" && !(val in _matches)) {",
+            "if (_rindex >= "+ (Utils.typeOf(schema.required) === "array" ? schema.required.length : 0 ) +" && !(val in _matches)) {",
               "_matches[val] = true;",
               "data[val] = defaults[val];",
               // Validate default value
-              "result = validators['"+ schema_path +"/properties/' + val](data[val],"+ ((options.errors.schema) ? ' _schema.properties[val],': ' null,') +" data, root, path + '/' + _encodeJSONPointer(val), Utils);",
+              "result = validators['"+ schema_path +"/properties/' + val](data[val],"+ ((options.errors.schema) ? " _schema.properties[val],": " null,") +" data, root, path + '/' + _encodeJSONPointer(val), Utils);",
               "if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }",
               "if (!result.valid) {",
                 "report.valid = false;",
@@ -1520,7 +1519,7 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
             "} else {",
               "if (val !== null && !(val in _matches)) {",
                 "report.valid = false;",
-                buildError('OBJECT_MISSING_REQUIRED_PROPERTY', schema, schema_path, '/required', 'required', schema.required, {}, options),
+                buildError("OBJECT_MISSING_REQUIRED_PROPERTY", schema, schema_path, "/required", "required", schema.required, {}, options),
               "} else { validations_passed++; }",
             "}",
           "}"
@@ -1531,7 +1530,7 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
             "var val = required_keys[_rindex];",
             "if (val !== null && !(val in _matches)) {",
               "report.valid = false;",
-              buildError('OBJECT_MISSING_REQUIRED_PROPERTY', schema, schema_path, '/required', 'required', schema.required, {}, options),
+              buildError("OBJECT_MISSING_REQUIRED_PROPERTY", schema, schema_path, "/required", "required", schema.required, {}, options),
             "} else { validations_passed++; }",
           "}"
         );
@@ -1544,35 +1543,35 @@ var ObjectGenerator = function (code, schema, schema_path, schema_id, options) {
       code.push(
         "if (_additionalKeys.length > 0) {",
           "report.valid = false;",
-          buildError('OBJECT_ADDITIONAL_PROPERTIES', schema, schema_path, '/additionalProperties', 'additionalProperties', schema.additionalProperties, {}, options),
+          buildError("OBJECT_ADDITIONAL_PROPERTIES", schema, schema_path, "/additionalProperties", "additionalProperties", schema.additionalProperties, {}, options),
         "} else { validations_passed++; }"
       );
     }
 
     // Check if minProperties and maxProperties were satisfied
-    if (Utils.typeOf(schema.minProperties) === 'integer') {
+    if (Utils.typeOf(schema.minProperties) === "integer") {
       code.push(
         "if (_length < "+ schema.minProperties +") {",
           "report.valid = false;",
-          buildError('OBJECT_PROPERTIES_MINIMUM', schema, schema_path, '/minProperties', 'minProperties', schema.minProperties, {}, options),
+          buildError("OBJECT_PROPERTIES_MINIMUM", schema, schema_path, "/minProperties", "minProperties", schema.minProperties, {}, options),
         "} else { validations_passed++; }"
       );
     }
 
-    if (Utils.typeOf(schema.maxProperties) === 'integer') {
+    if (Utils.typeOf(schema.maxProperties) === "integer") {
       code.push(
         "if (_length > "+ schema.maxProperties +") {",
           "report.valid = false;",
-          buildError('OBJECT_PROPERTIES_MAXIMUM', schema, schema_path, '/maxProperties', 'maxProperties', schema.maxProperties, {}, options),
+          buildError("OBJECT_PROPERTIES_MAXIMUM", schema, schema_path, "/maxProperties", "maxProperties", schema.maxProperties, {}, options),
         "} else { validations_passed++; }"
       );
     }
   }
 };
 
-var SchemaGenerator = function (schema, schema_path, schema_id, cache, options) {
+var generateSchema = function (schema, schema_path, schema_id, cache, options) {
 
-  var block_type, keyword_rank, keywords = [], blocks = {
+  var key, value, index, block_type, keyword_rank, keywords = [], blocks = {
     any: { start: null, end: null },
     number: { start: null, end: null },
     string: { start: null, end: null },
@@ -1600,12 +1599,12 @@ var SchemaGenerator = function (schema, schema_path, schema_id, cache, options) 
     // Calculate start and end validation for each type of block
     if (KEYWORD_META[key] === undefined) {
       // We assume the keyword is a json schema defined to be referenced by a json pointer
-      if (cache[schema_path + '/' + key] === undefined) {
-        cache[schema_path + '/' + key] = (function (key, schema, schema_path) {
+      if (cache[schema_path + "/" + key] === undefined) {
+        cache[schema_path + "/" + key] = (function (key, schema, schema_path) {
           return function() {
-            var schema_code = SchemaGenerator(schema[key], schema_path + "/" + key, schema_id, cache, options);
+            var schema_code = generateSchema(schema[key], schema_path + "/" + key, schema_id, cache, options);
             code = Array.prototype.splice.apply(code, [10, 0].concat(schema_code));
-            cache[schema_path + '/' + key] = true;
+            cache[schema_path + "/" + key] = true;
           };
         })(key, schema, schema_path);
       }
@@ -1629,27 +1628,27 @@ var SchemaGenerator = function (schema, schema_path, schema_id, cache, options) 
     return KEYWORD_META[a][0] - KEYWORD_META[b][0];
   });
 
-  for (var index = 0; index < keywords.length; index++) {
+  for (index = 0; index < keywords.length; index++) {
     var generator, keyword = keywords[index];
 
-    if ((generator = ValidationGenerators[keyword]) != null) {
+    if ((generator = ValidationGenerators[keyword])) {
       var keyword_type = KEYWORD_META[keyword][1];
 
       // Open type check block
       if (blocks[keyword_type].start === KEYWORD_META[keyword][0]) {
         blocks[keyword_type].start = null;
         switch (keyword_type) {
-          case 'string':
-          case 'number':
+          case "string":
+          case "number":
             code.push("if (_type === '"+ keyword_type +"') {");
             break;
-          case 'array':
+          case "array":
             code.push(
               "if (type === 'array') {",
                 "_length = data.length;"
             );
             break;
-          case 'object':
+          case "object":
             code.push(
               "if (type === 'object') {",
                 "var _keys = [];"
@@ -1664,16 +1663,16 @@ var SchemaGenerator = function (schema, schema_path, schema_id, cache, options) 
       if (blocks[keyword_type].end === KEYWORD_META[keyword][0]) {
         blocks[keyword_type].end = null;
         switch (keyword_type) {
-          case 'string':
-          case 'number':
+          case "string":
+          case "number":
             code.push("}");
             break;
-          case 'array':
-            ArrayGenerator(code, schema, schema_path, schema_id, options);
+          case "array":
+            generateArrayValidator(code, schema, schema_path, schema_id, options);
             code.push("}");
             break;
-          case 'object':
-            ObjectGenerator(code, schema, schema_path, schema_id, options);
+          case "object":
+            generateObjectValidator(code, schema, schema_path, schema_id, options);
             code.push("}");
             break;
         }
@@ -1682,8 +1681,8 @@ var SchemaGenerator = function (schema, schema_path, schema_id, cache, options) 
 
   }
 
-  if (Utils.typeOf(schema.$ref) === 'string') {
-    if (schema.$ref[0] === '#') {
+  if (Utils.typeOf(schema.$ref) === "string") {
+    if (schema.$ref[0] === "#") {
       if (code.length === 10) {
         code = [
           "validators['"+ schema_path +"'] = function (data, _schema, parent, root, path, Utils) {",
@@ -1695,14 +1694,14 @@ var SchemaGenerator = function (schema, schema_path, schema_id, cache, options) 
             "result = validators['"+ schema_id + Utils.decodeJSONPointer(schema.$ref.slice(1)) +"'](data, _schema, parent, root, path, Utils);",
             "if (!result.valid) report.valid = false;",
             "report.errors = report.errors.concat(result.errors);"
-        )
+        );
         if (options.enable_defaults) {
           code.push(
             "if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }"
           );
         }
       }
-      if (typeof cache[schema_id + Utils.decodeJSONPointer(schema.$ref.slice(1))] === 'function') {
+      if (typeof cache[schema_id + Utils.decodeJSONPointer(schema.$ref.slice(1))] === "function") {
         cache[schema_id + Utils.decodeJSONPointer(schema.$ref.slice(1))]();
       }
     } else {
@@ -1724,7 +1723,7 @@ var SchemaGenerator = function (schema, schema_path, schema_id, cache, options) 
             );
         }
       }
-      if (typeof cache[Utils.decodeJSONPointer(schema.$ref)] === 'function') {
+      if (typeof cache[Utils.decodeJSONPointer(schema.$ref)] === "function") {
         cache[Utils.decodeJSONPointer(schema.$ref)]();
       }
     }
@@ -1754,7 +1753,7 @@ var SchemaGenerator = function (schema, schema_path, schema_id, cache, options) 
           "report.passed = validations_passed;",
           "return report;",
         "};"
-      )
+      );
     }
   }
 
@@ -1767,68 +1766,66 @@ var SchemaGenerator = function (schema, schema_path, schema_id, cache, options) 
 
   // Generate validators for arrays
   if (Array.isArray(schema.items)) {
-    var index;
     for (index = 0; index < schema.items.length; index++) {
-      code = code.concat(SchemaGenerator(schema.items[index], schema_path + "/items/" + index, schema_id, cache, options));
+      code = code.concat(generateSchema(schema.items[index], schema_path + "/items/" + index, schema_id, cache, options));
     }
     if (Utils.typeOf(schema.additionalItems) === "object") {
-      code = code.concat(SchemaGenerator(schema.additionalItems, schema_path + "/additionalItems", schema_id, cache, options));
+      code = code.concat(generateSchema(schema.additionalItems, schema_path + "/additionalItems", schema_id, cache, options));
     }
   } else if (typeof schema.items === "object") {
-    code = code.concat(SchemaGenerator(schema.items, schema_path + "/items", schema_id, cache, options));
+    code = code.concat(generateSchema(schema.items, schema_path + "/items", schema_id, cache, options));
   }
   // Generate validators for objects
-  var key, value;
-  if (Utils.typeOf(schema.properties) == 'object') {
+  if (Utils.typeOf(schema.properties) == "object") {
     for (key in schema.properties) {
       value = schema.properties[key];
-      code = code.concat(SchemaGenerator(value, schema_path + "/properties/" + key, schema_id, cache, options));
+      code = code.concat(generateSchema(value, schema_path + "/properties/" + key, schema_id, cache, options));
     }
   }
-  if (Utils.typeOf(schema.patternProperties) == 'object') {
+  if (Utils.typeOf(schema.patternProperties) == "object") {
     for (key in schema.patternProperties) {
       value = schema.patternProperties[key];
-      code = code.concat(SchemaGenerator(value, schema_path + "/patternProperties/" + key, schema_id, cache, options));
+      code = code.concat(generateSchema(value, schema_path + "/patternProperties/" + key, schema_id, cache, options));
     }
   }
-  if (Utils.typeOf(schema.additionalProperties) == 'object') {
-    code = code.concat(SchemaGenerator(schema.additionalProperties, schema_path + "/additionalProperties", schema_id, cache, options));
+  if (Utils.typeOf(schema.additionalProperties) == "object") {
+    code = code.concat(generateSchema(schema.additionalProperties, schema_path + "/additionalProperties", schema_id, cache, options));
   }
-  if (Utils.typeOf(schema.dependencies) === 'object') {
+  if (Utils.typeOf(schema.dependencies) === "object") {
     for (key in schema.dependencies) {
       value = schema.dependencies[key];
-      if (Utils.typeOf(value) === 'object') {
-        code = code.concat(SchemaGenerator(value, schema_path + "/dependencies/" + key, schema_id, cache, options));
+      if (Utils.typeOf(value) === "object") {
+        code = code.concat(generateSchema(value, schema_path + "/dependencies/" + key, schema_id, cache, options));
       }
     }
   }
-  if (Utils.typeOf(schema.allOf) === 'array' && schema.allOf.length > 0) {
+  if (Utils.typeOf(schema.allOf) === "array" && schema.allOf.length > 0) {
     for (index in schema.allOf) {
       value = schema.allOf[index];
-      code = code.concat(SchemaGenerator(value, schema_path + "/allOf/" + index, schema_id, cache, options));
+      code = code.concat(generateSchema(value, schema_path + "/allOf/" + index, schema_id, cache, options));
     }
   }
-  if (Utils.typeOf(schema.anyOf) === 'array' && schema.anyOf.length > 0) {
+  if (Utils.typeOf(schema.anyOf) === "array" && schema.anyOf.length > 0) {
     for (index in schema.anyOf) {
       value = schema.anyOf[index];
-      code = code.concat(SchemaGenerator(value, schema_path + "/anyOf/" + index, schema_id, cache, options));
+      code = code.concat(generateSchema(value, schema_path + "/anyOf/" + index, schema_id, cache, options));
     }
   }
-  if (Utils.typeOf(schema.oneOf) === 'array' && schema.oneOf.length > 0) {
+  if (Utils.typeOf(schema.oneOf) === "array" && schema.oneOf.length > 0) {
     for (index in schema.oneOf) {
       value = schema.oneOf[index];
-      code = code.concat(SchemaGenerator(value, schema_path + "/oneOf/" + index, schema_id, cache, options));
+      code = code.concat(generateSchema(value, schema_path + "/oneOf/" + index, schema_id, cache, options));
     }
   }
-  if (Utils.typeOf(schema.not) === 'object') {
-    code = code.concat(SchemaGenerator(schema.not, schema_path + "/not", schema_id, cache, options));
+  if (Utils.typeOf(schema.not) === "object") {
+    code = code.concat(generateSchema(schema.not, schema_path + "/not", schema_id, cache, options));
   }
 
-  if (Utils.typeOf(schema.definitions) === 'object') {
+  if (Utils.typeOf(schema.definitions) === "object") {
     for (index in schema.definitions) {
       value = schema.definitions[index];
       if (!cache[schema_path + "/definitions/" + index]) {
-        code = code.concat(SchemaGenerator(value, schema_path + "/definitions/" + index, schema_id, cache, options));
+        code = code.concat(generateSchema(value, schema_path + "/definitions/" + index, schema_id, cache, options));
         cache[schema_path + "/definitions/" + index] = true;
       }
     }
@@ -1840,11 +1837,11 @@ var SchemaGenerator = function (schema, schema_path, schema_id, cache, options) 
 var schema_validator = null, $schema = null;
 
 var buildValidator = function (schemas, options) {
-  var body, index, validator, schema, SCHEMA_ID, code;
+  var body, index, validator, schema, SCHEMA_ID, code, ast, stream, compressed_ast, compressor;
 
   Utils.defaults(options.errors, {
-    schema: false,
-    validator: false,
+    schema: true,
+    validator_value: true,
     messages: true
   });
 
@@ -1865,8 +1862,8 @@ var buildValidator = function (schemas, options) {
   // Generate validators for each schema provided
   for (index = 0; index < schemas.length; index++) {
     schema = schemas[index];
-    SCHEMA_ID = (schema.id != null) ? schema.id : index;
-    body = body.concat(SchemaGenerator(schema, SCHEMA_ID, SCHEMA_ID, {}, options));
+    SCHEMA_ID = (schema.id !== undefined) ? schema.id : index;
+    body = body.concat(generateSchema(schema, SCHEMA_ID, SCHEMA_ID, {}, options));
   }
 
   if (options.file) {
@@ -1891,22 +1888,21 @@ var buildValidator = function (schemas, options) {
 
   if (options.beautify) {
     // Generate readable code
-    var ast;
     ast = UglifyJS.parse(body);
     ast.figure_out_scope();
-    var stream = UglifyJS.OutputStream({ beautify: true });
+    stream = UglifyJS.OutputStream({ beautify: true });
     ast.print(stream);
     code = stream.toString();
   } else {
     // Generate compressed code
-    var ast = UglifyJS.parse(body);
+    ast = UglifyJS.parse(body);
     ast.figure_out_scope();
-    var compressor = UglifyJS.Compressor({ warnings: false });
-    var compressed_ast = ast.transform(compressor);
+    compressor = UglifyJS.Compressor({ warnings: false });
+    compressed_ast = ast.transform(compressor);
     compressed_ast.figure_out_scope();
     compressed_ast.compute_char_frequency();
     compressed_ast.mangle_names();
-    var stream = UglifyJS.OutputStream({ beautify: true });
+    stream = UglifyJS.OutputStream({ beautify: true });
     compressed_ast.print(stream);
     code = stream.toString();
   }
@@ -1914,7 +1910,7 @@ var buildValidator = function (schemas, options) {
 };
 
 var buildSchemas = function (schema_data, options) {
-  var _schemas = {}, index, schemas, buffer = [], schema_id;
+  var schema, schemas, schema_id, key, _key, index, _schemas = {}, buffer = [];
 
   // Create a deep clone of schemas
   eval("schemas = "+ Utils.stringify(schema_data) +";");
@@ -1922,7 +1918,7 @@ var buildSchemas = function (schema_data, options) {
 
   // Index all schemas
   for (;index--;) {
-    schema_id = (schemas[index].id != null) ? schemas[index].id: index;
+    schema_id = (schemas[index].id !== undefined) ? schemas[index].id: index;
     _schemas[schema_id] = schemas[index];
     buffer[index] = [schemas[index], schema_id];
   }
@@ -1930,27 +1926,27 @@ var buildSchemas = function (schema_data, options) {
   // Build refs
   index = buffer.length;
   while (buffer.length > 0) {
-    var schema_data = buffer.shift();
-    var schema = schema_data[0];
-    var schema_id = schema_data[1];
-    for (var key in schema) {
+    schema_data = buffer.shift();
+    schema = schema_data[0];
+    schema_id = schema_data[1];
+    for (key in schema) {
       switch (key) {
-        case 'not':
-        case 'additionalItems':
-        case 'additionalProperties':
-          if (Utils.typeOf(schema[key].$ref) === 'string') {
+        case "not":
+        case "additionalItems":
+        case "additionalProperties":
+          if (Utils.typeOf(schema[key].$ref) === "string") {
             schema[key] = Utils.dereferencePath(schema[key].$ref, schema_id, _schemas);
           } else {
             buffer.push([schema[key], schema_id]);
           }
           break;
-        case 'items':
-        case 'oneOf':
-        case 'allOf':
-        case 'anyOf':
-          if (Utils.typeOf(schema[key]) === 'array') {
-            for (var _key in schema[key]) {
-              if (Utils.typeOf(schema[key][_key].$ref) === 'string') {
+        case "items":
+        case "oneOf":
+        case "allOf":
+        case "anyOf":
+          if (Utils.typeOf(schema[key]) === "array") {
+            for (_key in schema[key]) {
+              if (Utils.typeOf(schema[key][_key].$ref) === "string") {
                 schema[key][_key] = Utils.dereferencePath(schema[key][_key].$ref, schema_id, _schemas);
               } else {
                 buffer.push([schema[key][_key], schema_id]);
@@ -1964,11 +1960,11 @@ var buildSchemas = function (schema_data, options) {
             }
           }
           break;
-        case 'definitions':
-        case 'properties':
-        case 'patternProperties':
-          for (var _key in schema[key]) {
-            if (Utils.typeOf(schema[key][_key].$ref) === 'string') {
+        case "definitions":
+        case "properties":
+        case "patternProperties":
+          for (_key in schema[key]) {
+            if (Utils.typeOf(schema[key][_key].$ref) === "string") {
               schema[key][_key] = Utils.dereferencePath(schema[key][_key].$ref, schema_id, _schemas);
             } else {
               buffer.push([schema[key][_key], schema_id]);
@@ -1993,28 +1989,28 @@ module.exports = {
 
   registerValidator: function (keyword, meta, validation_func) {
     var rank;
-    if (meta.order[0] == 'after') {
-      rank = KEYWORD_META[meta.order[1]][0] + 1
-    } else if (meta.order[0] == 'before') {
-      rank = KEYWORD_META[meta.order[1]][0] - 1
+    if (meta.order[0] == "after") {
+      rank = KEYWORD_META[meta.order[1]][0] + 1;
+    } else if (meta.order[0] == "before") {
+      rank = KEYWORD_META[meta.order[1]][0] - 1;
     }
     KEYWORD_META[keyword] = [rank, meta.type];
     ValidationGenerators[keyword] = validation_func;
   },
 
-  registerTransformer: function (keyword, meta, transform_gen_func) {
+  registerTransformer: function (keyword, order, transform_func) {
     if (Utils.transform === undefined) {
       Utils.transform[keyword] = {
         order: order,
         func: transform_func
-      }
+      };
     } else {
       throw new Error("The transformer 'keyword' has already been registered");
     }
   },
 
   writeToFile: function(schemas, options, filename) {
-    options = (options == null ? {} : options);
+    options = (options === undefined ? {} : options);
     options.file = true;
 
     Utils.defaults(options, {
@@ -2033,7 +2029,7 @@ module.exports = {
       errors: {}
     });
 
-    if (Utils.typeOf(schemas) === 'object') {
+    if (Utils.typeOf(schemas) === "object") {
       schemas = [schemas];
     }
 
@@ -2041,7 +2037,7 @@ module.exports = {
     if (options.validate_schemas) {
 
       if (schema_validator === null) {
-        $schema = require('./draftv4/schema.json');
+        $schema = require("./draftv4/schema.json");
 
         if (options.simple_ids) {
           delete $schema.allOf[0].properties.id.format;
@@ -2051,28 +2047,28 @@ module.exports = {
           $schema.allOf.push({
             oneOf: [
               {
-                type: 'object',
-                required: ['additionalProperties'],
+                type: "object",
+                required: ["additionalProperties"],
                 properties: {
                   type: {
-                    enum: ['object']
+                    enum: ["object"]
                   },
                 }
               },
               {
-                type: 'object',
-                required: ['additionalItems'],
+                type: "object",
+                required: ["additionalItems"],
                 properties: {
                   type: {
-                    enum: ['array']
+                    enum: ["array"]
                   }
                 }
               },
               {
-                type: 'object',
+                type: "object",
                 properties: {
                   type: {
-                    enum: ['boolean', 'integer', 'null', 'number', 'string']
+                    enum: ["boolean", "integer", "null", "number", "string"]
                   }
                 }
               }
@@ -2084,19 +2080,19 @@ module.exports = {
           $schema.allOf.push({
             oneOf: [
               {
-                type: 'object',
-                required: ['items'],
+                type: "object",
+                required: ["items"],
                 properties: {
                   type: {
-                    enum: ['array']
+                    enum: ["array"]
                   }
                 }
               },
               {
-                type: 'object',
+                type: "object",
                 properties: {
                   type: {
-                    enum: ['object', 'boolean', 'integer', 'null', 'number', 'string']
+                    enum: ["object", "boolean", "integer", "null", "number", "string"]
                   }
                 }
               }
@@ -2108,19 +2104,19 @@ module.exports = {
           $schema.allOf.push({
             oneOf: [
               {
-                type: 'object',
-                required: ['maxLength'],
+                type: "object",
+                required: ["maxLength"],
                 properties: {
                   type: {
-                    enum: ['string']
+                    enum: ["string"]
                   }
                 }
               },
               {
-                type: 'object',
+                type: "object",
                 properties: {
                   type: {
-                    enum: ['array', 'object', 'boolean', 'integer', 'null', 'number']
+                    enum: ["array", "object", "boolean", "integer", "null", "number"]
                   }
                 }
               }
@@ -2132,28 +2128,28 @@ module.exports = {
           $schema.allOf.push({
             anyOf: [
               {
-                type: 'object',
-                required: ['properties'],
+                type: "object",
+                required: ["properties"],
                 properties: {
                   type: {
-                    enum: ['object']
+                    enum: ["object"]
                   }
                 }
               },
               {
-                type: 'object',
-                required: ['patternProperties'],
+                type: "object",
+                required: ["patternProperties"],
                 properties: {
                   type: {
-                    enum: ['object']
+                    enum: ["object"]
                   }
                 }
               },
               {
-                type: 'object',
+                type: "object",
                 properties: {
                   type: {
-                    enum: ['array', 'boolean', 'integer', 'null', 'number', 'string']
+                    enum: ["array", "boolean", "integer", "null", "number", "string"]
                   }
                 }
               }
@@ -2162,13 +2158,13 @@ module.exports = {
         }
 
         if (options.no_extra_keywords) {
-          $schema.allOf[0].additionalProperties = false
+          $schema.allOf[0].additionalProperties = false;
         }
 
         if (options.no_typeless) {
           $schema.allOf.push({
-            type: 'object',
-            required: ['type']
+            type: "object",
+            required: ["type"]
           });
         }
 
@@ -2176,10 +2172,10 @@ module.exports = {
           $schema.allOf.push({
             oneOf: [
               {
-                type: 'object',
+                type: "object",
                 properties: {
                   type: {
-                    enum: ['string']
+                    enum: ["string"]
                   },
                   minLength: {
                     default: 1
@@ -2187,10 +2183,10 @@ module.exports = {
                 }
               },
               {
-                type: 'object',
+                type: "object",
                 properties: {
                   type: {
-                    enum: ['array', 'object', 'boolean', 'integer', 'null', 'number']
+                    enum: ["array", "object", "boolean", "integer", "null", "number"]
                   }
                 }
               }
@@ -2202,10 +2198,10 @@ module.exports = {
           $schema.allOf.push({
             oneOf: [
               {
-                type: 'object',
+                type: "object",
                 properties: {
                   type: {
-                    enum: ['array']
+                    enum: ["array"]
                   },
                   minItems: {
                     default: 1
@@ -2213,10 +2209,10 @@ module.exports = {
                 }
               },
               {
-                type: 'object',
+                type: "object",
                 properties: {
                   type: {
-                    enum: ['string', 'object', 'boolean', 'integer', 'null', 'number']
+                    enum: ["string", "object", "boolean", "integer", "null", "number"]
                   }
                 }
               }
@@ -2228,10 +2224,10 @@ module.exports = {
           $schema.allOf.push({
             oneOf: [
               {
-                type: 'object',
+                type: "object",
                 properties: {
                   type: {
-                    enum: ['object']
+                    enum: ["object"]
                   },
                   additionalProperties: {
                     default: options.assume_additional
@@ -2239,24 +2235,23 @@ module.exports = {
                 }
               },
               {
-                type: 'object',
+                type: "object",
                 properties: {
                   type: {
-                    enum: ['array', 'string', 'boolean', 'integer', 'null', 'number']
+                    enum: ["array", "string", "boolean", "integer", "null", "number"]
                   }
                 }
               }
             ]
-          })
+          });
         }
-        schema_validator = this.validator($schema, { enable_defaults: true, validate_schemas: false, errors: { messages: false, schema: false, validator_value: true } })
+        schema_validator = this.validator($schema, { enable_defaults: true, validate_schemas: false, errors: { messages: false, schema: false, validator_value: true } });
       }
 
       for (var index = 0; index < schemas.length; index++) {
-        var report = schema_validator(schemas[index], 'http://json-schema.org/draft-04/schema#', { algorithm: 'best_match' });
+        var report = schema_validator(schemas[index], "http://json-schema.org/draft-04/schema#", { algorithm: "best_match" });
         report.schema_id = schemas[index].id;
         if (!report.valid) {
-          //console.log(require('util').inspect(report, { depth: 100, colors: true }));
           return report;
         }
       }
@@ -2264,6 +2259,7 @@ module.exports = {
 
     var generate;
     var code = buildValidator(schemas, options);
+
     fs.writeFileSync(filename, code);
   },
 
@@ -2272,14 +2268,14 @@ module.exports = {
     var _schemas = buildSchemas(data.schemas);
     var validator = data.validator;
     return function (data, schema_id, options) {
-      if (!schema_id) throw Error('Please specify a schema');
-      options = (options == null) ? {} : options;
-      options.algorithm = (options.algorithm == null) ? 'none': options.algorithm;
+      if (!schema_id) throw Error("Please specify a schema");
+      options = (options === undefined) ? {} : options;
+      options.algorithm = (options.algorithm === undefined) ? "none": options.algorithm;
       var _schema = _schemas[schema_id];
       var report = validator(data, schema_id, _schema, Utils);
       delete report.rollback;
       if (!report.valid) {
-        if(options.algorithm !== 'none') { report = Utils.filterReports([report], options.algorithm)[0][0] };
+        if(options.algorithm !== "none") { report = Utils.filterReports([report], options.algorithm)[0][0]; }
         report.data = data;
       }
       return report;
@@ -2287,7 +2283,7 @@ module.exports = {
   },
 
   validator: function (schemas, options) {
-    options = (options == null ? {} : options);
+    options = (options === undefined ? {} : options);
 
     Utils.defaults(options, {
       file: false,
@@ -2306,7 +2302,7 @@ module.exports = {
       errors: {}
     });
 
-    if (Utils.typeOf(schemas) === 'object') {
+    if (Utils.typeOf(schemas) === "object") {
       schemas = [schemas];
     }
 
@@ -2314,7 +2310,7 @@ module.exports = {
     if (options.validate_schemas) {
 
       if (schema_validator === null) {
-        $schema = require('./draftv4/schema.json');
+        $schema = require("./draftv4/schema.json");
 
         if (options.simple_ids) {
           delete $schema.allOf[0].properties.id.format;
@@ -2324,28 +2320,28 @@ module.exports = {
           $schema.allOf.push({
             oneOf: [
               {
-                type: 'object',
-                required: ['additionalProperties'],
+                type: "object",
+                required: ["additionalProperties"],
                 properties: {
                   type: {
-                    enum: ['object']
+                    enum: ["object"]
                   },
                 }
               },
               {
-                type: 'object',
-                required: ['additionalItems'],
+                type: "object",
+                required: ["additionalItems"],
                 properties: {
                   type: {
-                    enum: ['array']
+                    enum: ["array"]
                   }
                 }
               },
               {
-                type: 'object',
+                type: "object",
                 properties: {
                   type: {
-                    enum: ['boolean', 'integer', 'null', 'number', 'string']
+                    enum: ["boolean", "integer", "null", "number", "string"]
                   }
                 }
               }
@@ -2357,19 +2353,19 @@ module.exports = {
           $schema.allOf.push({
             oneOf: [
               {
-                type: 'object',
-                required: ['items'],
+                type: "object",
+                required: ["items"],
                 properties: {
                   type: {
-                    enum: ['array']
+                    enum: ["array"]
                   }
                 }
               },
               {
-                type: 'object',
+                type: "object",
                 properties: {
                   type: {
-                    enum: ['object', 'boolean', 'integer', 'null', 'number', 'string']
+                    enum: ["object", "boolean", "integer", "null", "number", "string"]
                   }
                 }
               }
@@ -2381,19 +2377,19 @@ module.exports = {
           $schema.allOf.push({
             oneOf: [
               {
-                type: 'object',
-                required: ['maxLength'],
+                type: "object",
+                required: ["maxLength"],
                 properties: {
                   type: {
-                    enum: ['string']
+                    enum: ["string"]
                   }
                 }
               },
               {
-                type: 'object',
+                type: "object",
                 properties: {
                   type: {
-                    enum: ['array', 'object', 'boolean', 'integer', 'null', 'number']
+                    enum: ["array", "object", "boolean", "integer", "null", "number"]
                   }
                 }
               }
@@ -2405,28 +2401,28 @@ module.exports = {
           $schema.allOf.push({
             anyOf: [
               {
-                type: 'object',
-                required: ['properties'],
+                type: "object",
+                required: ["properties"],
                 properties: {
                   type: {
-                    enum: ['object']
+                    enum: ["object"]
                   }
                 }
               },
               {
-                type: 'object',
-                required: ['patternProperties'],
+                type: "object",
+                required: ["patternProperties"],
                 properties: {
                   type: {
-                    enum: ['object']
+                    enum: ["object"]
                   }
                 }
               },
               {
-                type: 'object',
+                type: "object",
                 properties: {
                   type: {
-                    enum: ['array', 'boolean', 'integer', 'null', 'number', 'string']
+                    enum: ["array", "boolean", "integer", "null", "number", "string"]
                   }
                 }
               }
@@ -2435,13 +2431,13 @@ module.exports = {
         }
 
         if (options.no_extra_keywords) {
-          $schema.allOf[0].additionalProperties = false
+          $schema.allOf[0].additionalProperties = false;
         }
 
         if (options.no_typeless) {
           $schema.allOf.push({
-            type: 'object',
-            required: ['type']
+            type: "object",
+            required: ["type"]
           });
         }
 
@@ -2449,10 +2445,10 @@ module.exports = {
           $schema.allOf.push({
             oneOf: [
               {
-                type: 'object',
+                type: "object",
                 properties: {
                   type: {
-                    enum: ['string']
+                    enum: ["string"]
                   },
                   minLength: {
                     default: 1
@@ -2460,10 +2456,10 @@ module.exports = {
                 }
               },
               {
-                type: 'object',
+                type: "object",
                 properties: {
                   type: {
-                    enum: ['array', 'object', 'boolean', 'integer', 'null', 'number']
+                    enum: ["array", "object", "boolean", "integer", "null", "number"]
                   }
                 }
               }
@@ -2475,10 +2471,10 @@ module.exports = {
           $schema.allOf.push({
             oneOf: [
               {
-                type: 'object',
+                type: "object",
                 properties: {
                   type: {
-                    enum: ['array']
+                    enum: ["array"]
                   },
                   minItems: {
                     default: 1
@@ -2486,10 +2482,10 @@ module.exports = {
                 }
               },
               {
-                type: 'object',
+                type: "object",
                 properties: {
                   type: {
-                    enum: ['string', 'object', 'boolean', 'integer', 'null', 'number']
+                    enum: ["string", "object", "boolean", "integer", "null", "number"]
                   }
                 }
               }
@@ -2501,10 +2497,10 @@ module.exports = {
           $schema.allOf.push({
             oneOf: [
               {
-                type: 'object',
+                type: "object",
                 properties: {
                   type: {
-                    enum: ['object']
+                    enum: ["object"]
                   },
                   additionalProperties: {
                     default: options.assume_additional
@@ -2512,24 +2508,23 @@ module.exports = {
                 }
               },
               {
-                type: 'object',
+                type: "object",
                 properties: {
                   type: {
-                    enum: ['array', 'string', 'boolean', 'integer', 'null', 'number']
+                    enum: ["array", "string", "boolean", "integer", "null", "number"]
                   }
                 }
               }
             ]
-          })
+          });
         }
-        schema_validator = this.validator($schema, { enable_defaults: true, validate_schemas: false, errors: { messages: false, schema: false, validator_value: true } })
+        schema_validator = this.validator($schema, { enable_defaults: true, validate_schemas: false, errors: { messages: false, schema: false, validator_value: true } });
       }
 
       for (var index = 0; index < schemas.length; index++) {
-        var report = schema_validator(schemas[index], 'http://json-schema.org/draft-04/schema#', { algorithm: 'best_match' });
+        var report = schema_validator(schemas[index], "http://json-schema.org/draft-04/schema#", { algorithm: "best_match" });
         report.schema_id = schemas[index].id;
         if (!report.valid) {
-          //console.log(require('util').inspect(report, { depth: 100, colors: true }));
           return report;
         }
       }
@@ -2543,31 +2538,31 @@ module.exports = {
 
     if (options.enable_defaults) {
       return function (data, schema_id, options) {
-        if (!schema_id) throw Error('Please specify a schema');
-        options = (options == null) ? {} : options;
-        options.algorithm = (options.algorithm == null) ? 'none': options.algorithm;
+        if (!schema_id) throw Error("Please specify a schema");
+        options = (options === undefined) ? {} : options;
+        options.algorithm = (options.algorithm === undefined) ? "none": options.algorithm;
         var _schema = _schemas[schema_id];
         var report = validator(data, schema_id, _schema, Utils);
         delete report.rollback;
         if (!report.valid) {
-          if(options.algorithm !== 'none') { report = Utils.filterReports([report], options.algorithm)[0][0] };
+          if(options.algorithm !== "none") { report = Utils.filterReports([report], options.algorithm)[0][0]; }
           report.data = data;
         }
         return report;
       };
     } else {
       return function (data, schema_id, options) {
-        if (!schema_id) throw Error('Please specify a schema');
-        options = (options == null) ? {} : options;
-        options.algorithm = (options.algorithm == null) ? 'none': options.algorithm;
+        if (!schema_id) throw Error("Please specify a schema");
+        options = (options === undefined) ? {} : options;
+        options.algorithm = (options.algorithm === undefined) ? "none": options.algorithm;
         var _schema = _schemas[schema_id];
         var report = validator(data, schema_id, _schema, Utils);
         if (!report.valid) {
-          if(options.algorithm !== 'none') { report = Utils.filterReports([report], options.algorithm)[0][0] };
+          if(options.algorithm !== "none") { report = Utils.filterReports([report], options.algorithm)[0][0]; }
           report.data = data;
         }
         return report;
       };
     }
   }
-}
+};
