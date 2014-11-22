@@ -900,7 +900,7 @@ describe('The error algorithms', function () {
          [ { code: 'ONE_OF_MISSING',
              path: '',
              instance: { type: 'triangle' },
-             message: '{ "type": "triangle" } is not valid under any of the given schemas',
+             message: 'Data is not valid under any of the given schemas',
              validator: 'oneOf',
              relative_schema_path: '/oneOf',
              absolute_schema_path: 'shape/oneOf',
@@ -926,7 +926,7 @@ describe('The error algorithms', function () {
          [ { code: 'ONE_OF_MISSING',
              path: '',
              instance: { type: 'triangle', data: [] },
-             message: '{ "type": "triangle", "data": [] } is not valid under any of the given schemas',
+             message: 'Data is not valid under any of the given schemas',
              validator: 'oneOf',
              relative_schema_path: '/oneOf',
              absolute_schema_path: 'shape/oneOf',
@@ -937,7 +937,7 @@ describe('The error algorithms', function () {
                    [ { code: 'ARRAY_LENGTH_SHORT',
                        path: '/data',
                        instance: [],
-                       message: '[] is too short, minimum 3',
+                       message: 'Array is too short, minimum 3',
                        validator: 'minItems',
                        relative_schema_path: '/minItems',
                        absolute_schema_path: 'triangle/properties/data/minItems' } ] } ] } ],
@@ -957,7 +957,7 @@ describe('The error algorithms', function () {
                  [ { type: 'point' },
                    { type: 'box' },
                    { type: 'point' } ] },
-             message: '{ "type": "triangle", "data": [ { "type": "point" }, { "type": "box" }, { "type": "point" } ] } is not valid under any of the given schemas',
+             message: 'Data is not valid under any of the given schemas',
              validator: 'oneOf',
              relative_schema_path: '/oneOf',
              absolute_schema_path: 'shape/oneOf',
@@ -1015,7 +1015,7 @@ describe('The error algorithms', function () {
                    { type: 'point', data: {} },
                    { type: 'point', data: {} } ] },
              validator: 'oneOf',
-             message: '{ "type": "triangle", "data": [ { "type": "point", "data": {} }, { "type": "point", "data": {} }, { "type": "point", "data": {} } ] } is not valid under any of the given schemas',
+             message: 'Data is not valid under any of the given schemas',
              relative_schema_path: '/oneOf',
              absolute_schema_path: 'shape/oneOf',
              context:
@@ -1087,7 +1087,7 @@ describe('The error algorithms', function () {
                    { type: 'point', data: {} },
                    { type: 'point', data: {} } ] },
              validator: 'oneOf',
-             message: '{ "type": "box", "data": [ { "type": "point", "data": {} }, { "type": "point", "data": {} }, { "type": "point", "data": {} } ] } is not valid under any of the given schemas',
+             message: 'Data is not valid under any of the given schemas',
              relative_schema_path: '/oneOf',
              absolute_schema_path: 'shape/oneOf',
              context:
@@ -1142,7 +1142,7 @@ describe('The error algorithms', function () {
                           { type: 'point', data: {} },
                           { type: 'point', data: {} } ],
                        validator: 'minItems',
-                       message: '[ { "type": "point", "data": {} }, { "type": "point", "data": {} }, { "type": "point", "data": {} } ] is too short, minimum 4',
+                       message: 'Array is too short, minimum 4',
                        relative_schema_path: '/minItems',
                        absolute_schema_path: 'box/properties/data/minItems' } ],
                   passed: 5 } ] } ],
@@ -1195,7 +1195,7 @@ describe('The error algorithms', function () {
                      data: { x: 1, y: 1 } },
                    { type: 'point', data: { x: 1 } } ] },
              validator: 'oneOf',
-             message: '{ "type": "triangle", "data": [ { "type": "point", "data": { "x": 1, "y": 1 } }, { "type": "point", "data": { "x": 1, "y": 1 } }, { "type": "point", "data": { "x": 1 } } ] } is not valid under any of the given schemas',
+             message: 'Data is not valid under any of the given schemas',
              relative_schema_path: '/oneOf',
              absolute_schema_path: 'shape/oneOf',
              context:
@@ -1224,10 +1224,6 @@ describe('The error algorithms', function () {
       report = validator(data, 'shape', { algorithm: 'best_match' });
 
       report.should.deep.equal({ valid: true, passed: 42, errors: [] });
-
-    });
-
-    it('works regardless of the base schema id', function () {
 
     });
 
