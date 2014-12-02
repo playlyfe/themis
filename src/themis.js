@@ -1863,7 +1863,7 @@ var buildValidator = function (schemas, options) {
   for (index = 0; index < schemas.length; index++) {
     schema = schemas[index];
     SCHEMA_ID = (schema.id !== undefined) ? schema.id : index;
-    body = body.concat(generateSchema(schema, SCHEMA_ID, SCHEMA_ID, {}, options));
+    body = body.concat(generateSchema(schema, SCHEMA_ID + "#", SCHEMA_ID, {}, options));
   }
 
   if (options.file) {
