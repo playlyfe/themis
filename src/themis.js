@@ -1570,7 +1570,12 @@ var generateObjectValidator = function (code, schema, schema_path, schema_id, op
 };
 
 var generateSchema = function (schema, schema_path, schema_id, cache, options) {
-
+  // Trim the trailing #
+  if (schema_path.slice(-1) === '#') {
+    var validator_path = schema_path.slice(0, -1);
+  } else {
+    var validator_path = schema_path;
+  }
   var key, value, index, block_type, keyword_rank, keywords = [], blocks = {
     any: { start: null, end: null },
     number: { start: null, end: null },
@@ -1578,7 +1583,7 @@ var generateSchema = function (schema, schema_path, schema_id, cache, options) {
     array: { start: null, end: null },
     object: { start: null, end: null }
   }, code = [
-    "validators['"+ schema_path +"'] = function (data, _schema, parent, root, path, Utils) {",
+    "validators['"+ validator_path +"'] = function (data, _schema, parent, root, path, Utils) {",
       "var result, validations_passed = 0;",
       "var _areEqual = Utils.areEqual, _stringify = Utils.stringify;",
       "var _typeOf = Utils.typeOf;",
@@ -1685,7 +1690,7 @@ var generateSchema = function (schema, schema_path, schema_id, cache, options) {
     if (schema.$ref[0] === "#") {
       if (code.length === 10) {
         code = [
-          "validators['"+ schema_path +"'] = function (data, _schema, parent, root, path, Utils) {",
+          "validators['"+ validator_path +"'] = function (data, _schema, parent, root, path, Utils) {",
             "return validators['"+ schema_id + Utils.decodeJSONPointer(schema.$ref.slice(1)) +"'](data, _schema, parent, root, path, Utils);",
           "}"
         ];
@@ -1707,7 +1712,7 @@ var generateSchema = function (schema, schema_path, schema_id, cache, options) {
     } else {
       if (code.length === 10) {
         code = [
-          "validators['"+ schema_path +"'] = function (data, _schema, parent, root, path, Utils) {",
+          "validators['"+ validator_path +"'] = function (data, _schema, parent, root, path, Utils) {",
             "return validators['"+ Utils.decodeJSONPointer(schema.$ref) +"'](data, _schema, parent, root, path, Utils);",
           "}"
         ];
@@ -1760,7 +1765,7 @@ var generateSchema = function (schema, schema_path, schema_id, cache, options) {
 
   if (code.length === 12) {
     code = [
-      "validators['"+ schema_path +"'] = _stub;"
+      "validators['"+ validator_path +"'] = _stub;"
     ];
   }
 
