@@ -81,7 +81,6 @@ var ERROR_MESSAGES = {
   MIN_LENGTH:                             "_stringify(data) + ' is too short, minimum ' + _schema.minLength",
   MAX_LENGTH:                             "_stringify(data) + ' is too long, maximum ' + _schema.maxLength",
   PATTERN:                                "_stringify(data) + ' should match the pattern ' + _schema.pattern",
-
 };
 
 var Utils = {
@@ -147,9 +146,13 @@ var Utils = {
 
   decodeJSONPointer: function (str) {
     // http://tools.ietf.org/html/draft-ietf-appsawg-json-pointer-07#section-3
-    return decodeURIComponent(str).replace(/~[0-1]/g, function (x) {
-      return x === "~1" ? "/" : "~";
-    });
+    if (str === '#') {
+      return '';
+    } else {
+      return decodeURIComponent(str).replace(/~[0-1]/g, function (x) {
+        return x === "~1" ? "/" : "~";
+      });
+    }
   },
 
   encodeJSONPointer: function (str) {
@@ -587,7 +590,7 @@ var Utils = {
 
   },
 
-  transform: {
+  pre_transform: {
 
   }
 
@@ -1133,14 +1136,24 @@ var ValidationGenerators = {
 
 var generateArrayValidator = function (code, schema, schema_path, schema_id, options) {
   // TODO: Optimize using loop unrolling
+  var key;
   if (Array.isArray(schema.items)) {
-    var index, defaults = [], defaults_present = false;
+    var index, defaults = [], defaults_present = false, pre_validation_transformers = ["switch (_length) {"];
     defaults.length = schema.items.length;
 
     for (index = 0; index < schema.items.length; index++) {
       if (schema.items[index].default !== undefined) {
         defaults_present = true;
         defaults[index] = schema.items[index].default;
+      }
+      for (key in Utils.pre_transform) {
+        if (schema.items[index][key] !== undefined) {
+          pre_validation_transformers.push(
+            "case " + index + ":",
+              "data["+ index +"] = Utils.pre_transform['"+ key +"'](data[" + index + "], " + Utils.stringify(schema.items[index][key]) + ");",
+              "break;"
+          );
+        }
       }
     }
 
@@ -1165,8 +1178,13 @@ var generateArrayValidator = function (code, schema, schema_path, schema_id, opt
       );
     }
 
+    // insert pre validation transformers
+    if (pre_validation_transformers.length > 1) {
+      pre_validation_transformers.push("}");
+      Array.prototype.push.apply(code, pre_validation_transformers);
+    }
+
     code.push(
-          // TODO: insert pre validation transformers
           "result = validators['"+ schema_path + "/items/' + _length" +"](data[_length],"+ ((options.errors.schema) ? " _schema.items[_length],": " null,") +" data, root, path + '/' + _length, Utils);"
     );
     if (options.enable_defaults) {
@@ -1196,8 +1214,17 @@ var generateArrayValidator = function (code, schema, schema_path, schema_id, opt
           "}"
         );
       }
+
+      // insert pre validation transformers
+      for (key in Utils.pre_transform) {
+        if (schema.additionalItems[key] !== undefined) {
+          code.push(
+            "data[_length] = Utils.pre_transform['"+ key +"'](data[_length], " + Utils.stringify(schema.additionalItems[key]) + ")"
+          );
+        }
+      }
+
       code.push(
-          // TODO: insert pre validation transformers
           "result = validators['"+ schema_path + "/additionalItems'](data[_length],"+ ((options.errors.schema) ? " _schema.additionalItems,": " null,") +" data, root, path + '/' + _length, Utils);"
       );
       if (options.enable_defaults) {
@@ -1219,6 +1246,7 @@ var generateArrayValidator = function (code, schema, schema_path, schema_id, opt
       );
     }
   } else if (typeof schema.items === "object") {
+
     // If items is a schema, then the child instance must be valid against this schema,
     // regardless of its index, and regardless of the value of "additionalItems".
     code.push(
@@ -1234,8 +1262,17 @@ var generateArrayValidator = function (code, schema, schema_path, schema_id, opt
         "}"
       );
     }
+
+    // insert pre validation transformers
+    for (key in Utils.pre_transform) {
+      if (schema.items[key] !== undefined) {
+        code.push(
+          "data[_length] = Utils.pre_transform['"+ key +"'](data[_length], " + Utils.stringify(schema.items[key]) + ");"
+        );
+      }
+    }
+
     code.push(
-        // TODO: insert pre validation transformers
         "result = validators['"+ schema_path +"/items'](data[_length],"+ ((options.errors.schema) ? " _schema.items,": " null,") +" data, root, path + '/' + _length, Utils);"
     );
     if (options.enable_defaults) {
@@ -1257,7 +1294,7 @@ var generateArrayValidator = function (code, schema, schema_path, schema_id, opt
 var generateObjectValidator = function (code, schema, schema_path, schema_id, options) {
   if (Utils.typeOf(schema.properties) === "object" || Utils.typeOf(schema.patternProperties) === "object" || Utils.typeOf(schema.additionalProperties === "object")) {
     var additionalProperties = schema.additionalProperties;
-    var index, index2, key, required_keys = [], defaults = {}, required_values, conditions;
+    var index, index2, key, tkey, required_keys = [], defaults = {}, required_values, conditions;
     var properties = [];
     var patternProperties = [];
 
@@ -1322,8 +1359,17 @@ var generateObjectValidator = function (code, schema, schema_path, schema_id, op
         key = properties[index];
         prop_index[key] = true;
         code.push(
-          "case '"+ Utils.escapeString(key) +"':",
-            // TODO: insert pre validation transformers
+          "case '"+ Utils.escapeString(key) +"':"
+        );
+
+        // insert pre validation transformers
+        for (tkey in Utils.pre_transform) {
+          if (schema.properties[key][tkey] !== undefined) {
+            code.push("data['"+ Utils.escapeString(key) +"'] = Utils.pre_transform['" + tkey + "'](data['"+ Utils.escapeString(key) +"'], "+ Utils.stringify(schema.properties[key][tkey]) +");");
+          }
+        }
+
+        code.push(
             "result = validators['"+ schema_path +"/properties/"+ Utils.escapeString(key) +"'](data['"+ Utils.escapeString(key) +"'],"+ ((options.errors.schema) ? " _schema.properties[\"" + Utils.escapeString(key) + "\"],": " null,") +" data, root, path + '/"+ Utils.escapeString(Utils.encodeJSONPointer(key)) +"', Utils);"
         );
 
@@ -1441,15 +1487,26 @@ var generateObjectValidator = function (code, schema, schema_path, schema_id, op
 
       for (index = 0; index < patternProperties.length; index++) {
         code.push(
-          "if (/"+ Utils.escapeRegexp(patternProperties[index]) +"/.test(key)) {",
-            // TODO: insert pre validation transformers
+          "if (/"+ Utils.escapeRegexp(patternProperties[index]) +"/.test(key)) {"
+        );
+
+        // insert pre validation transformers
+        for (tkey in Utils.pre_transform) {
+          if (schema.patternProperties[patternProperties[index]][tkey] !== undefined) {
+            code.push("data[key] = Utils.pre_transform['" + tkey + "'](data[key], "+ Utils.stringify(schema.patternProperties[patternProperties[index]][tkey]) +");");
+          }
+        }
+
+        code.push(
             "result = validators['"+ schema_path +"/patternProperties/"+ Utils.escapeRegexp(patternProperties[index]) +"'](data[key],"+ ((options.errors.schema) ? " _schema.patternProperties[\""+ Utils.escapeRegexp(patternProperties[index]) +"\"] ,": " null,") +" data, root, path + '/' + _encodeJSONPointer(key), Utils);"
         );
+
         if (options.enable_defaults) {
           code.push(
             "if (result.rollback !== _rollback) { rollbacks.push(result.rollback); }"
           );
         }
+
         code.push(
             // TODO: insert post validation transformers
             "_matches[key] = true;",
@@ -1464,9 +1521,19 @@ var generateObjectValidator = function (code, schema, schema_path, schema_id, op
 
     // If additional properties is a schema check against it
     if (Utils.typeOf(schema.additionalProperties) === "object") {
+
       code.push(
-        "if (!_matches[key]) {",
-          // TODO: insert pre validation transformers
+        "if (!_matches[key]) {"
+      );
+
+      // insert pre validation transformers
+      for (tkey in Utils.pre_transform) {
+        if (schema.additionalProperties[tkey] !== undefined) {
+          code.push("data[key] = Utils.pre_transform['" + tkey + "'](data[key], "+ Utils.stringify(schema.additionalProperties[tkey]) +");");
+        }
+      }
+
+      code.push(
           "result = validators['"+schema_path+"/additionalProperties'](data[key],"+ ((options.errors.schema) ? " _schema.additionalProperties,": " null,") +" data, root, path + '/' + _encodeJSONPointer(key), Utils);"
       );
       if (options.enable_defaults) {
@@ -1571,10 +1638,11 @@ var generateObjectValidator = function (code, schema, schema_path, schema_id, op
 
 var generateSchema = function (schema, schema_path, schema_id, cache, options) {
   // Trim the trailing #
-  if (schema_path.slice(-1) === '#') {
-    var validator_path = schema_path.slice(0, -1);
+  var validator_path;
+  if (schema_path.slice(-1) === "#") {
+    validator_path = schema_path.slice(0, -1);
   } else {
-    var validator_path = schema_path;
+    validator_path = schema_path;
   }
   var key, value, index, block_type, keyword_rank, keywords = [], blocks = {
     any: { start: null, end: null },
@@ -1691,12 +1759,12 @@ var generateSchema = function (schema, schema_path, schema_id, cache, options) {
       if (code.length === 10) {
         code = [
           "validators['"+ validator_path +"'] = function (data, _schema, parent, root, path, Utils) {",
-            "return validators['"+ schema_id + Utils.decodeJSONPointer(schema.$ref.slice(1)) +"'](data, _schema, parent, root, path, Utils);",
+            "return validators['"+ schema_id + Utils.decodeJSONPointer(schema.$ref) +"'](data, _schema, parent, root, path, Utils);",
           "}"
         ];
       } else {
         code.push(
-            "result = validators['"+ schema_id + Utils.decodeJSONPointer(schema.$ref.slice(1)) +"'](data, _schema, parent, root, path, Utils);",
+            "result = validators['"+ schema_id + Utils.decodeJSONPointer(schema.$ref) +"'](data, _schema, parent, root, path, Utils);",
             "if (!result.valid) report.valid = false;",
             "report.errors = report.errors.concat(result.errors);"
         );
@@ -1706,8 +1774,8 @@ var generateSchema = function (schema, schema_path, schema_id, cache, options) {
           );
         }
       }
-      if (typeof cache[schema_id + Utils.decodeJSONPointer(schema.$ref.slice(1))] === "function") {
-        cache[schema_id + Utils.decodeJSONPointer(schema.$ref.slice(1))]();
+      if (typeof cache[schema_id + Utils.decodeJSONPointer(schema.$ref)] === "function") {
+        cache[schema_id + Utils.decodeJSONPointer(schema.$ref)]();
       }
     } else {
       if (code.length === 10) {
@@ -1957,8 +2025,8 @@ var buildSchemas = function (schema_data, options) {
                 buffer.push([schema[key][_key], schema_id]);
               }
             }
-          } else if (Utils.typeOf(schema[key]) === 'object') {
-            if (Utils.typeOf(schema[key].$ref) === 'string') {
+          } else if (Utils.typeOf(schema[key]) === "object") {
+            if (Utils.typeOf(schema[key].$ref) === "string") {
               schema[key] = Utils.dereferencePath(schema[key].$ref, schema_id, _schemas);
             } else {
               buffer.push([schema[key], schema_id]);
@@ -2004,13 +2072,12 @@ module.exports = {
   },
 
   registerTransformer: function (keyword, order, transform_func) {
-    if (Utils.transform === undefined) {
-      Utils.transform[keyword] = {
-        order: order,
-        func: transform_func
-      };
-    } else {
-      throw new Error("The transformer 'keyword' has already been registered");
+    if (order === "pre") {
+      if (Utils.pre_transform[keyword] === undefined) {
+        Utils.pre_transform[keyword] = transform_func;
+      } else {
+        throw new Error("The transformer 'keyword' has already been registered");
+      }
     }
   },
 

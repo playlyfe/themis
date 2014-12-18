@@ -20,7 +20,7 @@ describe('The error messages', function () {
            validator_value: 'object',
            schema: { type: 'object' },
            relative_schema_path: '/type',
-           absolute_schema_path: '0/type' } ],
+           absolute_schema_path: '0#/type' } ],
       passed: 0,
       data: [] });
   });
@@ -42,7 +42,7 @@ describe('The error messages', function () {
            validator_value: 'date',
            schema: { type: 'string', format: 'date' },
            relative_schema_path: '/format',
-           absolute_schema_path: '0/format' } ],
+           absolute_schema_path: '0#/format' } ],
       passed: 1,
       data: 'foo' });
   });
@@ -63,7 +63,7 @@ describe('The error messages', function () {
            validator_value: [ 'string', 1, {} ],
            schema: { enum: [ 'string', 1, {} ] },
            relative_schema_path: '/enum',
-           absolute_schema_path: '0/enum' } ],
+           absolute_schema_path: '0#/enum' } ],
       passed: 0,
       data: 'foo' });
   });
@@ -87,7 +87,7 @@ describe('The error messages', function () {
            validator_value: [ { type: 'integer' }, { type: 'number' } ],
            schema: { allOf: [ { type: 'integer' }, { type: 'number' } ] },
            relative_schema_path: '/allOf',
-           absolute_schema_path: '0/allOf',
+           absolute_schema_path: '0#/allOf',
            context:
             [ { valid: false,
                 passed: 0,
@@ -99,7 +99,7 @@ describe('The error messages', function () {
                             validator_value: 'integer',
                             schema: { type: 'integer' },
                             relative_schema_path: '/type',
-                            absolute_schema_path: '0/allOf/0/type' } ] } ] } ],
+                            absolute_schema_path: '0#/allOf/0/type' } ] } ] } ],
       passed: 0,
       data: 1.5 });
   });
@@ -131,7 +131,7 @@ describe('The error messages', function () {
                  { type: 'number' },
                  { type: 'object' } ] },
            relative_schema_path: '/anyOf',
-           absolute_schema_path: '0/anyOf',
+           absolute_schema_path: '0#/anyOf',
            context:
             [ { valid: false,
                 passed: 0,
@@ -144,7 +144,7 @@ describe('The error messages', function () {
                      validator_value: 'string',
                      schema: { type: 'string' },
                      relative_schema_path: '/type',
-                     absolute_schema_path: '0/anyOf/0/type' } ] },
+                     absolute_schema_path: '0#/anyOf/0/type' } ] },
               { valid: false,
                 passed: 0,
                 errors:
@@ -156,7 +156,7 @@ describe('The error messages', function () {
                      validator_value: 'number',
                      schema: { type: 'number' },
                      relative_schema_path: '/type',
-                     absolute_schema_path: '0/anyOf/1/type' } ] },
+                     absolute_schema_path: '0#/anyOf/1/type' } ] },
               { valid: false,
                 passed: 0,
                 errors:
@@ -168,7 +168,7 @@ describe('The error messages', function () {
                      validator_value: 'object',
                      schema: { type: 'object' },
                      relative_schema_path: '/type',
-                     absolute_schema_path: '0/anyOf/2/type' } ] } ] } ],
+                     absolute_schema_path: '0#/anyOf/2/type' } ] } ] } ],
       passed: 0,
       data: [] });
   });
@@ -200,7 +200,7 @@ describe('The error messages', function () {
                  { type: 'number' },
                  { type: 'object' } ] },
            relative_schema_path: '/oneOf',
-           absolute_schema_path: '0/oneOf',
+           absolute_schema_path: '0#/oneOf',
            context:
             [ { valid: false,
                 passed: 0,
@@ -213,7 +213,7 @@ describe('The error messages', function () {
                      validator_value: 'string',
                      schema: { type: 'string' },
                      relative_schema_path: '/type',
-                     absolute_schema_path: '0/oneOf/0/type' } ] },
+                     absolute_schema_path: '0#/oneOf/0/type' } ] },
               { valid: false,
                 passed: 0,
                 errors:
@@ -225,7 +225,7 @@ describe('The error messages', function () {
                      validator_value: 'number',
                      schema: { type: 'number' },
                      relative_schema_path: '/type',
-                     absolute_schema_path: '0/oneOf/1/type' } ] },
+                     absolute_schema_path: '0#/oneOf/1/type' } ] },
               { valid: false,
                 passed: 0,
                 errors:
@@ -237,7 +237,7 @@ describe('The error messages', function () {
                      validator_value: 'object',
                      schema: { type: 'object' },
                      relative_schema_path: '/type',
-                     absolute_schema_path: '0/oneOf/2/type' } ] } ] } ],
+                     absolute_schema_path: '0#/oneOf/2/type' } ] } ] } ],
       passed: 0,
       data: [] });
   });
@@ -272,7 +272,7 @@ describe('The error messages', function () {
                  { type: 'integer' },
                  { type: 'object' } ] },
            relative_schema_path: '/oneOf',
-           absolute_schema_path: '0/oneOf',
+           absolute_schema_path: '0#/oneOf',
            context:
             [ { valid: true, schema: { type: 'number' } },
               { valid: true, schema: { type: 'integer' } } ] } ],
@@ -301,7 +301,7 @@ describe('The error messages', function () {
            validator_value: { anyOf: [ { type: 'integer' }, { type: 'number' } ] },
            schema: { not: { anyOf: [ { type: 'integer' }, { type: 'number' } ] } },
            relative_schema_path: '/not',
-           absolute_schema_path: '0/not' } ],
+           absolute_schema_path: '0#/not' } ],
       passed: 0,
       data: 1 });
     //console.log(util.inspect(report, { depth: 10, colors: true }));
@@ -324,7 +324,7 @@ describe('The error messages', function () {
            validator_value: 3,
            schema: { type: 'array', minItems: 3 },
            relative_schema_path: '/minItems',
-           absolute_schema_path: '0/minItems' } ],
+           absolute_schema_path: '0#/minItems' } ],
       passed: 1,
       data: [ 1 ] });
   });
@@ -346,7 +346,7 @@ describe('The error messages', function () {
            validator_value: 3,
            schema: { type: 'array', maxItems: 3 },
            relative_schema_path: '/maxItems',
-           absolute_schema_path: '0/maxItems' } ],
+           absolute_schema_path: '0#/maxItems' } ],
       passed: 1,
       data: [ 1, 2, 3, 4 ] });
   });
@@ -372,7 +372,7 @@ describe('The error messages', function () {
            validator_value: true,
            schema: { type: 'array', uniqueItems: true },
            relative_schema_path: '/uniqueItems',
-           absolute_schema_path: '0/uniqueItems' } ],
+           absolute_schema_path: '0#/uniqueItems' } ],
       passed: 1,
       data:
        [ { x: 1 },
@@ -406,7 +406,7 @@ describe('The error messages', function () {
               items: [ { type: 'string' }, { type: 'number' } ],
               additionalItems: false },
            relative_schema_path: '/additionalItems',
-           absolute_schema_path: '0/additionalItems' } ],
+           absolute_schema_path: '0#/additionalItems' } ],
       passed: 3,
       data: [ 'a', 1, { foo: 'bar' } ] });
   });
@@ -428,7 +428,7 @@ describe('The error messages', function () {
            validator_value: 5,
            schema: { type: 'number', multipleOf: 5 },
            relative_schema_path: '/multipleOf',
-           absolute_schema_path: '0/multipleOf' } ],
+           absolute_schema_path: '0#/multipleOf' } ],
       passed: 1,
       data: 3 });
   });
@@ -450,7 +450,7 @@ describe('The error messages', function () {
            validator_value: 5,
            schema: { type: 'number', minimum: 5 },
            relative_schema_path: '/minimum',
-           absolute_schema_path: '0/minimum' } ],
+           absolute_schema_path: '0#/minimum' } ],
       passed: 1,
       data: 3 });
   });
@@ -476,7 +476,7 @@ describe('The error messages', function () {
               minimum: 5,
               exclusiveMinimum: true },
            relative_schema_path: '/exclusiveMinimum',
-           absolute_schema_path: '0/exclusiveMinimum' } ],
+           absolute_schema_path: '0#/exclusiveMinimum' } ],
       passed: 1,
       data: 5 });
   });
@@ -498,7 +498,7 @@ describe('The error messages', function () {
            validator_value: 5,
            schema: { type: 'number', maximum: 5 },
            relative_schema_path: '/maximum',
-           absolute_schema_path: '0/maximum' } ],
+           absolute_schema_path: '0#/maximum' } ],
       passed: 1,
       data: 6 });
   });
@@ -524,7 +524,7 @@ describe('The error messages', function () {
               maximum: 5,
               exclusiveMaximum: true },
            relative_schema_path: '/exclusiveMaximum',
-           absolute_schema_path: '0/exclusiveMaximum' } ],
+           absolute_schema_path: '0#/exclusiveMaximum' } ],
       passed: 1,
       data: 5 });
   });
@@ -547,7 +547,7 @@ describe('The error messages', function () {
            validator_value: 2,
            schema: { type: 'object', minProperties: 2 },
            relative_schema_path: '/minProperties',
-           absolute_schema_path: '0/minProperties' } ],
+           absolute_schema_path: '0#/minProperties' } ],
       passed: 1,
       data: {} });
   });
@@ -569,7 +569,7 @@ describe('The error messages', function () {
            validator_value: 2,
            schema: { type: 'object', maxProperties: 2 },
            relative_schema_path: '/maxProperties',
-           absolute_schema_path: '0/maxProperties' } ],
+           absolute_schema_path: '0#/maxProperties' } ],
       passed: 1,
       data: { x: true, y: 'foo', z: 'boo' } });
   });
@@ -593,7 +593,7 @@ describe('The error messages', function () {
             { type: 'object',
               required: [ 'foo', 'bar', 'baz' ] },
            relative_schema_path: '/required',
-           absolute_schema_path: '0/required' },
+           absolute_schema_path: '0#/required' },
          { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
            path: '',
            instance: {},
@@ -604,7 +604,7 @@ describe('The error messages', function () {
             { type: 'object',
               required: [ 'foo', 'bar', 'baz' ] },
            relative_schema_path: '/required',
-           absolute_schema_path: '0/required' },
+           absolute_schema_path: '0#/required' },
          { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
            path: '',
            instance: {},
@@ -615,7 +615,7 @@ describe('The error messages', function () {
             { type: 'object',
               required: [ 'foo', 'bar', 'baz' ] },
            relative_schema_path: '/required',
-           absolute_schema_path: '0/required' } ],
+           absolute_schema_path: '0#/required' } ],
       passed: 1,
       data: {} });
   });
@@ -639,7 +639,7 @@ describe('The error messages', function () {
             { type: 'object',
               additionalProperties: false },
            relative_schema_path: '/additionalProperties',
-           absolute_schema_path: '0/additionalProperties' } ],
+           absolute_schema_path: '0#/additionalProperties' } ],
       passed: 1,
       data: { x: 'foo', y: 'bar' } });
   });
@@ -672,7 +672,7 @@ describe('The error messages', function () {
            validator_value: 'number',
            schema: { type: 'number' },
            relative_schema_path: '/type',
-           absolute_schema_path: '0/dependencies/foo/properties/bar/type' },
+           absolute_schema_path: '0#/dependencies/foo/properties/bar/type' },
          { code: 'OBJECT_DEPENDENCY_KEY',
            path: '',
            instance: { foo: true, bar: true },
@@ -691,7 +691,7 @@ describe('The error messages', function () {
                     properties: { bar: { type: 'number' } } },
                  bar: [ 'foo', 'baz' ] } },
            relative_schema_path: '/dependencies',
-           absolute_schema_path: '0/dependencies' } ],
+           absolute_schema_path: '0#/dependencies' } ],
       passed: 1,
       data: { foo: true, bar: true } });
   });
@@ -713,7 +713,7 @@ describe('The error messages', function () {
            validator_value: 3,
            schema: { type: 'string', minLength: 3 },
            relative_schema_path: '/minLength',
-           absolute_schema_path: '0/minLength' } ],
+           absolute_schema_path: '0#/minLength' } ],
       passed: 1,
       data: 'as' });
   });
@@ -735,7 +735,7 @@ describe('The error messages', function () {
            validator_value: 3,
            schema: { type: 'string', maxLength: 3 },
            relative_schema_path: '/maxLength',
-           absolute_schema_path: '0/maxLength' } ],
+           absolute_schema_path: '0#/maxLength' } ],
       passed: 1,
       data: 'asdb' });
   });
@@ -757,7 +757,7 @@ describe('The error messages', function () {
            validator_value: '^a.*b$',
            schema: { type: 'string', pattern: '^a.*b$' },
            relative_schema_path: '/pattern',
-           absolute_schema_path: '0/pattern' } ],
+           absolute_schema_path: '0#/pattern' } ],
       passed: 1,
       data: 'xb' });
   });
@@ -866,7 +866,7 @@ describe('The error algorithms', function () {
              message: 'The required property \'type\' is missing',
              validator: 'required',
              relative_schema_path: '/required',
-             absolute_schema_path: 'shape/required' } ],
+             absolute_schema_path: 'shape#/required' } ],
         passed: 1,
         data: {} });
 
@@ -881,14 +881,14 @@ describe('The error algorithms', function () {
              message: 'null is not one of [ "point", "triangle", "box" ]',
              validator: 'enum',
              relative_schema_path: '/enum',
-             absolute_schema_path: 'shape/properties/type/enum' },
+             absolute_schema_path: 'shape#/properties/type/enum' },
            { code: 'INVALID_TYPE',
              path: '/type',
              instance: null,
              message: 'Data should be of type string not null',
              validator: 'type',
              relative_schema_path: '/type',
-             absolute_schema_path: 'shape/properties/type/type' } ],
+             absolute_schema_path: 'shape#/properties/type/type' } ],
         passed: 2,
         data: { type: null } });
 
@@ -903,7 +903,7 @@ describe('The error algorithms', function () {
              message: 'Data is not valid under any of the given schemas',
              validator: 'oneOf',
              relative_schema_path: '/oneOf',
-             absolute_schema_path: 'shape/oneOf',
+             absolute_schema_path: 'shape#/oneOf',
              context:
               [ { valid: false,
                   passed: 4,
@@ -914,7 +914,7 @@ describe('The error algorithms', function () {
                        message: 'The required property \'data\' is missing',
                        validator: 'required',
                        relative_schema_path: '/required',
-                       absolute_schema_path: 'triangle/required' } ] } ] } ],
+                       absolute_schema_path: 'triangle#/required' } ] } ] } ],
         passed: 4,
         data: { type: 'triangle' } });
 
@@ -929,7 +929,7 @@ describe('The error algorithms', function () {
              message: 'Data is not valid under any of the given schemas',
              validator: 'oneOf',
              relative_schema_path: '/oneOf',
-             absolute_schema_path: 'shape/oneOf',
+             absolute_schema_path: 'shape#/oneOf',
              context:
               [ { valid: false,
                   passed: 5,
@@ -940,7 +940,7 @@ describe('The error algorithms', function () {
                        message: 'Array is too short, minimum 3',
                        validator: 'minItems',
                        relative_schema_path: '/minItems',
-                       absolute_schema_path: 'triangle/properties/data/minItems' } ] } ] } ],
+                       absolute_schema_path: 'triangle#/properties/data/minItems' } ] } ] } ],
         passed: 4,
         data: { type: 'triangle', data: [] } });
 
@@ -960,7 +960,7 @@ describe('The error algorithms', function () {
              message: 'Data is not valid under any of the given schemas',
              validator: 'oneOf',
              relative_schema_path: '/oneOf',
-             absolute_schema_path: 'shape/oneOf',
+             absolute_schema_path: 'shape#/oneOf',
              context:
               [ { valid: false,
                   errors:
@@ -970,28 +970,28 @@ describe('The error algorithms', function () {
                        message: 'The required property \'data\' is missing',
                        validator: 'required',
                        relative_schema_path: '/required',
-                       absolute_schema_path: 'point/required' },
+                       absolute_schema_path: 'point#/required' },
                      { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
                        path: '/data/1',
                        instance: { type: 'box' },
                        message: 'The required property \'data\' is missing',
                        validator: 'required',
                        relative_schema_path: '/required',
-                       absolute_schema_path: 'point/required' },
+                       absolute_schema_path: 'point#/required' },
                      { code: 'ENUM_MISMATCH',
                        path: '/data/1/type',
                        instance: 'box',
                        message: '"box" is not one of [ "point" ]',
                        validator: 'enum',
                        relative_schema_path: '/enum',
-                       absolute_schema_path: 'point/properties/type/enum' },
+                       absolute_schema_path: 'point#/properties/type/enum' },
                      { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
                        path: '/data/2',
                        instance: { type: 'point' },
                        message: 'The required property \'data\' is missing',
                        validator: 'required',
                        relative_schema_path: '/required',
-                       absolute_schema_path: 'point/required' } ],
+                       absolute_schema_path: 'point#/required' } ],
                   passed: 5 } ] } ],
         passed: 4,
         data:
@@ -1017,7 +1017,7 @@ describe('The error algorithms', function () {
              validator: 'oneOf',
              message: 'Data is not valid under any of the given schemas',
              relative_schema_path: '/oneOf',
-             absolute_schema_path: 'shape/oneOf',
+             absolute_schema_path: 'shape#/oneOf',
              context:
               [ { valid: false,
                   errors:
@@ -1027,42 +1027,42 @@ describe('The error algorithms', function () {
                        validator: 'required',
                        message: 'The required property \'x\' is missing',
                        relative_schema_path: '/required',
-                       absolute_schema_path: 'point/properties/data/required' },
+                       absolute_schema_path: 'point#/properties/data/required' },
                      { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
                        path: '/data/0/data',
                        instance: {},
                        validator: 'required',
                        message: 'The required property \'y\' is missing',
                        relative_schema_path: '/required',
-                       absolute_schema_path: 'point/properties/data/required' },
+                       absolute_schema_path: 'point#/properties/data/required' },
                      { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
                        path: '/data/1/data',
                        instance: {},
                        validator: 'required',
                        message: 'The required property \'x\' is missing',
                        relative_schema_path: '/required',
-                       absolute_schema_path: 'point/properties/data/required' },
+                       absolute_schema_path: 'point#/properties/data/required' },
                      { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
                        path: '/data/1/data',
                        instance: {},
                        validator: 'required',
                        message: 'The required property \'y\' is missing',
                        relative_schema_path: '/required',
-                       absolute_schema_path: 'point/properties/data/required' },
+                       absolute_schema_path: 'point#/properties/data/required' },
                      { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
                        path: '/data/2/data',
                        instance: {},
                        validator: 'required',
                        message: 'The required property \'x\' is missing',
                        relative_schema_path: '/required',
-                       absolute_schema_path: 'point/properties/data/required' },
+                       absolute_schema_path: 'point#/properties/data/required' },
                      { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
                        path: '/data/2/data',
                        instance: {},
                        validator: 'required',
                        message: 'The required property \'y\' is missing',
                        relative_schema_path: '/required',
-                       absolute_schema_path: 'point/properties/data/required' } ],
+                       absolute_schema_path: 'point#/properties/data/required' } ],
                   passed: 5 } ] } ],
         passed: 4,
         data:
@@ -1089,7 +1089,7 @@ describe('The error algorithms', function () {
              validator: 'oneOf',
              message: 'Data is not valid under any of the given schemas',
              relative_schema_path: '/oneOf',
-             absolute_schema_path: 'shape/oneOf',
+             absolute_schema_path: 'shape#/oneOf',
              context:
               [ { valid: false,
                   errors:
@@ -1099,42 +1099,42 @@ describe('The error algorithms', function () {
                        validator: 'required',
                        message: 'The required property \'x\' is missing',
                        relative_schema_path: '/required',
-                       absolute_schema_path: 'point/properties/data/required' },
+                       absolute_schema_path: 'point#/properties/data/required' },
                      { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
                        path: '/data/0/data',
                        instance: {},
                        validator: 'required',
                        message: 'The required property \'y\' is missing',
                        relative_schema_path: '/required',
-                       absolute_schema_path: 'point/properties/data/required' },
+                       absolute_schema_path: 'point#/properties/data/required' },
                      { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
                        path: '/data/1/data',
                        instance: {},
                        validator: 'required',
                        message: 'The required property \'x\' is missing',
                        relative_schema_path: '/required',
-                       absolute_schema_path: 'point/properties/data/required' },
+                       absolute_schema_path: 'point#/properties/data/required' },
                      { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
                        path: '/data/1/data',
                        instance: {},
                        validator: 'required',
                        message: 'The required property \'y\' is missing',
                        relative_schema_path: '/required',
-                       absolute_schema_path: 'point/properties/data/required' },
+                       absolute_schema_path: 'point#/properties/data/required' },
                      { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
                        path: '/data/2/data',
                        instance: {},
                        validator: 'required',
                        message: 'The required property \'x\' is missing',
                        relative_schema_path: '/required',
-                       absolute_schema_path: 'point/properties/data/required' },
+                       absolute_schema_path: 'point#/properties/data/required' },
                      { code: 'OBJECT_MISSING_REQUIRED_PROPERTY',
                        path: '/data/2/data',
                        instance: {},
                        validator: 'required',
                        message: 'The required property \'y\' is missing',
                        relative_schema_path: '/required',
-                       absolute_schema_path: 'point/properties/data/required' },
+                       absolute_schema_path: 'point#/properties/data/required' },
                      { code: 'ARRAY_LENGTH_SHORT',
                        path: '/data',
                        instance:
@@ -1144,7 +1144,7 @@ describe('The error algorithms', function () {
                        validator: 'minItems',
                        message: 'Array is too short, minimum 4',
                        relative_schema_path: '/minItems',
-                       absolute_schema_path: 'box/properties/data/minItems' } ],
+                       absolute_schema_path: 'box#/properties/data/minItems' } ],
                   passed: 5 } ] } ],
         passed: 4,
         data:
@@ -1170,7 +1170,7 @@ describe('The error algorithms', function () {
              validator: 'required',
              message: 'The required property \'type\' is missing',
              relative_schema_path: '/required',
-             absolute_schema_path: 'shape/required' } ],
+             absolute_schema_path: 'shape#/required' } ],
         passed: 1,
         data:
          { data:
@@ -1197,7 +1197,7 @@ describe('The error algorithms', function () {
              validator: 'oneOf',
              message: 'Data is not valid under any of the given schemas',
              relative_schema_path: '/oneOf',
-             absolute_schema_path: 'shape/oneOf',
+             absolute_schema_path: 'shape#/oneOf',
              context:
               [ { valid: false,
                   errors:
@@ -1207,7 +1207,7 @@ describe('The error algorithms', function () {
                        validator: 'required',
                        message: 'The required property \'y\' is missing',
                        relative_schema_path: '/required',
-                       absolute_schema_path: 'point/properties/data/required' } ],
+                       absolute_schema_path: 'point#/properties/data/required' } ],
                   passed: 5 } ] } ],
         passed: 4,
         data:
