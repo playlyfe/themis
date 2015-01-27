@@ -88,10 +88,19 @@ var Utils = {
   rollback: function () { return; },
 
   dereferencePath: function (path, schema_id, schemas) {
-    if (path[0] === "#") {
+    var hash_index, index, ref, parts;
+    hash_index = path.indexOf('#');
+    if (hash_index === 0) {
       if (path === "#") { return schemas[schema_id]; }
-      var index, ref = schemas[schema_id];
-      var parts = path.slice(2).split("/").map(function (part) { return Utils.decodeJSONPointer(part); });
+      ref = schemas[schema_id];
+      parts = path.slice(2).split("/").map(function (part) { return Utils.decodeJSONPointer(part); });
+      for (index = 0; index < parts.length; index++) {
+        ref = ref[parts[index]];
+      }
+      return ref;
+    } else if (hash_index > 0) {
+      ref = schemas[path.slice(0, hash_index)];
+      parts = path.slice(hash_index + 2).split("/").map(function (part) { return Utils.decodeJSONPointer(part); });
       for (index = 0; index < parts.length; index++) {
         ref = ref[parts[index]];
       }
@@ -1995,6 +2004,7 @@ var buildSchemas = function (schema_data, options) {
     _schemas[schema_id] = schemas[index];
     buffer[index] = [schemas[index], schema_id];
   }
+
 
   // Build refs
   index = buffer.length;
