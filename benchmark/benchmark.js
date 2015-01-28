@@ -13,23 +13,23 @@ var imjv = require('is-my-json-valid');
 
 
 Tester.registerValidator({
-	name: "is-my-json-valid",
-	setup: function (schema) {
-		return imjv(schema);
-	},
-	test: function (instance, json, schema) {
-		return !!instance(json);
-	}
+    name: "is-my-json-valid",
+    setup: function (schema) {
+        return imjv(schema);
+    },
+    test: function (instance, json, schema) {
+        return !!instance(json);
+    }
 });
 
 Tester.registerValidator({
-	name: "themis[minimal]",
-	setup: function (schema) {
-		return Themis.validator(schema, { enable_defaults: false, errors: { messages: false, validator_value: false, schema: false } });
-	},
-	test: function (instance, json, schema) {
-		return instance(json, '0').valid === true;
-	}
+    name: "themis[minimal]",
+    setup: function (schema) {
+        return Themis.validator(schema, { enable_defaults: false, errors: { messages: false, validator_value: false, schema: false } });
+    },
+    test: function (instance, json, schema) {
+        return instance(json, '0').valid === true;
+    }
 });
 
 Tester.registerValidator({
