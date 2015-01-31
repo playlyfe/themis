@@ -19,5 +19,17 @@
     "mocha": "^2.0.1"
   },
   "author": "Johny Jose <johny@playlyfe.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/playlyfe/themis.git"
+  },
+  "bugs": {
+    "url": "https://github.com/playlyfe/themis/issues"
+  },
+  "homepage": "https://github.com/playlyfe/themis"
 }
