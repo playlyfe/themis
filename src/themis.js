@@ -89,24 +89,29 @@ var Utils = {
 
   dereferencePath: function (path, schema_id, schemas) {
     var hash_index, index, ref, parts;
-    hash_index = path.indexOf('#');
-    if (hash_index === 0) {
-      if (path === "#") { return schemas[schema_id]; }
-      ref = schemas[schema_id];
-      parts = path.slice(2).split("/").map(function (part) { return Utils.decodeJSONPointer(part); });
-      for (index = 0; index < parts.length; index++) {
-        ref = ref[parts[index]];
+    if (schemas[path]) {
+      return schemas[path];
+    } else {
+      hash_index = path.indexOf("#");
+      if (hash_index === 0) {
+        if (path === "#") { return schemas[schema_id]; }
+        ref = schemas[schema_id];
+        parts = path.slice(2).split("/").map(function (part) { return Utils.decodeJSONPointer(part); });
+        for (index = 0; index < parts.length; index++) {
+          ref = ref[parts[index]];
+        }
+        return ref;
+      } else if (hash_index > 0) {
+        ref = schemas[path.slice(0, hash_index)];
+        parts = path.slice(hash_index + 2).split("/").map(function (part) { return Utils.decodeJSONPointer(part); });
+        for (index = 0; index < parts.length; index++) {
+          ref = ref[parts[index]];
+        }
+        return ref;
+      } else {
+        throw Error("invalid ref: " + path + ' in ' + schema_id);
       }
-      return ref;
-    } else if (hash_index > 0) {
-      ref = schemas[path.slice(0, hash_index)];
-      parts = path.slice(hash_index + 2).split("/").map(function (part) { return Utils.decodeJSONPointer(part); });
-      for (index = 0; index < parts.length; index++) {
-        ref = ref[parts[index]];
-      }
-      return ref;
     }
-    return schemas[path];
   },
 
   defaults: function (obj) {
@@ -155,8 +160,8 @@ var Utils = {
 
   decodeJSONPointer: function (str) {
     // http://tools.ietf.org/html/draft-ietf-appsawg-json-pointer-07#section-3
-    if (str === '#') {
-      return '';
+    if (str === "#") {
+      return "";
     } else {
       return decodeURIComponent(str).replace(/~[0-1]/g, function (x) {
         return x === "~1" ? "/" : "~";
@@ -177,6 +182,7 @@ var Utils = {
     case "object":
       value = ["{"];
       for (index in data) {
+        if (!data.hasOwnProperty(index))  continue;
         if (!flag) {
           flag = true;
           value.push(" \"" + index + "\": " + _stringify(data[index]));
@@ -193,6 +199,7 @@ var Utils = {
     case "array":
       value = ["["];
       for (index in data) {
+        if (!data.hasOwnProperty(index))  continue;
         if (!flag) {
           flag = true;
           value.push(" " + _stringify(data[index]));
@@ -1764,7 +1771,7 @@ var generateSchema = function (schema, schema_path, schema_id, cache, options) {
   }
 
   if (Utils.typeOf(schema.$ref) === "string") {
-    if (schema.$ref[0] === "#") {
+    if (schema.$ref === "#" || schema.$ref.indexOf("#/") === 0) {
       if (code.length === 10) {
         code = [
           "validators['"+ validator_path +"'] = function (data, _schema, parent, root, path, Utils) {",
@@ -1844,6 +1851,13 @@ var generateSchema = function (schema, schema_path, schema_id, cache, options) {
     code = [
       "validators['"+ validator_path +"'] = _stub;"
     ];
+  }
+
+  // Add id references
+  if (Utils.typeOf(schema.id) === "string") {
+    code.push(
+      "validators['" + schema.id + "'] = validators['"+ validator_path +"']"
+    );
   }
 
   // Generate validators for arrays
@@ -1993,18 +2007,59 @@ var buildValidator = function (schemas, options) {
 
 var buildSchemas = function (schema_data, options) {
   var schema, schemas, schema_id, key, _key, index, _schemas = {}, buffer = [];
-
   // Create a deep clone of schemas
   eval("schemas = "+ Utils.stringify(schema_data) +";");
-  index = schemas.length;
-
   // Index all schemas
-  for (;index--;) {
-    schema_id = (schemas[index].id !== undefined) ? schemas[index].id: index;
-    _schemas[schema_id] = schemas[index];
-    buffer[index] = [schemas[index], schema_id];
+  for (index = 0; index < schemas.length;  index++) {
+    schema = schemas[index];
+    if (schema.id !== undefined) {
+      schema_id = schema.id;
+      _schemas[schema_id] = schema;
+      buffer[index] = [schema, schema_id];
+    } else {
+      schema_id = index;
+      _schemas[schema_id] = schema;
+      if (index < schema_data.length) {
+        buffer[index] = [schema, schema_id];
+      }
+    }
+    for (key in schema) {
+      switch (key) {
+        case "not":
+        case "additionalItems":
+        case "additionalProperties":
+          if (Utils.typeOf(schema[key].$ref) !== "string") {
+            schemas.push(schema[key]);
+          }
+          break;
+        case "items":
+        case "oneOf":
+        case "allOf":
+        case "anyOf":
+          if (Utils.typeOf(schema[key]) === "array") {
+            for (_key in schema[key]) {
+              if (Utils.typeOf(schema[key][_key].$ref) !== "string") {
+                schemas.push(schema[key][_key]);
+              }
+            }
+          } else if (Utils.typeOf(schema[key]) === "object") {
+            if (Utils.typeOf(schema[key].$ref) !== "string") {
+              schemas.push(schema[key]);
+            }
+          }
+          break;
+        case "definitions":
+        case "properties":
+        case "patternProperties":
+          for (_key in schema[key]) {
+            if (Utils.typeOf(schema[key][_key].$ref) !== "string") {
+              schemas.push(schema[key][_key]);
+            }
+          }
+          break;
+      }
+    }
   }
-
 
   // Build refs
   index = buffer.length;
