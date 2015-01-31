@@ -9,7 +9,18 @@ var JsonSchema = require("jsonschema");
 var tv4 = require("tv4");
 var JsonModel = require('json-model');
 var Themis = require('../src/themis');
+var imjv = require('is-my-json-valid');
 
+
+Tester.registerValidator({
+    name: "is-my-json-valid",
+    setup: function (schema) {
+        return imjv(schema);
+    },
+    test: function (instance, json, schema) {
+        return !!instance(json);
+    }
+});
 
 Tester.registerValidator({
     name: "themis[minimal]",
