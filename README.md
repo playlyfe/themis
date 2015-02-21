@@ -106,6 +106,25 @@ console.log(require('util').inspect(report, { depth: 10, colors: true }));
 // { valid: true, errors: [], subReport: [] }
 ```
 
+### Validating against schemas with no `id` attribute
+
+Themis assumes your schema will have an `id` giving the schema a name. But if
+your schema has no `id` attribute, pass Themis a default `id` of `'0'`.
+
+In the above example, you would change this:
+
+```javascript
+// now validate our data against the schema
+var report = validator(data, 'basicSchema');
+```
+
+to this:
+
+```javascript
+// now validate our data against the schema
+var report = validator(data, '0');
+```
+
 ### Validating against multiple schemas
 At present themis does not support fetching remote json-schemas. You can however pre-fetch them and pass them in.
 
@@ -449,7 +468,7 @@ var validator = Themis.validator(schema, { enable_defaults: true });
 var report = validator(empty_data, 'simple_defaults');
 
 console.log(util.inspect(report, { depth: 10, colors: true }));
-// { valid: true, errors: [] }
+// { valid: true, errors: [], passed: 7 }
 
 console.log(util.inspect(empty_data, { depth: 10, colors: true }));
 /*
