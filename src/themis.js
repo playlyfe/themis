@@ -480,8 +480,8 @@ var Utils = {
         if (typeof email !== "string") {
             return true;
         }
-        // use regex from owasp: https://www.owasp.org/index.php/OWASP_Validation_Regex_Repository
-        return /^[a-zA-Z0-9+&*-]+(?:\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$/.test(email);
+        // http://emailregex.com/
+        return /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i.test(email);
     },
     "hostname": function (hostname) {
         if (typeof hostname !== "string") {
