@@ -1,4 +1,3 @@
-'use strict';
 var Themis = require('../src/themis');
 var util = require('util');
 
@@ -8,7 +7,7 @@ describe('The error messages', function () {
     var schema = {
       type: 'object'
     };
-    var data = []
+    var data = [];
     var report = Themis.validator(schema)(data, '0');
     report.should.deep.equal({ valid: false,
       errors:
@@ -30,7 +29,7 @@ describe('The error messages', function () {
       type: 'string',
       format: 'date'
     };
-    var data = 'foo'
+    var data = 'foo';
     var report = Themis.validator(schema)(data, '0');
     report.should.deep.equal({ valid: false,
       errors:
@@ -51,7 +50,7 @@ describe('The error messages', function () {
     var schema = {
       enum: ['string', 1, {}]
     };
-    var data = 'foo'
+    var data = 'foo';
     var report = Themis.validator(schema)(data, '0');
     report.should.deep.equal({ valid: false,
       errors:
@@ -75,7 +74,7 @@ describe('The error messages', function () {
         { type: 'number' }
       ]
     };
-    var data = 1.5
+    var data = 1.5;
     var report = Themis.validator(schema)(data, '0');
     report.should.deep.equal({ valid: false,
       errors:
@@ -852,7 +851,7 @@ describe('The error algorithms', function () {
             }
           }
         }
-      ]
+      ];
 
       var data = {};
       var validator = Themis.validator(schemas, { errors: { validator_value: false, schema: false } });

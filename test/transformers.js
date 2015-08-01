@@ -1,4 +1,3 @@
-'use strict';
 var Themis = require('../src/themis');
 var util = require('util');
 

@@ -670,7 +670,7 @@ var buildError = function (error_code, schema, schema_path, relative_schema_path
 };
 
 var ValidationGenerators = {
-  "type": function (schema, schema_path, schema_id, options) {
+  type: function (schema, schema_path, schema_id, options) {
     var code = [""], conditions;
 
     if (Utils.typeOf(schema.type) === "array" && schema.type.length > 0) {

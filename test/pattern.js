@@ -31,7 +31,7 @@ describe('Issue #3: Crashing when pattern is incorrect in ref(erenced) schema', 
     };
     var valid_item = {
       "id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
-    }
+    };
     validator(invalid_item, 'kitchensink').valid.should.be.false;
     validator(valid_item, 'kitchensink').valid.should.be.true;
   });
