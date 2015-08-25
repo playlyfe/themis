@@ -1,2 +1,4 @@
 node_modules
 benchmark/node_modules
+
+.DS_Store
