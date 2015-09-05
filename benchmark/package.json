@@ -3,10 +3,12 @@
   "main": "benchmark.js",
   "license": "MIT",
   "dependencies": {
+    "ajv": "latest",
     "benchmark": "latest",
-    "is-my-json-valid": "^2.0.3",
+    "is-my-json-valid": "latest",
     "jayschema": "latest",
     "jjv": "latest",
+    "jsen": "latest",
     "json-model": "latest",
     "jsonschema": "latest",
     "lodash": "latest",

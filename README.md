@@ -760,30 +760,47 @@ Themis achieves its high performance by generating custom optimized validation f
 ```
 Basic Object Validation
 -----------------------
-z-schema#basicObject x 15,421 ops/sec ±7.07% (56 runs sampled)
-jayschema#basicObject x 205 ops/sec ±6.95% (59 runs sampled)
-jjv#basicObject x 3,385 ops/sec ±5.43% (56 runs sampled)
-jsonschema#basicObject x 388 ops/sec ±5.11% (59 runs sampled)
-tv4#basicObject x 9,746 ops/sec ±2.81% (70 runs sampled)
-json-model#basicObject x 29,009 ops/sec ±7.28% (69 runs sampled)
-themis#basicObject x 96,757 ops/sec ±2.80% (55 runs sampled)
-Fastest is themis#basicObject
+is-my-json-valid#basicObject x 5,742,425 ops/sec ±0.53% (98 runs sampled)
+themis[minimal]#basicObject x 479,754 ops/sec ±0.42% (99 runs sampled)
+themis[default]#basicObject x 343,837 ops/sec ±0.47% (102 runs sampled)
+ajv#basicObject x 7,112,748 ops/sec ±0.59% (101 runs sampled)
+jsen#basicObject x 1,941,323 ops/sec ±1.00% (99 runs sampled)
+json-model#basicObject x 63,082 ops/sec ±0.67% (97 runs sampled)
+z-schema 3#basicObject x 52,547 ops/sec ±0.44% (97 runs sampled)
+tv4#basicObject x 54,321 ops/sec ±0.64% (98 runs sampled)
+jjv#basicObject x 11,411 ops/sec ±0.94% (98 runs sampled)
+jsonschema#basicObject x 4,011 ops/sec ±1.49% (98 runs sampled)
+jayschema#basicObject x 1,006 ops/sec ±0.48% (95 runs sampled)
+Fastest is ajv#basicObject
 
 Advanced Object Validation
 --------------------------
-z-schema#advancedObject x 2,704 ops/sec ±8.09% (60 runs sampled)
-jayschema#advancedObject x 24.79 ops/sec ±5.88% (35 runs sampled)
-jjv#advancedObject x 933 ops/sec ±6.32% (57 runs sampled)
-jsonschema#advancedObject x 90.19 ops/sec ±6.21% (53 runs sampled)
-tv4#advancedObject x 148 ops/sec ±8.47% (64 runs sampled)
-json-model#advancedObject x 3,730 ops/sec ±2.04% (65 runs sampled)
-themis#advancedObject x 10,173 ops/sec ±3.04% (65 runs sampled)
-Fastest is themis#advancedObject
+is-my-json-valid#advancedObject x 373,102 ops/sec ±0.62% (97 runs sampled)
+themis[minimal]#advancedObject x 55,200 ops/sec ±0.36% (96 runs sampled)
+themis[default]#advancedObject x 15,186 ops/sec ±0.36% (102 runs sampled)
+ajv#advancedObject x 433,042 ops/sec ±1.67% (94 runs sampled)
+jsen#advancedObject x 128,032 ops/sec ±5.34% (91 runs sampled)
+json-model#advancedObject x 11,762 ops/sec ±1.36% (97 runs sampled)
+z-schema 3#advancedObject x 8,533 ops/sec ±0.43% (97 runs sampled)
+tv4#advancedObject x 447 ops/sec ±0.60% (93 runs sampled)
+jjv#advancedObject x 3,089 ops/sec ±0.75% (98 runs sampled)
+jsonschema#advancedObject x 785 ops/sec ±0.72% (99 runs sampled)
+jayschema#advancedObject x 143 ops/sec ±0.47% (84 runs sampled)
+Fastest is ajv#advancedObject
 ```
 
 For a more detailed analysis of performance check out the benchmarks against the other popular json schema validators available today.
 
 [Benchmark Results](https://cdn.rawgit.com/playlyfe/themis/master/benchmark/results.html)
+
+To run benchmark:
+
+```
+git submodule update --init
+cd benchmark
+npm install
+node benchmark
+```
 
 ##TODO
 

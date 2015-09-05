@@ -10,6 +10,8 @@ var tv4 = require("tv4");
 var JsonModel = require('json-model');
 var Themis = require('../src/themis');
 var imjv = require('is-my-json-valid');
+var Ajv = require('ajv');
+var jsen = require('jsen');
 
 
 Tester.registerValidator({
@@ -39,6 +41,26 @@ Tester.registerValidator({
     },
     test: function (instance, json, schema) {
         return instance(json, '0').valid === true;
+    }
+});
+
+Tester.registerValidator({
+    name: "ajv",
+    setup: function (schema) {
+        return Ajv().compile(schema);
+    },
+    test: function (instance, json, schema) {
+        return instance(json);
+    }
+});
+
+Tester.registerValidator({
+    name: 'jsen',
+    setup: function (schema) {
+        return jsen(schema);
+    },
+    test: function (instance, json, schema) {
+        return instance(json);
     }
 });
 
